@@ -67,9 +67,9 @@ dependencies {
     compileOnly Config.rxJava2Libs
     compileOnly Config.navigationLibs
     compileOnly Config.rxPermissions
-    compileOnly Config.coil
-    compileOnly Config.gson
-    compileOnly Config.logger
+    implementation Config.coil
+    implementation Config.gson
+    implementation Config.logger
 }
 
 //添加以下配置，否则上传后的jar包看不到注释-------------------------------------------------------------
