@@ -1,9 +1,9 @@
 package com.fphoenixcorneae
 
+import android.content.pm.ApplicationInfo
 import androidx.core.content.FileProvider
 import com.fphoenixcorneae.ext.loggerD
 import com.fphoenixcorneae.util.AppUtil
-import com.fphoenixcorneae.util.BuildConfig
 import com.fphoenixcorneae.util.ContextUtil
 import com.fphoenixcorneae.util.CrashUtil
 import com.fphoenixcorneae.util.toast.ToastUtil
@@ -62,7 +62,8 @@ class CommonUtilFileProvider : FileProvider() {
             .build()
         Logger.addLogAdapter(object : AndroidLogAdapter(formatStrategy) {
             override fun isLoggable(priority: Int, tag: String?): Boolean {
-                return BuildConfig.DEBUG
+                // Module 默认会提供 Release 版给其他 Module 或工程使用，BuildConfig.DEBUG 会始终为 false
+                return context!!.applicationInfo != null && (context!!.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
             }
         })
     }

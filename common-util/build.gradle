@@ -66,10 +66,10 @@ dependencies {
     compileOnly Config.kotlinLibs
     compileOnly Config.rxJava2Libs
     compileOnly Config.navigationLibs
-    api Config.rxPermissions
-    api Config.coil
-    api Config.gson
-    api Config.logger
+    implementation Config.rxPermissions
+    implementation Config.coil
+    implementation Config.gson
+    implementation Config.logger
 }
 
 //添加以下配置，否则上传后的jar包看不到注释-------------------------------------------------------------

@@ -16,8 +16,8 @@ class Config {
             buildToolsVersion: "30.0.1",
             minSdkVersion    : 21,
             targetSdkVersion : 30,
-            versionCode      : 103,
-            versionName      : "1.0.3"
+            versionCode      : 104,
+            versionName      : "1.0.4"
     ]
 
     /** Supports */
