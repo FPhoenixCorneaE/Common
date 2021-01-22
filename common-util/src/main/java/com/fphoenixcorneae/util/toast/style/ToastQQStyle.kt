@@ -1,11 +1,9 @@
 package com.fphoenixcorneae.util.toast.style
 
-import android.content.Context
-
 /**
  * QQ 样式实现
  */
-class ToastQQStyle(context: Context) : BaseToastStyle(context) {
+class ToastQQStyle : BaseToastStyle() {
     override val z: Int
         get() = 0
 

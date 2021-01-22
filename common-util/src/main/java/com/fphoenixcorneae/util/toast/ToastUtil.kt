@@ -54,7 +54,7 @@ object ToastUtil {
         }
         // 初始化 Toast 样式
         if (sStyle == null) {
-            initStyle(ToastBlackStyle(application))
+            initStyle(ToastBlackStyle())
         }
         // 初始化吐司
         toast = if (isNotificationEnabled(application)) {
@@ -114,11 +114,7 @@ object ToastUtil {
     @Synchronized
     fun show(text: CharSequence?) {
         checkToastState()
-        if (sInterceptor!!.intercept(
-                sToast,
-                text
-            )
-        ) {
+        if (sInterceptor!!.intercept(sToast, text)) {
             return
         }
         sStrategy!!.show(text)

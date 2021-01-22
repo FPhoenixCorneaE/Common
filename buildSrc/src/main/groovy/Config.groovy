@@ -1,6 +1,6 @@
 class Config {
-    static gradle_version = '3.2.0'
-    static kotlin_version = '1.3.50'
+    static gradle_version = '4.1.1'
+    static kotlin_version = '1.4.0'
     static navigation_version = '2.3.0'
     static android_maven_gradle_plugin = '2.1'
 
@@ -16,8 +16,8 @@ class Config {
             buildToolsVersion: "30.0.1",
             minSdkVersion    : 21,
             targetSdkVersion : 30,
-            versionCode      : 104,
-            versionName      : "1.0.4"
+            versionCode      : 105,
+            versionName      : "1.0.5"
     ]
 
     /** Supports */
@@ -62,6 +62,8 @@ class Config {
     static gson = 'com.google.code.gson:gson:2.8.5'
     /** Kotlin Coroutines Image Loader */
     static coil = 'io.coil-kt:coil:0.13.0'
+    /** eventBus */
+    static eventBus = "org.greenrobot:eventbus:3.2.0"
 
 
     static supportLibs = support.values()

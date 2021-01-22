@@ -4,6 +4,22 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.TextView
 
+/**
+ * 自动缩小文字大小，以全部显示文字
+ */
+fun TextView.autoScaleTextSize(maxWidth: Int) {
+    if (maxWidth <= 0) {
+        return
+    }
+    val textString = text
+    var width = paint.measureText(textString, 0, textString.length)
+    while (width > maxWidth && paint.textSize > 0) {
+        paint.textSize = paint.textSize - 1
+        width = paint.measureText(textString, 0, textString.length)
+    }
+    invalidate()
+}
+
 fun TextView.notEmpty(f: TextView.() -> Unit, t: TextView.() -> Unit) {
     if (text.toString().isNotEmpty()) f() else t()
 }

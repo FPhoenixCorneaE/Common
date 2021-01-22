@@ -1,11 +1,9 @@
 package com.fphoenixcorneae.util.toast.style
 
-import android.content.Context
-
 /**
  * 默认黑色样式实现
  */
-open class ToastBlackStyle(context: Context) : BaseToastStyle(context) {
+open class ToastBlackStyle : BaseToastStyle() {
     override val cornerRadius: Int
         get() = dp2px(8f)
 

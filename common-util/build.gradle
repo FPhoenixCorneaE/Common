@@ -70,6 +70,7 @@ dependencies {
     implementation Config.coil
     implementation Config.gson
     implementation Config.logger
+    implementation Config.eventBus
 }
 
 //添加以下配置，否则上传后的jar包看不到注释-------------------------------------------------------------

@@ -1,9 +1,96 @@
 package com.fphoenixcorneae.ext
 
 import android.content.Context
+import android.content.res.Resources
 import android.util.DisplayMetrics
+import android.util.TypedValue
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
+
+
+/**
+ * Int类型转换为需要的像素值
+ */
+fun Int.dp2Px(): Int {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this.toFloat(),
+        Resources.getSystem().displayMetrics
+    ).toInt()
+}
+
+/**
+ * Int类型转换为需要的像素值
+ */
+fun Int.dpToPx(): Float {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this.toFloat(),
+        Resources.getSystem().displayMetrics
+    )
+}
+
+/**
+ * Float类型转换为需要的像素值
+ */
+fun Float.dp2Px(): Int {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this,
+        Resources.getSystem().displayMetrics
+    ).toInt()
+}
+
+/**
+ * Float类型转换为需要的像素值
+ */
+fun Float.dpToPx(): Float {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this,
+        Resources.getSystem().displayMetrics
+    )
+}
+
+/**
+ * Int类型转换为需要的像素值
+ */
+fun Int.sp2Px(): Int {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
+        this.toFloat(),
+        Resources.getSystem().displayMetrics
+    ).toInt()
+}
+
+/**
+ * Int类型转换为需要的像素值
+ */
+fun Int.spToPx(): Float {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
+        this.toFloat(),
+        Resources.getSystem().displayMetrics
+    )
+}
+
+/**
+ * Float类型转换为需要的像素值
+ */
+fun Float.sp2Px(): Int {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP, this, Resources.getSystem().displayMetrics
+    ).toInt()
+}
+
+/**
+ * Float类型转换为需要的像素值
+ */
+fun Float.spToPx(): Float {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP, this, Resources.getSystem().displayMetrics
+    )
+}
 
 /**
  * dp转px
@@ -121,6 +208,7 @@ val Context.screenWidth: Int
         windowManager.defaultDisplay?.getMetrics(dm)
         return dm.widthPixels
     }
+
 val Fragment.screenWidth: Int
     get() {
         return requireActivity().screenWidth

@@ -1,12 +1,11 @@
 package com.fphoenixcorneae.util.toast.style
 
-import android.content.Context
 import android.view.Gravity
 
 /**
  * 支付宝样式实现
  */
-class ToastAliPayStyle(context: Context) : BaseToastStyle(context) {
+class ToastAliPayStyle : BaseToastStyle() {
     override val gravity: Int
         get() = Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM
 

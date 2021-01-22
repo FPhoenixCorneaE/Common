@@ -93,7 +93,7 @@ fun View.clickNoRepeat(
  * @param interval 时间间隔 默认：1秒
  * @param onClick 点击触发的方法
  */
-fun setOnclickNoRepeat(vararg views: View?, interval: Long = 1000, onClick: (View) -> Unit) {
+fun setOnClickNoRepeat(vararg views: View?, interval: Long = 1000, onClick: (View) -> Unit) {
     views.forEach {
         it?.clickNoRepeat(interval) { view ->
             onClick.invoke(view)

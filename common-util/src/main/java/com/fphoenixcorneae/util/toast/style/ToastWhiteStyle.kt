@@ -1,11 +1,9 @@
 package com.fphoenixcorneae.util.toast.style
 
-import android.content.Context
-
 /**
  * 白色样式实现
  */
-class ToastWhiteStyle(context: Context) : ToastBlackStyle(context) {
+class ToastWhiteStyle : ToastBlackStyle() {
     override val backgroundColor: Int
         get() = -0x151516
 

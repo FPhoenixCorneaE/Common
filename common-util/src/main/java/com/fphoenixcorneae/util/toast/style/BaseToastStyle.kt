@@ -1,6 +1,6 @@
 package com.fphoenixcorneae.util.toast.style
 
-import android.content.Context
+import android.content.res.Resources
 import android.util.TypedValue
 import android.view.Gravity
 import com.fphoenixcorneae.util.toast.IToastStyle
@@ -8,7 +8,7 @@ import com.fphoenixcorneae.util.toast.IToastStyle
 /**
  * Toast 样式基类
  */
-abstract class BaseToastStyle(private val mContext: Context) : IToastStyle {
+abstract class BaseToastStyle : IToastStyle {
     override val gravity: Int
         get() = Gravity.CENTER
 
@@ -37,7 +37,7 @@ abstract class BaseToastStyle(private val mContext: Context) : IToastStyle {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             dpValue,
-            mContext.resources.displayMetrics
+            Resources.getSystem().displayMetrics
         ).toInt()
     }
 
@@ -48,8 +48,7 @@ abstract class BaseToastStyle(private val mContext: Context) : IToastStyle {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_SP,
             spValue,
-            mContext.resources.displayMetrics
+            Resources.getSystem().displayMetrics
         ).toInt()
     }
-
 }
