@@ -3,7 +3,7 @@ package com.fphoenixcorneae.util.demo
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.fphoenixcorneae.ext.toast
+import com.fphoenixcorneae.ext.toastAliPayStyle
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
@@ -13,7 +13,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
 
         btnTest.setOnClickListener {
-            toast("测试测试测试！！！")
+//            toast("测试测试测试！！！")
+            toastAliPayStyle("测试测试测试！！！")
         }
     }
 }

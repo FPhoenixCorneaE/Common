@@ -16,8 +16,8 @@ class Config {
             buildToolsVersion: "30.0.1",
             minSdkVersion    : 21,
             targetSdkVersion : 30,
-            versionCode      : 105,
-            versionName      : "1.0.5"
+            versionCode      : 106,
+            versionName      : "1.0.6"
     ]
 
     /** Supports */
@@ -40,7 +40,7 @@ class Config {
 
     /** Kotlin */
     static kotlin = [
-            core            : "androidx.core:core-ktx:1.3.2",
+            core            : "androidx.core:core-ktx:1.3.1",
             activity        : "androidx.activity:activity-ktx:1.2.0-alpha02",
             fragment        : "androidx.fragment:fragment-ktx:1.3.0-alpha04",
             kotlinStdlibJdk7: "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
@@ -49,7 +49,7 @@ class Config {
 
     /** RxJava2 */
     static rxJava2 = [
-            rxJava   : "io.reactivex.rxjava2:rxjava:2.2.0",
+            rxJava   : "io.reactivex.rxjava2:rxjava:2.1.16",
             rxAndroid: "io.reactivex.rxjava2:rxandroid:2.1.0",
             rxKotlin : "io.reactivex.rxjava2:rxkotlin:2.2.0",
     ]

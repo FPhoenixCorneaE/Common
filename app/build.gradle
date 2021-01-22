@@ -49,7 +49,7 @@ android {
             eachDependency { DependencyResolveDetails details ->
                 details.requested.with {
                     if (group == "org.jetbrains.kotlin" && name == "kotlin-stdlib") {
-                        details.useTarget(group: group, name: name, version: "1.3.50")
+                        details.useTarget(group: group, name: name, version: "1.4.0")
                     }
                 }
             }
