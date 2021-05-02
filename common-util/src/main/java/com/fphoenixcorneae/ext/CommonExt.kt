@@ -1,12 +1,28 @@
 package com.fphoenixcorneae.ext
 
+import android.app.Application
 import android.text.TextUtils
 import com.fphoenixcorneae.util.CloseUtil
 import com.fphoenixcorneae.util.ContextUtil
-import com.fphoenixcorneae.util.toast.ToastUtil
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.nio.charset.Charset
+
+val appContext: Application by lazy { ContextUtil.context }
+
+/**
+ * 判断是否为空 并传入相关操作
+ */
+inline fun <reified T> T?.action(
+    crossinline notNullAction: (T) -> Unit = {},
+    crossinline nullAction: () -> Unit = {}
+) {
+    if (this != null) {
+        notNullAction.invoke(this)
+    } else {
+        nullAction.invoke()
+    }
+}
 
 /**
  * 判断任意一个字符串是否为空
@@ -36,12 +52,12 @@ fun Any?.isNull(): Boolean {
 /**
  * 判断任意一个对象是否为非null
  */
-fun Any?.isNonNull(): Boolean {
+fun Any?.isNotNull(): Boolean {
     return this != null
 }
 
-fun <T> Collection<T>?.isNonNullAndNotEmpty(): Boolean {
-    return !this.isNullOrEmpty()
+fun <T> Collection<T>?.isNotNullOrEmpty(): Boolean {
+    return this.isNullOrEmpty().not()
 }
 
 /**
@@ -49,10 +65,6 @@ fun <T> Collection<T>?.isNonNullAndNotEmpty(): Boolean {
  */
 fun CharSequence?.equals(charSequence: CharSequence?): Boolean {
     return TextUtils.equals(this, charSequence)
-}
-
-fun showToast(content: CharSequence?) {
-    ToastUtil.show(content)
 }
 
 /**
@@ -66,7 +78,7 @@ fun readFileFromAssets(fileName: String): String {
     //使用IO流读取json文件内容
     var bufferedReader: BufferedReader? = null
     try {
-        val assetManager = ContextUtil.context.assets
+        val assetManager = appContext.assets
         bufferedReader = BufferedReader(
             InputStreamReader(assetManager.open(fileName), Charset.defaultCharset())
         )

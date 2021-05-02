@@ -16,6 +16,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.util.Xml
 import androidx.annotation.RequiresPermission
+import com.fphoenixcorneae.ext.appContext
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.reflect.InvocationTargetException
@@ -278,7 +279,7 @@ class PhoneUtil private constructor() {
             val intent =
                 Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNumber"))
             if (isIntentAvailable(intent)) {
-                ContextUtil.context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                 return true
             }
             return false
@@ -298,7 +299,7 @@ class PhoneUtil private constructor() {
             val intent =
                 Intent(Intent.ACTION_CALL, Uri.parse("tel:$phoneNumber"))
             if (isIntentAvailable(intent)) {
-                ContextUtil.context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                 return true
             }
             return false
@@ -317,7 +318,7 @@ class PhoneUtil private constructor() {
             val intent = Intent(Intent.ACTION_SENDTO, uri)
             if (isIntentAvailable(intent)) {
                 intent.putExtra("sms_body", content)
-                ContextUtil.context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                 return true
             }
             return false
@@ -335,7 +336,7 @@ class PhoneUtil private constructor() {
         fun sendSmsSilent(phoneNumber: String?, content: String) {
             if (content.isEmpty()) return
             val sentIntent =
-                PendingIntent.getBroadcast(ContextUtil.context, 0, Intent(), 0)
+                PendingIntent.getBroadcast(appContext, 0, Intent(), 0)
             val smsManager = SmsManager.getDefault()
             if (content.length >= 70) {
                 val ms: List<String> = smsManager.divideMessage(content)
@@ -367,7 +368,7 @@ class PhoneUtil private constructor() {
             val list =
                 ArrayList<HashMap<String, String>>()
             // 1.获取内容解析者
-            val resolver: ContentResolver = ContextUtil.context.contentResolver
+            val resolver: ContentResolver = appContext.contentResolver
             // 2.获取内容提供者的地址:com.android.contacts
             // raw_contacts表的地址 :raw_contacts
             // view_data表的地址 : data
@@ -468,7 +469,7 @@ class PhoneUtil private constructor() {
          */
         fun getAllSMS() { // 1.获取短信
             // 1.1获取内容解析者
-            val resolver: ContentResolver = ContextUtil.context.contentResolver
+            val resolver: ContentResolver = appContext.contentResolver
             // 1.2获取内容提供者地址   sms,sms表的地址:null  不写
             // 1.3获取查询路径
             val uri = Uri.parse("content://sms")
@@ -563,7 +564,7 @@ class PhoneUtil private constructor() {
         @RequiresPermission(permission.READ_PHONE_STATE)
         @SuppressLint("HardwareIds")
         fun getPhoneStatus(): String {
-            val tm = ContextUtil.context
+            val tm = appContext
                 .getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             var str = ""
             str += "DeviceId(IMEI) = " + tm.deviceId + "\n"
@@ -585,10 +586,10 @@ class PhoneUtil private constructor() {
         }
 
         private val telephonyManager: TelephonyManager
-            get() = ContextUtil.context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            get() = appContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
         private fun isIntentAvailable(intent: Intent): Boolean {
-            return ContextUtil.context
+            return appContext
                 .packageManager
                 .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
                 .size > 0

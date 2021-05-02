@@ -1,6 +1,6 @@
 class Config {
-    static gradle_version = '4.1.1'
-    static kotlin_version = '1.4.0'
+    static gradle_version = '4.1.3'
+    static kotlin_version = '1.4.32'
     static navigation_version = '2.3.0'
     static android_maven_gradle_plugin = '2.1'
 
@@ -16,8 +16,8 @@ class Config {
             buildToolsVersion: "30.0.1",
             minSdkVersion    : 21,
             targetSdkVersion : 30,
-            versionCode      : 106,
-            versionName      : "1.0.6"
+            versionCode      : 107,
+            versionName      : "1.0.7"
     ]
 
     /** Supports */
@@ -54,14 +54,23 @@ class Config {
             rxKotlin : "io.reactivex.rxjava2:rxkotlin:2.2.0",
     ]
 
+    /** Kotlin Coroutines Image Loader */
+    static coil = [
+            coil                        : "io.coil-kt:coil:1.2.0",
+            gif                         : "io.coil-kt:coil-gif:1.2.0",
+            svg                         : "io.coil-kt:coil-svg:1.2.0",
+            video                       : "io.coil-kt:coil-video:1.2.0",
+            transformations             : "com.github.Commit451.coil-transformations:transformations:1.0.0",
+            transformationsGpu          : "com.github.Commit451.coil-transformations:transformations-gpu:1.0.0",
+            transformationsFaceDetection: "com.github.Commit451.coil-transformations:transformations-face-detection:1.0.0",
+    ]
+
     /** logger */
     static logger = "com.orhanobut:logger:2.2.0"
     /** 权限管理 */
     static rxPermissions = 'com.github.tbruyelle:rxpermissions:0.10.2'
     /** Gson */
     static gson = 'com.google.code.gson:gson:2.8.5'
-    /** Kotlin Coroutines Image Loader */
-    static coil = 'io.coil-kt:coil:0.13.0'
     /** eventBus */
     static eventBus = "org.greenrobot:eventbus:3.2.0"
 
@@ -70,4 +79,5 @@ class Config {
     static navigationLibs = navigation.values()
     static kotlinLibs = kotlin.values()
     static rxJava2Libs = rxJava2.values()
+    static coilLibs = coil.values()
 }

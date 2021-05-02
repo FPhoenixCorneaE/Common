@@ -2,6 +2,7 @@ package com.fphoenixcorneae.util
 
 import android.content.res.AssetFileDescriptor
 import android.content.res.ColorStateList
+import android.content.res.Resources
 import android.content.res.XmlResourceParser
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
@@ -9,6 +10,7 @@ import android.os.Build
 import androidx.annotation.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import com.fphoenixcorneae.ext.appContext
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
@@ -46,58 +48,58 @@ class ResourceUtil private constructor() {
     companion object {
 
         fun getLayoutId(name: String): Int {
-            return ContextUtil.context.resources.getIdentifier(
+            return Resources.getSystem().getIdentifier(
                 name, "layout",
-                ContextUtil.context.packageName
+                AppUtil.packageName
             )
         }
 
         fun getStringId(name: String): Int {
-            return ContextUtil.context.resources.getIdentifier(
+            return Resources.getSystem().getIdentifier(
                 name, "string",
-                ContextUtil.context.packageName
+                AppUtil.packageName
             )
         }
 
         fun getDrawableId(name: String): Int {
-            return ContextUtil.context.resources.getIdentifier(
+            return Resources.getSystem().getIdentifier(
                 name, "drawable",
-                ContextUtil.context.packageName
+                AppUtil.packageName
             )
         }
 
         fun getMipmapId(name: String): Int {
-            return ContextUtil.context.resources.getIdentifier(
+            return Resources.getSystem().getIdentifier(
                 name, "mipmap",
-                ContextUtil.context.packageName
+                AppUtil.packageName
             )
         }
 
         fun getStyleId(name: String): Int {
-            return ContextUtil.context.resources.getIdentifier(
+            return Resources.getSystem().getIdentifier(
                 name, "style",
-                ContextUtil.context.packageName
+                AppUtil.packageName
             )
         }
 
         fun getId(name: String): Int {
-            return ContextUtil.context.resources.getIdentifier(
+            return Resources.getSystem().getIdentifier(
                 name, "id",
-                ContextUtil.context.packageName
+                AppUtil.packageName
             )
         }
 
         fun getColorId(name: String): Int {
-            return ContextUtil.context.resources.getIdentifier(
+            return Resources.getSystem().getIdentifier(
                 name, "color",
-                ContextUtil.context.packageName
+                AppUtil.packageName
             )
         }
 
         fun getArrayId(name: String): Int {
-            return ContextUtil.context.resources.getIdentifier(
+            return Resources.getSystem().getIdentifier(
                 name, "array",
-                ContextUtil.context.packageName
+                AppUtil.packageName
             )
         }
 
@@ -105,7 +107,7 @@ class ResourceUtil private constructor() {
          * Get raw file, ui/raw/file
          */
         fun getRaw(@RawRes resId: Int): InputStream {
-            return ContextUtil.context.resources.openRawResource(resId)
+            return Resources.getSystem().openRawResource(resId)
         }
 
         /**
@@ -113,49 +115,49 @@ class ResourceUtil private constructor() {
          * uncompressed data, which typically includes things like mp3 files and png images.
          */
         fun getRawFd(@RawRes resId: Int): AssetFileDescriptor {
-            return ContextUtil.context.resources.openRawResourceFd(resId)
+            return Resources.getSystem().openRawResourceFd(resId)
         }
 
         /**
          * Get xml file, ui/xml/file
          */
         fun getXml(@XmlRes resId: Int): XmlResourceParser {
-            return ContextUtil.context.resources.getXml(resId)
+            return Resources.getSystem().getXml(resId)
         }
 
         /**
          * Get drawable, ui/drawable/file
          */
         fun getDrawable(@DrawableRes resId: Int): Drawable? {
-            return ContextCompat.getDrawable(ContextUtil.context, resId)
+            return ContextCompat.getDrawable(appContext, resId)
         }
 
         /**
          * Get string, ui/values/__picker_strings.xml
          */
         fun getString(@StringRes resId: Int): String {
-            return ContextUtil.context.resources.getString(resId)
+            return Resources.getSystem().getString(resId)
         }
 
         /**
          * Get string array, ui/values/__picker_strings.xml
          */
         fun getStringArray(@ArrayRes resId: Int): Array<String> {
-            return ContextUtil.context.resources.getStringArray(resId)
+            return Resources.getSystem().getStringArray(resId)
         }
 
         /**
          * Get int array, ui/values/__picker_strings.xml
          */
         fun getIntArray(@ArrayRes resId: Int): IntArray {
-            return ContextUtil.context.resources.getIntArray(resId)
+            return Resources.getSystem().getIntArray(resId)
         }
 
         /**
          * Get color, ui/values/__picker_colors.xml
          */
         fun getColor(@ColorRes resId: Int): Int {
-            return ContextCompat.getColor(ContextUtil.context, resId)
+            return ContextCompat.getColor(appContext, resId)
         }
 
         /**
@@ -164,10 +166,10 @@ class ResourceUtil private constructor() {
         fun getFont(@FontRes resId: Int): Typeface? {
             return when {
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
-                    ContextUtil.context.resources.getFont(resId)
+                    Resources.getSystem().getFont(resId)
                 }
                 else -> {
-                    ResourcesCompat.getFont(ContextUtil.context, resId)
+                    ResourcesCompat.getFont(appContext, resId)
                 }
             }
         }
@@ -176,7 +178,7 @@ class ResourceUtil private constructor() {
          * Get color state list, ui/values/__picker_colors.xml
          */
         fun getColorStateList(@ColorRes resId: Int): ColorStateList? {
-            return ContextCompat.getColorStateList(ContextUtil.context, resId)
+            return ContextCompat.getColorStateList(appContext, resId)
         }
 
         /**
@@ -186,7 +188,7 @@ class ResourceUtil private constructor() {
          * 获取某个dimen的值,如果是dp或sp的单位,将其乘以density,如果是px,则不乘   返回float
          */
         fun getDimension(@DimenRes resId: Int): Float {
-            return ContextUtil.context.resources.getDimension(resId)
+            return Resources.getSystem().getDimension(resId)
         }
 
         /**
@@ -196,7 +198,7 @@ class ResourceUtil private constructor() {
          * 获取某个dimen的值,如果是dp或sp的单位,将其乘以density,如果是px,则不乘  返回int
          */
         fun getDimensionPixelOffset(@DimenRes resId: Int): Int {
-            return ContextUtil.context.resources.getDimensionPixelOffset(resId)
+            return Resources.getSystem().getDimensionPixelOffset(resId)
         }
 
         /**
@@ -206,7 +208,7 @@ class ResourceUtil private constructor() {
          * 不管写的是dp还是sp还是px,都会乘以density.
          */
         fun getDimensionPixelSize(@DimenRes resId: Int): Int {
-            return ContextUtil.context.resources.getDimensionPixelSize(resId)
+            return Resources.getSystem().getDimensionPixelSize(resId)
         }
     }
 }

@@ -1,10 +1,11 @@
 package com.fphoenixcorneae.util
 
-import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.text.TextUtils
+import com.fphoenixcorneae.ext.appContext
+import com.fphoenixcorneae.ext.connectivityManager
 import com.fphoenixcorneae.ext.loggerE
 import java.io.IOException
 import java.net.Inet4Address
@@ -23,14 +24,14 @@ class NetworkUtil private constructor() {
 
     companion object {
 
-        private val ETHERNET = "eth0"
-        private val WLAN = "wlan0"
-        private val DNS1 = "[net.dns1]"
-        private val DNS2 = "[net.dns2]"
-        private val ETHERNET_GATEWAY = "[dhcp.eth0.gateway]"
-        private val WLAN_GATEWAY = "[dhcp.wlan0.gateway]"
-        private val ETHERNET_MASK = "[dhcp.eth0.mask]"
-        private val WLAN_MASK = "[dhcp.wlan0.mask]"
+        private const val ETHERNET = "eth0"
+        private const val WLAN = "wlan0"
+        private const val DNS1 = "[net.dns1]"
+        private const val DNS2 = "[net.dns2]"
+        private const val ETHERNET_GATEWAY = "[dhcp.eth0.gateway]"
+        private const val WLAN_GATEWAY = "[dhcp.wlan0.gateway]"
+        private const val ETHERNET_MASK = "[dhcp.eth0.mask]"
+        private const val WLAN_MASK = "[dhcp.wlan0.mask]"
 
         /**
          * 判断网络是否连接
@@ -38,20 +39,19 @@ class NetworkUtil private constructor() {
          */
         val isConnected: Boolean
             get() {
-                val connectivityManager =
-                    ContextUtil.context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                val connectivityManager = appContext.connectivityManager
                 return when {
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
                         // Android 6.0以上可用方法
                         // 当NetworkCapabilities的描述中有VALIDATED这个描述时，此网络是真正可用的
                         val networkCapabilities =
-                            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                            connectivityManager?.getNetworkCapabilities(connectivityManager.activeNetwork)
                         networkCapabilities != null && networkCapabilities.hasCapability(
                             NetworkCapabilities.NET_CAPABILITY_VALIDATED
                         )
                     }
                     else -> {
-                        val info = connectivityManager.activeNetworkInfo
+                        val info = connectivityManager?.activeNetworkInfo
                         info != null && info.isConnected
                     }
                 }
@@ -62,18 +62,17 @@ class NetworkUtil private constructor() {
          */
         val isWifiConnected: Boolean
             get() {
-                val connectivityManager =
-                    ContextUtil.context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                val connectivityManager =appContext.connectivityManager
                 return when {
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
                         val networkCapabilities =
-                            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                            connectivityManager?.getNetworkCapabilities(connectivityManager.activeNetwork)
                         networkCapabilities != null && networkCapabilities.hasTransport(
                             NetworkCapabilities.TRANSPORT_WIFI
                         )
                     }
                     else -> {
-                        val networkInfo = connectivityManager.activeNetworkInfo
+                        val networkInfo = connectivityManager?.activeNetworkInfo
                         networkInfo != null && networkInfo.type == ConnectivityManager.TYPE_WIFI && networkInfo.isConnected
                     }
                 }
@@ -84,18 +83,17 @@ class NetworkUtil private constructor() {
          */
         val isMobileConnected: Boolean
             get() {
-                val connectivityManager =
-                    ContextUtil.context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                val connectivityManager =appContext.connectivityManager
                 return when {
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
                         val networkCapabilities =
-                            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                            connectivityManager?.getNetworkCapabilities(connectivityManager.activeNetwork)
                         networkCapabilities != null && networkCapabilities.hasTransport(
                             NetworkCapabilities.TRANSPORT_CELLULAR
                         )
                     }
                     else -> {
-                        val networkInfo = connectivityManager.activeNetworkInfo
+                        val networkInfo = connectivityManager?.activeNetworkInfo
                         networkInfo != null && networkInfo.type == ConnectivityManager.TYPE_MOBILE && networkInfo.isConnected
                     }
                 }
@@ -106,9 +104,8 @@ class NetworkUtil private constructor() {
          */
         val connectedType: Int
             get() {
-                val mConnectivityManager =
-                    ContextUtil.context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-                val mNetworkInfo = mConnectivityManager.activeNetworkInfo
+                val mConnectivityManager =appContext.connectivityManager
+                val mNetworkInfo = mConnectivityManager?.activeNetworkInfo
                 return if (mNetworkInfo != null && mNetworkInfo.isConnected) mNetworkInfo.type else -1
             }
 

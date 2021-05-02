@@ -2,10 +2,9 @@ package com.fphoenixcorneae
 
 import android.content.pm.ApplicationInfo
 import androidx.core.content.FileProvider
+import com.fphoenixcorneae.ext.appContext
 import com.fphoenixcorneae.ext.loggerD
-import com.fphoenixcorneae.util.AppUtil
-import com.fphoenixcorneae.util.ContextUtil
-import com.fphoenixcorneae.util.CrashUtil
+import com.fphoenixcorneae.util.*
 import com.fphoenixcorneae.util.toast.ToastUtil
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
@@ -13,23 +12,25 @@ import com.orhanobut.logger.PrettyFormatStrategy
 
 /**
  * 工具集文件提供者:
- * 1、初始化ContextUtil;
- * 2、初始化ToastUtil;
- * 3、初始化日志打印配置;
+ * 1、初始化 ContextUtil;
+ * 2、初始化 ToastUtil;
+ * 3、初始化 AudioUtil;
+ * 4、初始化日志打印配置;
  */
 class CommonUtilFileProvider : FileProvider() {
 
     override fun onCreate(): Boolean {
-        // 初始化ContextUtil
+        // 初始化 ContextUtil
         ContextUtil.init(context!!)
-        // 初始化ToastUtil
-        ToastUtil.init(ContextUtil.context)
-        // 初始化CrashUtil
+        // 初始化 ToastUtil
+        ToastUtil.init(appContext)
+        // 初始化 AudioUtil
+        AudioUtil.init()
+        // 初始化 CrashUtil
         initCrashUtil()
         // 初始化日志打印配置
         initLoggerConfig()
-
-        // 返回true表示初始化成功,返回false则初始化失败.
+        // 返回 true 表示初始化成功,返回 false 则初始化失败.
         return true
     }
 
@@ -58,7 +59,7 @@ class CommonUtilFileProvider : FileProvider() {
             // (Optional) Hides internal method calls up to offset. Default 5
             .methodOffset(7)
             // (Optional) Global tag for every log. Default PRETTY_LOGGER
-            .tag("KotlinMVVM")
+            .tag("PhoenixKtx")
             .build()
         Logger.addLogAdapter(object : AndroidLogAdapter(formatStrategy) {
             override fun isLoggable(priority: Int, tag: String?): Boolean {

@@ -52,3 +52,12 @@ var EditText.maxLength: Int
             this.filters = filters.toTypedArray()
         }
     }
+
+/**
+ * 获取/设置[EditText]text
+ */
+var EditText.textString: CharSequence
+    get() = text.toString()
+    set(value) {
+        text = Editable.Factory.getInstance().newEditable(value)
+    }

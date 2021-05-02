@@ -49,7 +49,7 @@ android {
             eachDependency { DependencyResolveDetails details ->
                 details.requested.with {
                     if (group == "org.jetbrains.kotlin" && name == "kotlin-stdlib") {
-                        details.useTarget(group: group, name: name, version: "1.4.0")
+                        details.useTarget(group: group, name: name, version: "1.4.32")
                     }
                 }
             }
@@ -64,11 +64,11 @@ dependencies {
     implementation Config.rxJava2Libs
     implementation Config.navigationLibs
     implementation Config.rxPermissions
-    implementation Config.coil
+    implementation Config.coilLibs
     implementation Config.gson
     implementation Config.logger
     implementation project(path: ':common-util')
-    testImplementation 'junit:junit:4.13'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 

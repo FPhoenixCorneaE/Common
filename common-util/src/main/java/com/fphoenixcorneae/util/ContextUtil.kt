@@ -249,7 +249,7 @@ class ActivityLifecycleCallbacksImpl : ActivityLifecycleCallbacks {
                 .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         } else {
             val tag = activity.window.decorView.getTag(-123) as? Int ?: return
-            ContextUtil.runOnUiThreadDelayed(Runnable{
+            ContextUtil.runOnUiThreadDelayed(Runnable {
                 val window = activity.window
                 window?.setSoftInputMode(tag)
             }, 100)

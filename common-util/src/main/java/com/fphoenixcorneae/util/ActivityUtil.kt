@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import com.fphoenixcorneae.ext.appContext
 import com.fphoenixcorneae.ext.loggerE
 
 /**
@@ -51,7 +52,7 @@ class ActivityUtil private constructor() {
             val intent = Intent(Intent.ACTION_MAIN, null)
             intent.addCategory(Intent.CATEGORY_LAUNCHER)
             intent.setPackage(pkg)
-            val pm: PackageManager = ContextUtil.context.packageManager
+            val pm: PackageManager = appContext.packageManager
             val info = pm.queryIntentActivities(intent, 0)
             val size = info.size
             if (size == 0) return ""

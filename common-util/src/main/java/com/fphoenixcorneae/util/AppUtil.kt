@@ -17,10 +17,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Process
 import android.provider.Settings
-import com.fphoenixcorneae.ext.isNull
-import com.fphoenixcorneae.ext.isSpace
-import com.fphoenixcorneae.ext.loggerE
-import com.fphoenixcorneae.ext.loggerI
+import com.fphoenixcorneae.ext.*
 import java.io.ByteArrayInputStream
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -47,7 +44,7 @@ class AppUtil private constructor() {
          */
         val packageName: String
             get() {
-                return ContextUtil.context.packageName
+                return appContext.packageName
             }
 
         /**
@@ -78,7 +75,7 @@ class AppUtil private constructor() {
          * Get app icon
          */
         private fun getAppIcon(packageName: String): Drawable? {
-            val context = ContextUtil.context
+            val context = appContext
             try {
                 val pm = context.packageManager
                 val info = pm.getApplicationInfo(packageName, 0)
@@ -94,7 +91,7 @@ class AppUtil private constructor() {
          */
         fun getVersionName(packageName: String): String {
             try {
-                val packageInfo = ContextUtil.context.packageManager.getPackageInfo(packageName, 0)
+                val packageInfo = appContext.packageManager.getPackageInfo(packageName, 0)
                 return packageInfo.versionName
             } catch (e: NameNotFoundException) {
                 loggerE(e.toString())
@@ -106,7 +103,7 @@ class AppUtil private constructor() {
          * Get app version code
          */
         fun getVersionCode(packageName: String): Long {
-            val context = ContextUtil.context
+            val context = appContext
             try {
                 val pm = context.packageManager
                 val packageInfo = pm.getPackageInfo(packageName, 0)
@@ -124,7 +121,7 @@ class AppUtil private constructor() {
          * Get app name
          */
         fun getAppName(packageName: String): String {
-            val context = ContextUtil.context
+            val context = appContext
             try {
                 val pm = context.packageManager
                 val info = pm.getApplicationInfo(packageName, 0)
@@ -139,7 +136,7 @@ class AppUtil private constructor() {
          * Get app permission
          */
         fun getAppPermission(packageName: String): Array<String>? {
-            val context = ContextUtil.context
+            val context = appContext
             try {
                 val pm = context.packageManager
                 val packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS)
@@ -154,7 +151,7 @@ class AppUtil private constructor() {
          * Get app signature
          */
         fun getAppSignature(pkgName: String = packageName): String {
-            val context = ContextUtil.context
+            val context = appContext
             try {
                 val pm = context.packageManager
                 val packageInfo = pm.getPackageInfo(pkgName, PackageManager.GET_SIGNATURES)
@@ -204,7 +201,7 @@ class AppUtil private constructor() {
         fun getAppUid(pkgName: String = packageName): Int {
             try {
                 val applicationInfo: ApplicationInfo =
-                    ContextUtil.context.packageManager.getApplicationInfo(pkgName, 0)
+                    appContext.packageManager.getApplicationInfo(pkgName, 0)
                 return applicationInfo.uid
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -222,7 +219,7 @@ class AppUtil private constructor() {
             return when {
                 pkgName.isSpace() -> ""
                 else -> try {
-                    val pm: PackageManager = ContextUtil.context.packageManager
+                    val pm: PackageManager = appContext.packageManager
                     val pi = pm.getPackageInfo(pkgName, 0)
                     pi?.applicationInfo?.sourceDir
                 } catch (e: NameNotFoundException) {
@@ -237,7 +234,7 @@ class AppUtil private constructor() {
          */
         val isDebuggable: Boolean
             get() {
-                val context = ContextUtil.context
+                val context = appContext
                 var debuggable = false
                 try {
                     val packageInfo =
@@ -272,7 +269,7 @@ class AppUtil private constructor() {
             return when {
                 pkgName.isNullOrBlank() -> false
                 else -> try {
-                    val pm: PackageManager = ContextUtil.context.packageManager
+                    val pm: PackageManager = appContext.packageManager
                     val ai = pm.getApplicationInfo(pkgName, 0)
                     ai.flags and ApplicationInfo.FLAG_SYSTEM != 0
                 } catch (e: NameNotFoundException) {
@@ -288,7 +285,7 @@ class AppUtil private constructor() {
         val isAppInBackground: Boolean
             @TargetApi(Build.VERSION_CODES.Q)
             get() {
-                val context = ContextUtil.context
+                val context = appContext
                 val am = context
                     .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
                 val taskList: List<ActivityManager.RunningTaskInfo>?
@@ -305,7 +302,7 @@ class AppUtil private constructor() {
          */
         val isAppInForeground: Boolean
             get() {
-                val context = ContextUtil.context
+                val context = appContext
                 val am =
                     context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
                 val info = am.runningAppProcesses
@@ -341,7 +338,7 @@ class AppUtil private constructor() {
          */
         @SuppressLint("NewApi")
         fun isAppRunning(pkgName: String): Boolean {
-            val context = ContextUtil.context
+            val context = appContext
             val uid: Int
             val packageManager: PackageManager = context.getPackageManager()
             uid = try {
@@ -387,7 +384,7 @@ class AppUtil private constructor() {
                 loggerE("Launcher activity isn't exist.")
                 return
             }
-            ContextUtil.context.startActivity(launchAppIntent)
+            appContext.startActivity(launchAppIntent)
         }
 
         /**
@@ -431,7 +428,7 @@ class AppUtil private constructor() {
                 Intent.FLAG_ACTIVITY_NEW_TASK
                         or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
             )
-            ContextUtil.context.startActivity(intent)
+            appContext.startActivity(intent)
             if (!isKillProcess) return
             Process.killProcess(Process.myPid())
             exitProcess(0)
@@ -466,7 +463,7 @@ class AppUtil private constructor() {
          * @return 当前内存大小
          */
         fun getDeviceUsableMemory(): Int {
-            val context = ContextUtil.context
+            val context = appContext
             val am =
                 context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
             val mi = ActivityManager.MemoryInfo()
@@ -498,7 +495,7 @@ class AppUtil private constructor() {
         fun getSign(): String {
             return try {
                 @SuppressLint("PackageManagerGetSignatures")
-                val pis = ContextUtil.context.packageManager
+                val pis = appContext.packageManager
                     .getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
                 hexDigest(pis.signatures[0].toByteArray())
             } catch (e: NameNotFoundException) {
@@ -592,7 +589,7 @@ class AppUtil private constructor() {
         }
 
         private fun getForegroundProcessName(): String? {
-            val context = ContextUtil.context
+            val context = appContext
             val am =
                 context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
             val pInfo = am.runningAppProcesses

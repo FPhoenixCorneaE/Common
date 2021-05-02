@@ -4,7 +4,6 @@ import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import com.fphoenixcorneae.util.ContextUtil
 
 /**
  * 复制文本到剪贴板
@@ -23,11 +22,11 @@ fun Context.copyText(text: CharSequence?) {
  */
 val clipboardText: CharSequence?
     get() {
-        val clipboard = ContextUtil.context.clipboardManager
+        val clipboard = appContext.clipboardManager
         val clip = clipboard?.primaryClip
         return when {
             clip != null && clip.itemCount > 0 -> {
-                clip.getItemAt(0).coerceToText(ContextUtil.context)
+                clip.getItemAt(0).coerceToText(appContext)
             }
             else -> {
                 null
@@ -44,7 +43,7 @@ fun Context.copyUri(uri: Uri?) {
     val clipboard = clipboardManager
     clipboard?.setPrimaryClip(
         ClipData.newUri(
-            ContextUtil.context.contentResolver,
+            appContext.contentResolver,
             "uri",
             uri
         )
@@ -58,7 +57,7 @@ fun Context.copyUri(uri: Uri?) {
  */
 val clipboardUri: Uri?
     get() {
-        val clipboard = ContextUtil.context.clipboardManager
+        val clipboard = appContext.clipboardManager
         val clip = clipboard?.primaryClip
         return when {
             clip != null && clip.itemCount > 0 -> {
@@ -87,7 +86,7 @@ fun Context.copyIntent(intent: Intent?) {
  */
 val clipboardIntent: Intent?
     get() {
-        val clipboard = ContextUtil.context.clipboardManager
+        val clipboard = appContext.clipboardManager
         val clip = clipboard?.primaryClip
         return when {
             clip != null && clip.itemCount > 0 -> {

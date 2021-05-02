@@ -5,7 +5,6 @@ import android.view.View
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import com.fphoenixcorneae.util.ContextUtil
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -111,7 +110,7 @@ fun EditText.isKeyboardShowing(): Boolean {
  * Fix the leaks of soft input.
  */
 fun Window.fixSoftInputLeaks() {
-    ContextUtil.context.inputMethodManager?.let {
+    appContext.inputMethodManager?.let {
         val leakViews = arrayOf("mLastSrvView", "mCurRootView", "mServedView", "mNextServedView")
         for (leakView in leakViews) {
             try {

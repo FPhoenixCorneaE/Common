@@ -1,5 +1,6 @@
 package com.fphoenixcorneae.util
 
+import android.content.res.Resources
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.View
@@ -30,7 +31,7 @@ class SizeUtil private constructor() {
          * @return px值
          */
         fun dp2px(dpValue: Float): Int {
-            val scale = ContextUtil.context.resources.displayMetrics.density
+            val scale = Resources.getSystem().displayMetrics.density
             return (dpValue * scale + 0.5f).toInt()
         }
 
@@ -41,7 +42,7 @@ class SizeUtil private constructor() {
          * @return px值
          */
         fun dpToPx(dpValue: Float): Float {
-            val scale = ContextUtil.context.resources.displayMetrics.density
+            val scale = Resources.getSystem().displayMetrics.density
             return dpValue * scale + 0.5f
         }
 
@@ -52,7 +53,7 @@ class SizeUtil private constructor() {
          * @return dp值
          */
         fun px2dp(pxValue: Float): Int {
-            val scale = ContextUtil.context.resources.displayMetrics.density
+            val scale = Resources.getSystem().displayMetrics.density
             return (pxValue / scale + 0.5f).toInt()
         }
 
@@ -63,7 +64,7 @@ class SizeUtil private constructor() {
          * @return dp值
          */
         fun pxToDp(pxValue: Float): Float {
-            val scale = ContextUtil.context.resources.displayMetrics.density
+            val scale = Resources.getSystem().displayMetrics.density
             return pxValue / scale + 0.5f
         }
 
@@ -74,7 +75,7 @@ class SizeUtil private constructor() {
          * @return px值
          */
         fun pxToPx(pxValue: Float, screenSize: Int): Float {
-            val screenWidth = ContextUtil.context.resources.displayMetrics.widthPixels
+            val screenWidth = Resources.getSystem().displayMetrics.widthPixels
             return screenWidth * pxValue / screenSize
         }
 
@@ -85,7 +86,7 @@ class SizeUtil private constructor() {
          * @return px值
          */
         fun sp2px(spValue: Float): Int {
-            val fontScale = ContextUtil.context.resources.displayMetrics.scaledDensity
+            val fontScale = Resources.getSystem().displayMetrics.scaledDensity
             return (spValue * fontScale + 0.5f).toInt()
         }
 
@@ -96,7 +97,7 @@ class SizeUtil private constructor() {
          * @return px值
          */
         fun spToPx(spValue: Float): Float {
-            val fontScale = ContextUtil.context.resources.displayMetrics.scaledDensity
+            val fontScale = Resources.getSystem().displayMetrics.scaledDensity
             return spValue * fontScale + 0.5f
         }
 
@@ -107,7 +108,7 @@ class SizeUtil private constructor() {
          * @return sp值
          */
         fun px2sp(pxValue: Float): Int {
-            val fontScale = ContextUtil.context.resources.displayMetrics.scaledDensity
+            val fontScale = Resources.getSystem().displayMetrics.scaledDensity
             return (pxValue / fontScale + 0.5f).toInt()
         }
 
@@ -118,7 +119,7 @@ class SizeUtil private constructor() {
          * @return sp值
          */
         fun pxToSp(pxValue: Float): Float {
-            val fontScale = ContextUtil.context.resources.displayMetrics.scaledDensity
+            val fontScale = Resources.getSystem().displayMetrics.scaledDensity
             return pxValue / fontScale + 0.5f
         }
 
@@ -184,8 +185,7 @@ class SizeUtil private constructor() {
             }
             val widthSpec = ViewGroup.getChildMeasureSpec(0, 0, lp.width)
             val lpHeight = lp.height
-            val heightSpec: Int
-            heightSpec = when {
+            val heightSpec: Int = when {
                 lpHeight > 0 -> {
                     View.MeasureSpec.makeMeasureSpec(lpHeight, View.MeasureSpec.EXACTLY)
                 }

@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.PopupWindow
 import android.widget.TextView
+import com.fphoenixcorneae.ext.dp2Px
 import java.util.*
 
 /**
@@ -62,10 +63,8 @@ class ViewUtil private constructor() {
             if (view == null) {
                 return null
             }
-            val params = view.layoutParams
-            val marginParams: MarginLayoutParams
             // 获取view的margin设置参数
-            marginParams = when (params) {
+            val marginParams: MarginLayoutParams = when (val params = view.layoutParams) {
                 is MarginLayoutParams -> {
                     params
                 }
@@ -81,10 +80,10 @@ class ViewUtil private constructor() {
             val bottomPx: Int
             when {
                 isDp -> {
-                    leftPx = SizeUtil.dp2px(left)
-                    topPx = SizeUtil.dp2px(top)
-                    rightPx = SizeUtil.dp2px(right)
-                    bottomPx = SizeUtil.dp2px(bottom)
+                    leftPx = left.dp2Px()
+                    topPx = top.dp2Px()
+                    rightPx = right.dp2Px()
+                    bottomPx = bottom.dp2Px()
                 }
                 else -> {
                     leftPx = left.toInt()
@@ -127,10 +126,10 @@ class ViewUtil private constructor() {
             val bottomPx: Int
             when {
                 isDp -> {
-                    leftPx = SizeUtil.dp2px(left)
-                    topPx = SizeUtil.dp2px(top)
-                    rightPx = SizeUtil.dp2px(right)
-                    bottomPx = SizeUtil.dp2px(bottom)
+                    leftPx = left.dp2Px()
+                    topPx = top.dp2Px()
+                    rightPx = right.dp2Px()
+                    bottomPx = bottom.dp2Px()
                 }
                 else -> {
                     leftPx = left.toInt()
@@ -389,8 +388,7 @@ class ViewUtil private constructor() {
             }
             val childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0, p.width)
             val lpHeight = p.height
-            val childHeightSpec: Int
-            childHeightSpec = if (lpHeight > 0) {
+            val childHeightSpec: Int = if (lpHeight > 0) {
                 MeasureSpec.makeMeasureSpec(lpHeight, MeasureSpec.EXACTLY)
             } else {
                 MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)

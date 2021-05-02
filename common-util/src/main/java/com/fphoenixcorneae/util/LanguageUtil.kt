@@ -6,9 +6,9 @@ import android.content.Intent
 import android.content.res.Resources
 import android.os.Build
 import android.text.TextUtils
+import com.fphoenixcorneae.ext.appContext
 import com.fphoenixcorneae.ext.loggerE
 import com.fphoenixcorneae.util.AppUtil.Companion.packageName
-import com.fphoenixcorneae.util.ContextUtil.Companion.context
 import com.fphoenixcorneae.util.SharedPreferencesUtil.Companion.getString
 import com.fphoenixcorneae.util.SharedPreferencesUtil.Companion.put
 import java.util.*
@@ -20,6 +20,7 @@ class LanguageUtil private constructor() {
     companion object {
         private const val KEY_LOCALE = "KEY_LOCALE"
         private const val VALUE_FOLLOW_SYSTEM = "VALUE_FOLLOW_SYSTEM"
+
         /**
          * Apply the system language in the [Application.onCreate].
          */
@@ -151,11 +152,11 @@ class LanguageUtil private constructor() {
                 val realActivityClassName =
                     if (TextUtils.isEmpty(activityClassName)) launcherActivity else activityClassName
                 intent.component = ComponentName(
-                    context,
+                    appContext,
                     realActivityClassName
                 )
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                context.startActivity(intent)
+                appContext.startActivity(intent)
             }
         }
 
@@ -181,7 +182,7 @@ class LanguageUtil private constructor() {
          * @return the locale
          */
         val currentLocale: Locale
-            get() = context.resources.configuration.locale
+            get() = Resources.getSystem().configuration.locale
 
         fun applyLanguage() {
             val spLocale = getString(KEY_LOCALE)
@@ -205,7 +206,7 @@ class LanguageUtil private constructor() {
         }
 
         private fun updateLanguage(locale: Locale) {
-            val context = context
+            val context = appContext
             val resources = context.resources
             val config = resources.configuration
             val contextLocale = config.locale
@@ -251,7 +252,7 @@ class LanguageUtil private constructor() {
                 val intent = Intent(Intent.ACTION_MAIN, null)
                 intent.addCategory(Intent.CATEGORY_LAUNCHER)
                 intent.setPackage(packageName)
-                val pm = context.packageManager
+                val pm = appContext.packageManager
                 val info = pm.queryIntentActivities(intent, 0)
                 val next = info.iterator().next()
                 return if (next != null) {

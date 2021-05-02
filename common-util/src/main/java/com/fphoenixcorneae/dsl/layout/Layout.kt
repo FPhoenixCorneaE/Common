@@ -122,43 +122,43 @@ inline fun Context.RecyclerView(init: RecyclerView.() -> Unit) =
     RecyclerView(this).apply(init)
 
 inline fun Fragment.ConstraintLayout(init: ConstraintLayout.() -> Unit) =
-    context?.let { ConstraintLayout(it).apply(init) }
+    requireContext().let { ConstraintLayout(it).apply(init) }
 
 inline fun Fragment.LinearLayout(init: LinearLayout.() -> Unit) =
-    context?.let { LinearLayout(it).apply(init) }
+    requireContext().let { LinearLayout(it).apply(init) }
 
 inline fun Fragment.FrameLayout(init: FrameLayout.() -> Unit) =
-    context?.let { FrameLayout(it).apply(init) }
+    requireContext().let { FrameLayout(it).apply(init) }
 
 inline fun Fragment.NestedScrollView(init: NestedScrollView.() -> Unit) =
-    context?.let { NestedScrollView(it).apply(init) }
+    requireContext().let { NestedScrollView(it).apply(init) }
 
 inline fun Fragment.TextView(init: TextView.() -> Unit) =
-    context?.let { TextView(it).apply(init) }
+    requireContext().let { TextView(it).apply(init) }
 
 inline fun Fragment.Button(init: Button.() -> Unit) =
-    context?.let { Button(it).apply(init) }
+    requireContext().let { Button(it).apply(init) }
 
 inline fun Fragment.ImageView(init: ImageView.() -> Unit) =
-    context?.let { ImageView(it).apply(init) }
+    requireContext().let { ImageView(it).apply(init) }
 
 inline fun Fragment.View(init: View.() -> Unit) =
-    context?.let { View(it).apply(init) }
+    requireContext().let { View(it).apply(init) }
 
 inline fun Fragment.ViewFlipper(init: ViewFlipper.() -> Unit) =
-    context?.let { ViewFlipper(it).apply(init) }
+    requireContext().let { ViewFlipper(it).apply(init) }
 
 inline fun Fragment.EditText(init: EditText.() -> Unit) =
-    context?.let { EditText(it).apply(init) }
+    requireContext().let { EditText(it).apply(init) }
 
 inline fun Fragment.HorizontalScrollView(init: HorizontalScrollView.() -> Unit) =
-    context?.let { HorizontalScrollView(it).apply(init) }
+    requireContext().let { HorizontalScrollView(it).apply(init) }
 
 inline fun Fragment.ViewPager2(init: ViewPager2.() -> Unit) =
-    context?.let { ViewPager2(it).apply(init) }
+    requireContext().let { ViewPager2(it).apply(init) }
 
 inline fun Fragment.RecyclerView(init: RecyclerView.() -> Unit) =
-    context?.let { RecyclerView(it).apply(init) }
+    requireContext().let { RecyclerView(it).apply(init) }
 //</editor-fold>
 
 //<editor-fold desc="View extend field">
@@ -743,7 +743,9 @@ val bold_italic = Typeface.BOLD_ITALIC
 
 val gravity_center = Gravity.CENTER
 val gravity_left = Gravity.LEFT
+val gravity_start = Gravity.START
 val gravity_right = Gravity.RIGHT
+val gravity_end = Gravity.END
 val gravity_bottom = Gravity.BOTTOM
 val gravity_top = Gravity.TOP
 val gravity_center_horizontal = Gravity.CENTER_HORIZONTAL
@@ -787,7 +789,7 @@ val Int.dp: Int
     }
 
 fun ViewGroup.MarginLayoutParams.toConstraintLayoutParam() =
-    ConstraintLayout.LayoutParams(width, height).also { it ->
+    ConstraintLayout.LayoutParams(width, height).also {
         it.topMargin = this.topMargin
         it.bottomMargin = this.bottomMargin
         it.marginStart = this.marginStart

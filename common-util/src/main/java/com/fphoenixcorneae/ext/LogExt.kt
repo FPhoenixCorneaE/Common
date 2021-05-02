@@ -29,3 +29,31 @@ fun loggerJson(json: String?, tag: String? = null) {
 fun loggerXml(xml: String?, tag: String? = null) {
     Logger.t(tag).xml(xml)
 }
+
+fun Any?.logd() {
+    loggerD(this)
+}
+
+fun String.logd(tag: String? = null) {
+    loggerD(this, tag)
+}
+
+fun String.loge(tag: String? = null) {
+    loggerE(this, tag)
+}
+
+fun String.logi(tag: String? = null) {
+    loggerI(this, tag)
+}
+
+fun String.logw(tag: String? = null) {
+    loggerW(this, tag)
+}
+
+fun String.logJson(tag: String? = null) {
+    loggerJson(this, tag)
+}
+
+fun String.logXml(tag: String? = null) {
+    loggerXml(this, tag)
+}

@@ -4,18 +4,46 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
 
+@Deprecated(
+    "已过时的方法，现在可以直接使用Ktx函数 viewmodels()获取",
+    ReplaceWith(
+        "by viewModels<T>()",
+        "androidx.activity.viewModels"
+    )
+)
 inline fun <reified T : ViewModel> FragmentActivity.viewModel() =
     lazy { ViewModelProviders.of(this).get(T::class.java) }
 
+@Deprecated(
+    "已过时的方法，现在可以直接使用Ktx函数 viewmodels()获取",
+    ReplaceWith(
+        "by viewModels<T>()",
+        "androidx.activity.viewModels"
+    )
+)
 inline fun <reified T : ViewModel> FragmentActivity.viewModel(crossinline block: T.() -> Unit) =
     lazy { ViewModelProviders.of(this).get(T::class.java).apply(block) }
 
+@Deprecated(
+    "已过时的方法，现在可以直接使用Ktx函数 viewmodels()获取",
+    ReplaceWith(
+        "by viewModels<T>()",
+        "androidx.fragment.app.viewModels"
+    )
+)
 inline fun <reified T : ViewModel> Fragment.viewModel() =
     lazy { ViewModelProviders.of(this).get(T::class.java) }
 
 /**
  * 相同类型使用多个的情况下
  */
+@Deprecated(
+    "已过时的方法，现在可以直接使用Ktx函数 viewmodels()获取",
+    ReplaceWith(
+        "by viewModels<T>()",
+        "androidx.fragment.app.viewModels"
+    )
+)
 @JvmOverloads
 inline fun <reified T : ViewModel> Fragment.viewModel(
     key: Int? = null,

@@ -4,6 +4,7 @@ import android.content.pm.PackageManager
 import android.graphics.SurfaceTexture
 import android.hardware.Camera
 import android.util.Log
+import com.fphoenixcorneae.ext.appContext
 import java.io.IOException
 
 /**
@@ -19,8 +20,7 @@ class FlashlightUtil private constructor() {
          * @return `true`: yes<br></br>`false`: no
          */
         val isFlashlightEnable: Boolean
-            get() = ContextUtil.context
-                .packageManager
+            get() = appContext.packageManager
                 .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)
 
         /**

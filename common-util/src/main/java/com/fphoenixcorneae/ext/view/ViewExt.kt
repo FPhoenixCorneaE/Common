@@ -3,6 +3,8 @@ package com.fphoenixcorneae.ext.view
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
+import android.app.Activity
+import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
@@ -220,3 +222,30 @@ fun ImageView.setTintColor(
 ) {
     ImageUtil.setTintColor(this, drawableResId, tintColor)
 }
+
+/**
+ * 获取 view 的上下文
+ * @return Activity
+ */
+fun View.getActivity(): Activity {
+    var context = context
+    while (context is ContextWrapper) {
+        if (context is Activity) {
+            return context
+        }
+        context = context.baseContext
+    }
+    throw IllegalStateException("View $this is not attached to an Activity")
+}
+
+/**
+ * 视图请求焦点
+ */
+fun View.setFocus(b: Boolean) {
+    if (b) {
+        requestFocus()
+    }
+    isFocusable = b
+    isFocusableInTouchMode = b
+}
+

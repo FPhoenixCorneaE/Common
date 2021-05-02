@@ -7,9 +7,7 @@ import android.location.*
 import android.os.Bundle
 import android.provider.Settings
 import androidx.annotation.RequiresPermission
-import com.fphoenixcorneae.ext.isNull
-import com.fphoenixcorneae.ext.loggerD
-import com.fphoenixcorneae.ext.toast
+import com.fphoenixcorneae.ext.*
 import java.io.IOException
 import java.util.*
 
@@ -106,9 +104,8 @@ class LocationUtil private constructor() {
          */
         val isGpsEnabled: Boolean
             get() {
-                val lm =
-                    ContextUtil.context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                return lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                val lm = appContext.locationManager
+                return lm?.isProviderEnabled(LocationManager.GPS_PROVIDER)?:false
             }
 
         /**
@@ -118,11 +115,8 @@ class LocationUtil private constructor() {
          */
         val isLocationEnabled: Boolean
             get() {
-                val lm =
-                    ContextUtil.context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                return lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || lm.isProviderEnabled(
-                    LocationManager.GPS_PROVIDER
-                )
+                val lm = appContext.locationManager
+                return lm?.isProviderEnabled(LocationManager.NETWORK_PROVIDER)==true || isGpsEnabled
             }
 
         /**
@@ -131,7 +125,7 @@ class LocationUtil private constructor() {
         fun openGpsSettings() {
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            ContextUtil.context.startActivity(intent)
+            appContext.startActivity(intent)
         }
 
         /**
@@ -162,17 +156,17 @@ class LocationUtil private constructor() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ]
         )
+        
         fun register(
             minTime: Long,
             minDistance: Long,
             listener: OnLocationChangeListener?
         ): Boolean {
             if (listener == null) return false
-            mLocationManager =
-                ContextUtil.context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            mLocationManager = appContext.locationManager
             mListener = listener
             if (!isLocationEnabled) {
-                toast("无法定位，请打开定位服务")
+                toast("无法定位，请打开定位服务！")
                 return false
             }
             val provider = mLocationManager!!.getBestProvider(
@@ -182,8 +176,7 @@ class LocationUtil private constructor() {
             if (provider.isNull()) {
                 return false
             }
-            val location =
-                mLocationManager!!.getLastKnownLocation(provider!!)
+            val location = mLocationManager?.getLastKnownLocation(provider!!)
             if (location != null) {
                 listener.getLastKnownLocation(location)
             }
@@ -191,7 +184,7 @@ class LocationUtil private constructor() {
                 myLocationListener = MyLocationListener()
             }
             mLocationManager!!.requestLocationUpdates(
-                provider,
+                provider!!,
                 minTime,
                 minDistance.toFloat(),
                 myLocationListener!!
@@ -210,12 +203,7 @@ class LocationUtil private constructor() {
                 }
                 mLocationManager = null
             }
-        }// 设置定位精确度 Criteria.ACCURACY_COARSE比较粗略，Criteria.ACCURACY_FINE则比较精细
-        // 设置是否要求速度
-        // 设置是否允许运营商收费
-        // 设置是否需要方位信息
-        // 设置是否需要海拔信息
-        // 设置对电源的需求
+        }
 
         /**
          * 设置定位参数
@@ -223,7 +211,7 @@ class LocationUtil private constructor() {
          * @return [Criteria]
          */
         private val criteria: Criteria
-            private get() {
+            get() {
                 val criteria = Criteria()
                 // 设置定位精确度 Criteria.ACCURACY_COARSE比较粗略，Criteria.ACCURACY_FINE则比较精细
                 criteria.accuracy = Criteria.ACCURACY_FINE
@@ -251,7 +239,7 @@ class LocationUtil private constructor() {
             latitude: Double,
             longitude: Double
         ): Address? {
-            val geocoder = Geocoder(ContextUtil.context, Locale.getDefault())
+            val geocoder = Geocoder(appContext, Locale.getDefault())
             try {
                 val addresses =
                     geocoder.getFromLocation(latitude, longitude, 1)
@@ -362,7 +350,9 @@ class LocationUtil private constructor() {
         fun isSameProvider(provider0: String?, provider1: String?): Boolean {
             return if (provider0 == null) {
                 provider1 == null
-            } else provider0 == provider1
+            } else {
+                provider0 == provider1
+            }
         }
     }
 

@@ -197,12 +197,16 @@ class ConvertUtil private constructor() {
         }
 
         private fun hex2Int(hexChar: Char): Int {
-            return if (hexChar in '0'..'9') {
-                hexChar - '0'
-            } else if (hexChar in 'A'..'F') {
-                hexChar - 'A' + 10
-            } else {
-                throw IllegalArgumentException()
+            return when (hexChar) {
+                in '0'..'9' -> {
+                    hexChar - '0'
+                }
+                in 'A'..'F' -> {
+                    hexChar - 'A' + 10
+                }
+                else -> {
+                    throw IllegalArgumentException()
+                }
             }
         }
 
@@ -571,7 +575,7 @@ class ConvertUtil private constructor() {
          * @return bitmap
          */
         fun bytes2Bitmap(bytes: ByteArray?): Bitmap? {
-            return if (bytes == null || bytes.size == 0) null else BitmapFactory.decodeByteArray(
+            return if (bytes == null || bytes.isEmpty()) null else BitmapFactory.decodeByteArray(
                 bytes,
                 0,
                 bytes.size
@@ -586,13 +590,11 @@ class ConvertUtil private constructor() {
          */
         fun drawable2Bitmap(drawable: Drawable): Bitmap {
             if (drawable is BitmapDrawable) {
-                val bitmapDrawable = drawable
-                if (bitmapDrawable.bitmap != null) {
-                    return bitmapDrawable.bitmap
+                if (drawable.bitmap != null) {
+                    return drawable.bitmap
                 }
             }
-            val bitmap: Bitmap
-            bitmap = if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
+            val bitmap: Bitmap = if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
                 Bitmap.createBitmap(
                     1, 1,
                     if (drawable.opacity != PixelFormat.OPAQUE) Bitmap.Config.ARGB_8888 else Bitmap.Config.RGB_565
@@ -670,8 +672,7 @@ class ConvertUtil private constructor() {
             view.isDrawingCacheEnabled = true
             view.setWillNotCacheDrawing(false)
             val drawingCache = view.drawingCache
-            val bitmap: Bitmap
-            bitmap = if (null == drawingCache) {
+            val bitmap: Bitmap = if (null == drawingCache) {
                 view.layout(0, 0, view.width, view.height)
                 view.buildDrawingCache()
                 Bitmap.createBitmap(view.drawingCache)

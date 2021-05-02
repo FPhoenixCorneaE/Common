@@ -2,8 +2,6 @@ package com.fphoenixcorneae.util
 
 import android.Manifest
 import android.app.Activity
-import android.app.KeyguardManager
-import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Bitmap
@@ -13,9 +11,11 @@ import android.util.DisplayMetrics
 import android.view.Surface
 import android.view.View
 import android.view.Window
-import android.view.WindowManager
 import androidx.annotation.RequiresPermission
+import com.fphoenixcorneae.ext.appContext
+import com.fphoenixcorneae.ext.keyguardManager
 import com.fphoenixcorneae.ext.loggerE
+import com.fphoenixcorneae.ext.windowManager
 
 /**
  * 屏幕相关工具类
@@ -38,10 +38,9 @@ class ScreenUtil private constructor() {
         // 给白纸设置宽高
         val screenWidth: Int
             get() {
-                val windowManager =
-                    ContextUtil.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+                val windowManager = appContext.windowManager
                 val dm = DisplayMetrics()
-                windowManager.defaultDisplay?.getMetrics(dm)
+                windowManager?.defaultDisplay?.getMetrics(dm)
                 return dm.widthPixels
             }
 
@@ -54,10 +53,9 @@ class ScreenUtil private constructor() {
         // 给白纸设置宽高
         val screenHeight: Int
             get() {
-                val windowManager =
-                    ContextUtil.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+                val windowManager = appContext.windowManager
                 val dm = DisplayMetrics()
-                windowManager.defaultDisplay?.getMetrics(dm)
+                windowManager?.defaultDisplay?.getMetrics(dm)
                 return dm.heightPixels
             }
 
@@ -67,7 +65,7 @@ class ScreenUtil private constructor() {
          * @return `true`: 是<br></br>`false`: 否
          */
         val isLandscape: Boolean
-            get() = ContextUtil.context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+            get() = appContext.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
         /**
          * 设置屏幕为横屏
@@ -93,7 +91,7 @@ class ScreenUtil private constructor() {
          * @return `true`: 是<br></br>`false`: 否
          */
         val isPortrait: Boolean
-            get() = ContextUtil.context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+            get() = appContext.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
         /**
          * 设置屏幕为竖屏
@@ -145,9 +143,8 @@ class ScreenUtil private constructor() {
          */
         val isScreenLock: Boolean
             get() {
-                val km =
-                    ContextUtil.context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-                return km.inKeyguardRestrictedInputMode()
+                val km = appContext.keyguardManager
+                return km?.inKeyguardRestrictedInputMode() == true
             }
 
         /**
@@ -167,7 +164,7 @@ class ScreenUtil private constructor() {
             get() {
                 return try {
                     Settings.System.getInt(
-                        ContextUtil.context.contentResolver,
+                        appContext.contentResolver,
                         Settings.System.SCREEN_OFF_TIMEOUT
                     )
                 } catch (e: Settings.SettingNotFoundException) {
@@ -178,7 +175,7 @@ class ScreenUtil private constructor() {
             }
             set(duration) {
                 Settings.System.putInt(
-                    ContextUtil.context.contentResolver,
+                    appContext.contentResolver,
                     Settings.System.SCREEN_OFF_TIMEOUT,
                     duration
                 )
@@ -188,13 +185,13 @@ class ScreenUtil private constructor() {
          * Get screen density, the logical density of the display
          */
         val screenDensity: Float
-            get() = ContextUtil.context.resources.displayMetrics.density
+            get() = appContext.resources.displayMetrics.density
 
         /**
          * Get screen density dpi, the screen density expressed as dots-per-inch
          */
         val screenDensityDpi: Int
-            get() = ContextUtil.context.resources.displayMetrics.densityDpi
+            get() = appContext.resources.displayMetrics.densityDpi
 
         /**
          * Get titlebar height, this method cannot be used in onCreate(),onStart(),onResume(), unless it is called in the
@@ -228,7 +225,9 @@ class ScreenUtil private constructor() {
                     localClass = Class.forName("com.android.internal.R\$dimen")
                     val localObject = localClass.newInstance()
                     val id =
-                        Integer.parseInt(localClass.getField("status_bar_height").get(localObject)!!.toString())
+                        Integer.parseInt(
+                            localClass.getField("status_bar_height").get(localObject)!!.toString()
+                        )
                     statusBarHeight = activity.resources.getDimensionPixelSize(id)
                 } catch (e: Exception) {
                     loggerE(e.toString())

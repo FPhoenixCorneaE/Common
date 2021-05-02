@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.text.TextUtils
+import com.fphoenixcorneae.ext.appContext
 import com.fphoenixcorneae.ext.loggerE
 import java.io.*
 import kotlin.reflect.KProperty
@@ -35,7 +36,7 @@ class SharedPreferencesUtil<T>(private val keyName: String, private val default:
          * Get SharedPreferences
          */
         private val sharedPreferences: SharedPreferences by lazy {
-            ContextUtil.context.getSharedPreferences(AppUtil.appName, Context.MODE_PRIVATE)
+            appContext.getSharedPreferences(AppUtil.appName, Context.MODE_PRIVATE)
         }
 
         /**
@@ -45,7 +46,7 @@ class SharedPreferencesUtil<T>(private val keyName: String, private val default:
             var sharedPreferences = sharedPreferences
             if (!TextUtils.isEmpty(name)) {
                 sharedPreferences =
-                    ContextUtil.context.getSharedPreferences(name, Context.MODE_PRIVATE)
+                    appContext.getSharedPreferences(name, Context.MODE_PRIVATE)
             }
             return sharedPreferences
         }

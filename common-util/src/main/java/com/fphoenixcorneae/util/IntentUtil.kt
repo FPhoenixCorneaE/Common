@@ -29,6 +29,7 @@ import androidx.core.content.FileProvider
 import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.fphoenixcorneae.ext.appContext
 import com.fphoenixcorneae.ext.isNull
 import java.io.File
 import java.io.Serializable
@@ -163,11 +164,11 @@ object IntentUtil {
     fun getInstallAppIntent(
         file: File,
         isNewTask: Boolean = false
-    ): Intent? {
+    ): Intent {
         val intent = Intent(Intent.ACTION_VIEW)
         val data: Uri
         val type = "application/vnd.android.package-archive"
-        val context = ContextUtil.context
+        val context = appContext
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             data = Uri.fromFile(file)
         } else {
@@ -364,7 +365,7 @@ object IntentUtil {
     fun openSettings(action: String? = Settings.ACTION_SETTINGS) {
         val intent = Intent(action)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        ContextUtil.context.startActivity(intent)
+        appContext.startActivity(intent)
     }
 
     /**
@@ -375,7 +376,7 @@ object IntentUtil {
         val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
         intent.data = Uri.parse("package:${AppUtil.packageName}")
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        ContextUtil.context.startActivity(intent)
+        appContext.startActivity(intent)
     }
 
     /**
@@ -388,7 +389,7 @@ object IntentUtil {
             Uri.parse("package:${AppUtil.packageName}")
         )
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        ContextUtil.context.startActivity(intent)
+        appContext.startActivity(intent)
     }
 
     /**
@@ -413,7 +414,7 @@ object IntentUtil {
             intent.putExtra(appPkgName, AppUtil.packageName)
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        ContextUtil.context.startActivity(intent)
+        appContext.startActivity(intent)
     }
 
     /**

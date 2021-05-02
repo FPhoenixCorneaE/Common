@@ -12,6 +12,7 @@ import android.provider.MediaStore
 import android.text.TextUtils
 import androidx.core.content.FileProvider
 import androidx.loader.content.CursorLoader
+import com.fphoenixcorneae.ext.appContext
 import java.io.*
 
 /**
@@ -30,7 +31,7 @@ object UriUtil {
     fun file2Uri(file: File): Uri {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             val authority = "${AppUtil.packageName}.FileProvider"
-            FileProvider.getUriForFile(ContextUtil.context, authority, file)
+            FileProvider.getUriForFile(appContext, authority, file)
         } else {
             Uri.fromFile(file)
         }
