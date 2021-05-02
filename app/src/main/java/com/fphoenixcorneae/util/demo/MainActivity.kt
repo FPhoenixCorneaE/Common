@@ -7,6 +7,8 @@ import androidx.lifecycle.lifecycleScope
 import com.fphoenixcorneae.ext.action
 import com.fphoenixcorneae.ext.logd
 import com.fphoenixcorneae.ext.toastAliPayStyle
+import com.fphoenixcorneae.ext.toastQQStyle
+import com.fphoenixcorneae.ext.view.queryTextListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -27,6 +29,15 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             "notNull".logd("action====")
         }) {
             "null".logd("action====")
+        }
+
+        svSearch.queryTextListener {
+            onQueryTextChange {
+                toastQQStyle(it)
+            }
+            onQueryTextSubmit {
+                toastQQStyle(it)
+            }
         }
     }
 }
