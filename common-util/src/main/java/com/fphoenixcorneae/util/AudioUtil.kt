@@ -41,7 +41,7 @@ object AudioUtil {
     /**
      * 线程池
      */
-    private val mThreadPool by lazy { Executors.newFixedThreadPool(100) }
+    val mThreadPool by lazy { Executors.newFixedThreadPool(100) }
 
     @JvmStatic
     fun init() {
