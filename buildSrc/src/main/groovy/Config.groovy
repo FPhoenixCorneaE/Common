@@ -1,7 +1,7 @@
 class Config {
-    static gradle_version = '4.1.3'
-    static kotlin_version = '1.4.32'
-    static navigation_version = '2.3.0'
+    static gradle_version = '4.2.0'
+    static kotlin_version = '1.5.0'
+    static navigation_version = '2.3.5'
     static android_maven_gradle_plugin = '2.1'
 
     static classpath = [
@@ -13,7 +13,7 @@ class Config {
     /** Android */
     static android = [
             compileSdkVersion: 30,
-            buildToolsVersion: "30.0.1",
+            buildToolsVersion: "30.0.3",
             minSdkVersion    : 21,
             targetSdkVersion : 30,
             versionCode      : 107,
@@ -24,8 +24,7 @@ class Config {
     static support = [
             appcompat          : "androidx.appcompat:appcompat:1.2.0",
             constraintLayout   : "androidx.constraintlayout:constraintlayout:2.0.2",
-            lifecycleViewmodel : "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha02",
-            lifecycleExtensions: "androidx.lifecycle:lifecycle-extensions:2.2.0-alpha02",
+            lifecycleViewmodel : "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1",
             viewpager2         : "androidx.viewpager2:viewpager2:1.0.0",
             palette            : "androidx.palette:palette-ktx:1.0.0",
     ]
@@ -40,9 +39,9 @@ class Config {
 
     /** Kotlin */
     static kotlin = [
-            core            : "androidx.core:core-ktx:1.3.1",
-            activity        : "androidx.activity:activity-ktx:1.2.0-alpha02",
-            fragment        : "androidx.fragment:fragment-ktx:1.3.0-alpha04",
+            core            : "androidx.core:core-ktx:1.3.2",
+            activity        : "androidx.activity:activity-ktx:1.2.2",
+            fragment        : "androidx.fragment:fragment-ktx:1.3.3",
             kotlinStdlibJdk7: "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
             coroutines      : 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.2',
     ]
