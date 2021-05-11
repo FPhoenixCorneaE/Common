@@ -700,7 +700,7 @@ object BankCheckUtil {
             i--
             j++
         }
-        return if (luhnSum % 10 == 0) '0' else (10 - luhnSum % 10 + '0'.toInt()).toChar()
+        return if (luhnSum % 10 == 0) '0' else (10 - luhnSum % 10 + '0'.code).toChar()
     }
 
     /**

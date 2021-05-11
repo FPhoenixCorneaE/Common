@@ -133,7 +133,7 @@ class ConvertUtil private constructor() {
             val len = chars.size
             val bytes = ByteArray(len)
             for (i in 0 until len) {
-                bytes[i] = chars[i].toByte()
+                bytes[i] = chars[i].code.toByte()
             }
             return bytes
         }

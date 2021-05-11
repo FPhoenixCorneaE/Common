@@ -26,12 +26,16 @@ import java.io.*
  * 图像工具类
  */
 class ImageUtil private constructor() {
-    enum class ImageType(var value: String) {
-        TYPE_JPG("jpg"), TYPE_PNG("png"), TYPE_GIF("gif"), TYPE_TIFF("tiff"), TYPE_BMP("bmp"), TYPE_WEBP(
-            "webp"
-        ),
-        TYPE_ICO("ico"), TYPE_UNKNOWN("unknown");
 
+    enum class ImageType(var value: String) {
+        TYPE_JPG("jpg"),
+        TYPE_PNG("png"),
+        TYPE_GIF("gif"),
+        TYPE_TIFF("tiff"),
+        TYPE_BMP("bmp"),
+        TYPE_WEBP("webp"),
+        TYPE_ICO("ico"),
+        TYPE_UNKNOWN("unknown")
     }
 
     companion object {
@@ -61,11 +65,15 @@ class ImageUtil private constructor() {
          * @return bitmap
          */
         fun bytes2Bitmap(bytes: ByteArray?): Bitmap? {
-            return if (bytes == null || bytes.size == 0) null else BitmapFactory.decodeByteArray(
-                bytes,
-                0,
-                bytes.size
-            )
+            return if (bytes == null || bytes.isEmpty()) {
+                null
+            } else {
+                BitmapFactory.decodeByteArray(
+                    bytes,
+                    0,
+                    bytes.size
+                )
+            }
         }
 
         /**
@@ -106,10 +114,14 @@ class ImageUtil private constructor() {
          * @return drawable
          */
         fun bitmap2Drawable(bitmap: Bitmap?): Drawable? {
-            return if (bitmap == null) null else BitmapDrawable(
-                appContext.resources,
-                bitmap
-            )
+            return if (bitmap == null) {
+                null
+            } else {
+                BitmapDrawable(
+                    appContext.resources,
+                    bitmap
+                )
+            }
         }
 
         /**
@@ -120,11 +132,15 @@ class ImageUtil private constructor() {
          * @return bytes
          */
         fun drawable2Bytes(drawable: Drawable?, format: CompressFormat?): ByteArray? {
-            return if (drawable == null) null else bitmap2Bytes(
-                drawable2Bitmap(
-                    drawable
-                ), format
-            )
+            return if (drawable == null) {
+                null
+            } else {
+                bitmap2Bytes(
+                    drawable2Bitmap(
+                        drawable
+                    ), format
+                )
+            }
         }
 
         /**
@@ -134,11 +150,7 @@ class ImageUtil private constructor() {
          * @return drawable
          */
         fun bytes2Drawable(bytes: ByteArray?): Drawable? {
-            return bitmap2Drawable(
-                bytes2Bitmap(
-                    bytes
-                )
-            )
+            return bitmap2Drawable(bytes2Bitmap(bytes))
         }
 
         /**
@@ -156,8 +168,7 @@ class ImageUtil private constructor() {
             view.isDrawingCacheEnabled = true
             view.setWillNotCacheDrawing(false)
             val drawingCache = view.drawingCache
-            val bitmap: Bitmap
-            bitmap = if (null == drawingCache) {
+            val bitmap = if (null == drawingCache) {
                 view.measure(
                     View.MeasureSpec.makeMeasureSpec(
                         0,
@@ -189,7 +200,9 @@ class ImageUtil private constructor() {
         fun getBitmap(file: File?): Bitmap? {
             return if (file == null) {
                 null
-            } else BitmapFactory.decodeFile(file.absolutePath)
+            } else {
+                BitmapFactory.decodeFile(file.absolutePath)
+            }
         }
 
         /**
@@ -294,7 +307,7 @@ class ImageUtil private constructor() {
          * @return bitmap
          */
         fun getBitmap(data: ByteArray, offset: Int): Bitmap? {
-            return if (data.size == 0) {
+            return if (data.isEmpty()) {
                 null
             } else BitmapFactory.decodeByteArray(data, offset, data.size)
         }
@@ -314,7 +327,7 @@ class ImageUtil private constructor() {
             maxWidth: Int,
             maxHeight: Int
         ): Bitmap? {
-            if (data!!.size == 0) {
+            if (data!!.isEmpty()) {
                 return null
             }
             val options = BitmapFactory.Options()
@@ -405,19 +418,13 @@ class ImageUtil private constructor() {
             options.inJustDecodeBounds = false
             return BitmapFactory.decodeFileDescriptor(fd, null, options)
         }
+
         /**
          * Return the bitmap with the specified color.
          *
          * @param src     The source of bitmap.
          * @param color   The color.
          * @param recycle True to recycle the source of bitmap, false otherwise.
-         * @return the bitmap with the specified color
-         */
-        /**
-         * Return the bitmap with the specified color.
-         *
-         * @param src   The source of bitmap.
-         * @param color The color.
          * @return the bitmap with the specified color
          */
         @JvmOverloads
@@ -434,6 +441,7 @@ class ImageUtil private constructor() {
             canvas.drawColor(color, PorterDuff.Mode.DARKEN)
             return ret
         }
+
         /**
          * Return the scaled bitmap.
          *
@@ -441,14 +449,6 @@ class ImageUtil private constructor() {
          * @param newWidth  The new width.
          * @param newHeight The new height.
          * @param recycle   True to recycle the source of bitmap, false otherwise.
-         * @return the scaled bitmap
-         */
-        /**
-         * Return the scaled bitmap.
-         *
-         * @param src       The source of bitmap.
-         * @param newWidth  The new width.
-         * @param newHeight The new height.
          * @return the scaled bitmap
          */
         @JvmOverloads
@@ -468,6 +468,7 @@ class ImageUtil private constructor() {
             }
             return ret
         }
+
         /**
          * Return the scaled bitmap
          *
@@ -475,14 +476,6 @@ class ImageUtil private constructor() {
          * @param scaleWidth  The scale of width.
          * @param scaleHeight The scale of height.
          * @param recycle     True to recycle the source of bitmap, false otherwise.
-         * @return the scaled bitmap
-         */
-        /**
-         * Return the scaled bitmap
-         *
-         * @param src         The source of bitmap.
-         * @param scaleWidth  The scale of width.
-         * @param scaleHeight The scale of height.
          * @return the scaled bitmap
          */
         @JvmOverloads
@@ -511,6 +504,7 @@ class ImageUtil private constructor() {
             }
             return ret
         }
+
         /**
          * Return the clipped bitmap.
          *
@@ -520,16 +514,6 @@ class ImageUtil private constructor() {
          * @param width   The width.
          * @param height  The height.
          * @param recycle True to recycle the source of bitmap, false otherwise.
-         * @return the clipped bitmap
-         */
-        /**
-         * Return the clipped bitmap.
-         *
-         * @param src    The source of bitmap.
-         * @param x      The x coordinate of the first pixel.
-         * @param y      The y coordinate of the first pixel.
-         * @param width  The width.
-         * @param height The height.
          * @return the clipped bitmap
          */
         @JvmOverloads
@@ -569,6 +553,7 @@ class ImageUtil private constructor() {
         ): Bitmap? {
             return skew(src, kx, ky, 0f, 0f, recycle)
         }
+
         /**
          * Return the skewed bitmap.
          *
@@ -578,24 +563,6 @@ class ImageUtil private constructor() {
          * @param px      The x coordinate of the pivot point.
          * @param py      The y coordinate of the pivot point.
          * @param recycle True to recycle the source of bitmap, false otherwise.
-         * @return the skewed bitmap
-         */
-        /**
-         * Return the skewed bitmap.
-         *
-         * @param src The source of bitmap.
-         * @param kx  The skew factor of x.
-         * @param ky  The skew factor of y.
-         * @return the skewed bitmap
-         */
-        /**
-         * Return the skewed bitmap.
-         *
-         * @param src The source of bitmap.
-         * @param kx  The skew factor of x.
-         * @param ky  The skew factor of y.
-         * @param px  The x coordinate of the pivot point.
-         * @param py  The y coordinate of the pivot point.
          * @return the skewed bitmap
          */
         @JvmOverloads
@@ -626,6 +593,7 @@ class ImageUtil private constructor() {
             }
             return ret
         }
+
         /**
          * Return the rotated bitmap.
          *
@@ -634,15 +602,6 @@ class ImageUtil private constructor() {
          * @param px      The x coordinate of the pivot point.
          * @param py      The y coordinate of the pivot point.
          * @param recycle True to recycle the source of bitmap, false otherwise.
-         * @return the rotated bitmap
-         */
-        /**
-         * Return the rotated bitmap.
-         *
-         * @param src     The source of bitmap.
-         * @param degrees The number of degrees.
-         * @param px      The x coordinate of the pivot point.
-         * @param py      The y coordinate of the pivot point.
          * @return the rotated bitmap
          */
         @JvmOverloads
@@ -976,19 +935,13 @@ class ImageUtil private constructor() {
             }
             return ret
         }
+
         /**
          * Return the bitmap with reflection.
          *
          * @param src              The source of bitmap.
          * @param reflectionHeight The height of reflection.
          * @param recycle          True to recycle the source of bitmap, false otherwise.
-         * @return the bitmap with reflection
-         */
-        /**
-         * Return the bitmap with reflection.
-         *
-         * @param src              The source of bitmap.
-         * @param reflectionHeight The height of reflection.
          * @return the bitmap with reflection
          */
         @JvmOverloads
@@ -1802,30 +1755,30 @@ class ImageUtil private constructor() {
 
         private fun isGIF(b: ByteArray): Boolean {
             return b.size >= 6
-                    && b[0] == 'G'.toByte()
-                    && b[1] == 'I'.toByte()
-                    && b[2] == 'F'.toByte()
-                    && b[3] == '8'.toByte()
-                    && (b[4] == '7'.toByte() || b[4] == '9'.toByte())
-                    && b[5] == 'a'.toByte()
+                && b[0] == 'G'.code.toByte()
+                && b[1] == 'I'.code.toByte()
+                && b[2] == 'F'.code.toByte()
+                && b[3] == '8'.code.toByte()
+                && (b[4] == '7'.code.toByte() || b[4] == '9'.code.toByte())
+                && b[5] == 'a'.code.toByte()
         }
 
         private fun isPNG(b: ByteArray): Boolean {
             return b.size >= 8
-                    && b[0] == 137.toByte()
-                    && b[1] == 80.toByte()
-                    && b[2] == 78.toByte()
-                    && b[3] == 71.toByte()
-                    && b[4] == 13.toByte()
-                    && b[5] == 10.toByte()
-                    && b[6] == 26.toByte()
-                    && b[7] == 10.toByte()
+                && b[0] == 137.toByte()
+                && b[1] == 80.toByte()
+                && b[2] == 78.toByte()
+                && b[3] == 71.toByte()
+                && b[4] == 13.toByte()
+                && b[5] == 10.toByte()
+                && b[6] == 26.toByte()
+                && b[7] == 10.toByte()
         }
 
         private fun isBMP(b: ByteArray): Boolean {
             return b.size >= 2
-                    && b[0] == 0x42.toByte()
-                    && b[1] == 0x4d.toByte()
+                && b[0] == 0x42.toByte()
+                && b[1] == 0x4d.toByte()
         }
 
         private fun isEmptyBitmap(src: Bitmap?): Boolean {
@@ -1902,19 +1855,13 @@ class ImageUtil private constructor() {
         ): Bitmap? {
             return scale(src, scaleWidth, scaleHeight, recycle)
         }
+
         /**
          * Return the compressed data using quality.
          *
          * @param src     The source of bitmap.
          * @param quality The quality.
          * @param recycle True to recycle the source of bitmap, false otherwise.
-         * @return the compressed data using quality
-         */
-        /**
-         * Return the compressed data using quality.
-         *
-         * @param src     The source of bitmap.
-         * @param quality The quality.
          * @return the compressed data using quality
          */
         @JvmOverloads
@@ -1934,19 +1881,13 @@ class ImageUtil private constructor() {
             }
             return bytes
         }
+
         /**
          * Return the compressed data using quality.
          *
          * @param src         The source of bitmap.
          * @param maxByteSize The maximum size of byte.
          * @param recycle     True to recycle the source of bitmap, false otherwise.
-         * @return the compressed data using quality
-         */
-        /**
-         * Return the compressed data using quality.
-         *
-         * @param src         The source of bitmap.
-         * @param maxByteSize The maximum size of byte.
          * @return the compressed data using quality
          */
         @JvmOverloads
@@ -1997,19 +1938,13 @@ class ImageUtil private constructor() {
             }
             return bytes
         }
+
         /**
          * Return the compressed bitmap using sample size.
          *
          * @param src        The source of bitmap.
          * @param sampleSize The sample size.
          * @param recycle    True to recycle the source of bitmap, false otherwise.
-         * @return the compressed bitmap
-         */
-        /**
-         * Return the compressed bitmap using sample size.
-         *
-         * @param src        The source of bitmap.
-         * @param sampleSize The sample size.
          * @return the compressed bitmap
          */
         @JvmOverloads
@@ -2031,6 +1966,7 @@ class ImageUtil private constructor() {
             }
             return BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)
         }
+
         /**
          * Return the compressed bitmap using sample size.
          *
@@ -2038,14 +1974,6 @@ class ImageUtil private constructor() {
          * @param maxWidth  The maximum width.
          * @param maxHeight The maximum height.
          * @param recycle   True to recycle the source of bitmap, false otherwise.
-         * @return the compressed bitmap
-         */
-        /**
-         * Return the compressed bitmap using sample size.
-         *
-         * @param src       The source of bitmap.
-         * @param maxWidth  The maximum width.
-         * @param maxHeight The maximum height.
          * @return the compressed bitmap
          */
         @JvmOverloads
@@ -2128,8 +2056,8 @@ class ImageUtil private constructor() {
         }
 
         ///////////////////////////////////////////////////////////////////////////
-// other utils methods
-///////////////////////////////////////////////////////////////////////////
+        // other utils methods
+        ///////////////////////////////////////////////////////////////////////////
         private fun getFileByPath(filePath: String): File? {
             return if (isSpace(filePath)) null else File(
                 filePath

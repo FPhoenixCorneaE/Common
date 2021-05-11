@@ -38,7 +38,7 @@ object CharUtil {
      * @return true表示为ASCII字符，ASCII字符位于0~127之间
      */
     fun isAscii(ch: Char): Boolean {
-        return ch.toInt() < 128
+        return ch.code < 128
     }
 
     /**
@@ -57,7 +57,7 @@ object CharUtil {
      * @return true表示为ASCII可见字符，可见字符位于32~126之间
      */
     fun isAsciiPrintable(ch: Char): Boolean {
-        return ch.toInt() in 32..126
+        return ch.code in 32..126
     }
 
     /**
@@ -76,7 +76,7 @@ object CharUtil {
      * @return true表示为控制符，控制符位于0~31和127
      */
     fun isAsciiControl(ch: Char): Boolean {
-        return ch.toInt() < 32 || ch.toInt() == 127
+        return ch.code < 32 || ch.code == 127
     }
 
     /**
@@ -249,7 +249,7 @@ object CharUtil {
      * @see Character.isSpaceChar
      */
     fun isBlankChar(c: Char): Boolean {
-        return isBlankChar(c.toInt())
+        return isBlankChar(c.code)
     }
 
     /**
@@ -262,7 +262,7 @@ object CharUtil {
      * @see Character.isSpaceChar
      */
     fun isBlankChar(c: Int): Boolean {
-        return Character.isWhitespace(c) || Character.isSpaceChar(c) || c == '\ufeff'.toInt() || c == '\u202a'.toInt()
+        return Character.isWhitespace(c) || Character.isSpaceChar(c) || c == '\ufeff'.code || c == '\u202a'.code
     }
 
     /**
@@ -272,13 +272,13 @@ object CharUtil {
      * @return 是否为emoji
      */
     fun isEmoji(c: Char): Boolean {
-        return !(c.toInt() == 0x0
-                || c.toInt() == 0x9
-                || c.toInt() == 0xA
-                || c.toInt() == 0xD
-                || c.toInt() in 0x20..0xD7FF
-                || c.toInt() in 0xE000..0xFFFD
-                || c.toInt() in 0x10000..0x10FFFF)
+        return !(c.code == 0x0
+            || c.code == 0x9
+            || c.code == 0xA
+            || c.code == 0xD
+            || c.code in 0x20..0xD7FF
+            || c.code in 0xE000..0xFFFD
+            || c.code in 0x10000..0x10FFFF)
     }
 
     /**

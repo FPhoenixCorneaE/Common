@@ -1182,7 +1182,7 @@ class FileUtil private constructor() {
                 var readChars: Int = 0
                 while ({ readChars = `is`.read(buffer, 0, 1024); readChars }() != -1) {
                     for (i in 0 until readChars) {
-                        if (buffer[i] == '\n'.toByte()) {
+                        if (buffer[i] == '\n'.code.toByte()) {
                             ++count
                         }
                     }
