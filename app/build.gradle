@@ -3,15 +3,15 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion Config.android.compileSdkVersion
+    buildToolsVersion Config.android.buildToolsVersion
 
     defaultConfig {
         applicationId "com.fphoenixcorneae.util.demo"
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion Config.android.minSdkVersion
+        targetSdkVersion Config.android.targetSdkVersion
+        versionCode Config.android.versionCode
+        versionName Config.android.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -49,7 +49,7 @@ android {
             eachDependency { DependencyResolveDetails details ->
                 details.requested.with {
                     if (group == "org.jetbrains.kotlin" && name == "kotlin-stdlib") {
-                        details.useTarget(group: group, name: name, version: "1.4.32")
+                        details.useTarget(group: group, name: name, version: "${Config.kotlin_version}")
                     }
                 }
             }
