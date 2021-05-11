@@ -14,7 +14,7 @@ fun Editable.limit(limit: Int = 1) {
 
 /**
  * 保留小数点后面多少位数
- * @param limit 默认是保存小数点后2位数
+ * @param limit 默认是保存小数点后 2 位数
  */
 fun Editable.pointLimit(limit: Int = 2): Boolean {
     if (this.toString().contains(".")) {

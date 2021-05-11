@@ -17,7 +17,9 @@ fun Context.getAppInfoIntent(packageName: String = this.packageName): Intent =
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
     }
 
-/** 跳转到应用信息页面 */
+/**
+ * 跳转到应用信息页面
+ */
 fun Context.goToAppInfoPage(packageName: String = this.packageName) {
     startActivity(getAppInfoIntent(packageName))
 }
@@ -65,24 +67,36 @@ fun Context.getInstallIntent(apkFile: File): Intent? {
     return intent
 }
 
-/** 跳转到无障碍服务设置页面 */
-fun Context.goToAccessibilitySetting() = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).run { startActivity(this) }
-
-
 /**
+ * 安装 Apk
  * need android.permission.REQUEST_INSTALL_PACKAGES after N
  */
 fun Context.installApk(apkFile: File) {
     val intent = getInstallIntent(apkFile)
-    intent?.run { startActivity(this) }
+    intent?.run {
+        startActivity(this)
+    }
 }
 
-/** 浏览器打开指定网页 */
+/**
+ * 跳转到无障碍服务设置页面
+ */
+fun Context.goToAccessibilitySetting() = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).run {
+    startActivity(this)
+}
+
+/**
+ * 浏览器打开指定网页
+ */
 fun Context.openBrowser(url: String) {
-    Intent(Intent.ACTION_VIEW, Uri.parse(url)).run { startActivity(this) }
+    Intent(Intent.ACTION_VIEW, Uri.parse(url)).run {
+        startActivity(this)
+    }
 }
 
-/** 在应用商店中打开应用 */
+/**
+ * 在应用商店中打开应用
+ */
 fun Context.openInAppStore(packageName: String = this.packageName) {
     val intent = Intent(Intent.ACTION_VIEW)
     try {
@@ -95,11 +109,17 @@ fun Context.openInAppStore(packageName: String = this.packageName) {
     }
 }
 
-/** 启动 app */
+/**
+ * 根据包名启动 app
+ */
 fun Context.openApp(packageName: String) =
-    packageManager.getLaunchIntentForPackage(packageName)?.run { startActivity(this) }
+    packageManager.getLaunchIntentForPackage(packageName)?.run {
+        startActivity(this)
+    }
 
-/** 卸载 app */
+/**
+ * 根据包名卸载 app
+ */
 fun Context.uninstallApp(packageName: String) {
     Intent(Intent.ACTION_DELETE).run {
         data = Uri.parse("package:$packageName")

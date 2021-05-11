@@ -11,15 +11,12 @@ import android.os.Build
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.ImageView
 import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
 import androidx.annotation.Px
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.applyCanvas
 import androidx.core.view.ViewCompat
-import com.fphoenixcorneae.util.ImageUtil
 import kotlin.math.hypot
 
 fun View.visible() = run { visibility = View.VISIBLE }
@@ -71,8 +68,8 @@ fun View.createBitmap(config: Bitmap.Config = Bitmap.Config.ARGB_8888): Bitmap {
 var lastClickTime = 0L
 
 /**
- * 防止重复点击事件 默认1秒内不可重复点击
- * @param interval 时间间隔 默认：1秒
+ * 防止重复点击事件 默认 1 秒内不可重复点击
+ * @param interval 时间间隔 默认：1 秒
  * @param action   执行方法
  */
 fun View.clickNoRepeat(
@@ -91,11 +88,15 @@ fun View.clickNoRepeat(
 
 /**
  * 设置防止重复点击事件
- * @param views 需要设置点击事件的view集合
- * @param interval 时间间隔 默认：1秒
+ * @param views 需要设置点击事件的 view 集合
+ * @param interval 时间间隔 默认：1 秒
  * @param onClick 点击触发的方法
  */
-fun setOnClickNoRepeat(vararg views: View?, interval: Long = 1000, onClick: (View) -> Unit) {
+fun setOnClickNoRepeat(
+    vararg views: View?,
+    interval: Long = 1000,
+    onClick: (View) -> Unit
+) {
     views.forEach {
         it?.clickNoRepeat(interval) { view ->
             onClick.invoke(view)
@@ -188,39 +189,6 @@ fun View.animateRevealHide(
         }
     })
     anim.start()
-}
-
-fun View.dpToPx(dp: Float): Float {
-    val scale = resources.displayMetrics.density
-    return dp * scale + 0.5f
-}
-
-fun View.dp2px(dp: Float): Int {
-    val scale = resources.displayMetrics.density
-    return (dp * scale + 0.5f).toInt()
-}
-
-fun View.pxToDp(px: Float): Float {
-    val scale = resources.displayMetrics.density
-    return px / scale + 0.5f
-}
-
-fun View.px2dp(px: Float): Int {
-    val scale = resources.displayMetrics.density
-    return (px / scale + 0.5f).toInt()
-}
-
-fun ImageView.setTintColor(
-    tintColor: Int
-) {
-    ImageUtil.setTintColor(this, tintColor)
-}
-
-fun ImageView.setTintColor(
-    @DrawableRes drawableResId: Int,
-    tintColor: Int
-) {
-    ImageUtil.setTintColor(this, drawableResId, tintColor)
 }
 
 /**

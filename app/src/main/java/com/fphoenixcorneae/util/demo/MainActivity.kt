@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.fphoenixcorneae.dsl.layout.TextView
 import com.fphoenixcorneae.ext.action
 import com.fphoenixcorneae.ext.logd
 import com.fphoenixcorneae.ext.toastAliPayStyle
 import com.fphoenixcorneae.ext.toastQQStyle
 import com.fphoenixcorneae.ext.view.queryTextListener
+import com.fphoenixcorneae.ext.view.textAction
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -20,7 +22,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
 
         btnTest.setOnClickListener {
-//            toast("测试测试测试！！！")
+            //            toast("测试测试测试！！！")
             toastAliPayStyle("测试测试测试！！！")
         }
 
@@ -30,6 +32,12 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }) {
             "null".logd("action====")
         }
+
+        TextView {}.textAction({
+
+        }, {
+
+        })
 
         svSearch.queryTextListener {
             onQueryTextChange {

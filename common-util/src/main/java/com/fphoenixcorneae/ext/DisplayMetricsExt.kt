@@ -4,12 +4,13 @@ import android.content.Context
 import android.content.res.Resources
 import android.util.DisplayMetrics
 import android.util.TypedValue
+import android.view.View
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
 
 
 /**
- * Int类型转换为需要的像素值
+ * Int 类型： dp 转换为 px
  */
 fun Int.dp2Px(): Int {
     return TypedValue.applyDimension(
@@ -20,7 +21,7 @@ fun Int.dp2Px(): Int {
 }
 
 /**
- * Int类型转换为需要的像素值
+ * Int 类型： dp 转换为 px
  */
 fun Int.dpToPx(): Float {
     return TypedValue.applyDimension(
@@ -31,7 +32,7 @@ fun Int.dpToPx(): Float {
 }
 
 /**
- * Float类型转换为需要的像素值
+ * Float 类型： dp 转换为 px
  */
 fun Float.dp2Px(): Int {
     return TypedValue.applyDimension(
@@ -42,7 +43,7 @@ fun Float.dp2Px(): Int {
 }
 
 /**
- * Float类型转换为需要的像素值
+ * Float 类型： dp 转换为 px
  */
 fun Float.dpToPx(): Float {
     return TypedValue.applyDimension(
@@ -53,7 +54,7 @@ fun Float.dpToPx(): Float {
 }
 
 /**
- * Int类型转换为需要的像素值
+ * Int 类型： sp 转换为 px
  */
 fun Int.sp2Px(): Int {
     return TypedValue.applyDimension(
@@ -64,7 +65,7 @@ fun Int.sp2Px(): Int {
 }
 
 /**
- * Int类型转换为需要的像素值
+ * Int 类型： sp 转换为 px
  */
 fun Int.spToPx(): Float {
     return TypedValue.applyDimension(
@@ -75,28 +76,32 @@ fun Int.spToPx(): Float {
 }
 
 /**
- * Float类型转换为需要的像素值
+ * Float 类型： sp 转换为 px
  */
 fun Float.sp2Px(): Int {
     return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_SP, this, Resources.getSystem().displayMetrics
+        TypedValue.COMPLEX_UNIT_SP,
+        this,
+        Resources.getSystem().displayMetrics
     ).toInt()
 }
 
 /**
- * Float类型转换为需要的像素值
+ * Float 类型： sp 转换为 px
  */
 fun Float.spToPx(): Float {
     return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_SP, this, Resources.getSystem().displayMetrics
+        TypedValue.COMPLEX_UNIT_SP,
+        this,
+        Resources.getSystem().displayMetrics
     )
 }
 
 /**
- * dp转px
+ * dp 转 px
  *
- * @param dpValue dp值
- * @return px值
+ * @param dpValue dp 值
+ * @return px 值
  */
 fun Context.dp2px(dpValue: Float): Int {
     val scale = resources.displayMetrics.density
@@ -118,11 +123,21 @@ fun Fragment.dpToPx(dpValue: Float): Float {
     return dpValue * scale + 0.5f
 }
 
+fun View.dp2px(dp: Float): Int {
+    val scale = resources.displayMetrics.density
+    return (dp * scale + 0.5f).toInt()
+}
+
+fun View.dpToPx(dpValue: Float): Float {
+    val scale = resources.displayMetrics.density
+    return dpValue * scale + 0.5f
+}
+
 /**
- * px转dp
+ * px 转 dp
  *
- * @param pxValue px值
- * @return dp值
+ * @param pxValue px 值
+ * @return dp 值
  */
 fun Context.px2dp(pxValue: Float): Int {
     val scale = resources.displayMetrics.density
@@ -144,11 +159,21 @@ fun Fragment.pxToDp(pxValue: Float): Float {
     return pxValue / scale + 0.5f
 }
 
+fun View.px2dp(pxValue: Float): Int {
+    val scale = resources.displayMetrics.density
+    return (pxValue / scale + 0.5f).toInt()
+}
+
+fun View.pxToDp(pxValue: Float): Float {
+    val scale = resources.displayMetrics.density
+    return pxValue / scale + 0.5f
+}
+
 /**
- * sp转px
+ * sp 转 px
  *
- * @param spValue sp值
- * @return px值
+ * @param spValue sp 值
+ * @return px 值
  */
 fun Context.sp2px(spValue: Float): Int {
     val fontScale = resources.displayMetrics.scaledDensity
@@ -170,11 +195,21 @@ fun Fragment.spToPx(spValue: Float): Float {
     return spValue * fontScale + 0.5f
 }
 
+fun View.sp2px(spValue: Float): Int {
+    val fontScale = resources.displayMetrics.scaledDensity
+    return (spValue * fontScale + 0.5f).toInt()
+}
+
+fun View.spToPx(spValue: Float): Float {
+    val fontScale = resources.displayMetrics.scaledDensity
+    return spValue * fontScale + 0.5f
+}
+
 /**
- * px转sp
+ * px 转 sp
  *
- * @param pxValue px值
- * @return sp值
+ * @param pxValue px 值
+ * @return sp 值
  */
 fun Context.px2sp(pxValue: Float): Int {
     val fontScale = resources.displayMetrics.scaledDensity
@@ -196,16 +231,26 @@ fun Fragment.pxToSp(pxValue: Float): Float {
     return pxValue / fontScale + 0.5f
 }
 
+fun View.px2sp(pxValue: Float): Int {
+    val fontScale = resources.displayMetrics.scaledDensity
+    return (pxValue / fontScale + 0.5f).toInt()
+}
+
+fun View.pxToSp(pxValue: Float): Float {
+    val fontScale = resources.displayMetrics.scaledDensity
+    return pxValue / fontScale + 0.5f
+}
+
 /**
  * 获取屏幕的宽度（单位：px）
  *
- * @return 屏幕宽px
+ * @return 屏幕宽 px
  */
 val Context.screenWidth: Int
     get() {
-        val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val windowManager = getSystemService(Context.WINDOW_SERVICE) as? WindowManager
         val dm = DisplayMetrics()
-        windowManager.defaultDisplay?.getMetrics(dm)
+        windowManager?.defaultDisplay?.getMetrics(dm)
         return dm.widthPixels
     }
 
@@ -217,15 +262,16 @@ val Fragment.screenWidth: Int
 /**
  * 获取屏幕的高度（单位：px）
  *
- * @return 屏幕高px
+ * @return 屏幕高 px
  */
 val Context.screenHeight: Int
     get() {
-        val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val windowManager = getSystemService(Context.WINDOW_SERVICE) as? WindowManager
         val dm = DisplayMetrics()
-        windowManager.defaultDisplay?.getMetrics(dm)
+        windowManager?.defaultDisplay?.getMetrics(dm)
         return dm.heightPixels
     }
+
 val Fragment.screenHeight: Int
     get() {
         return requireActivity().screenHeight

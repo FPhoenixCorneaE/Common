@@ -7,12 +7,15 @@ import android.net.Uri
 import android.os.ParcelFileDescriptor
 import android.widget.ImageView
 import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 import androidx.annotation.Px
 import androidx.core.graphics.drawable.DrawableCompat
 import coil.Coil
 import coil.request.ImageRequest
+import com.fphoenixcorneae.ext.action
 import com.fphoenixcorneae.ext.appContext
 import com.fphoenixcorneae.util.ConvertUtil
+import com.fphoenixcorneae.util.ImageUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -30,6 +33,22 @@ fun getTintDrawable(
         .mutate()
 }?.apply {
     DrawableCompat.setTint(this, tintColor)
+}
+
+/**
+ * 图片着色
+ * @param tintColor     着色后的颜色
+ * @param drawableResId 图片资源 id
+ */
+fun ImageView.setTintColor(
+    tintColor: Int,
+    @DrawableRes drawableResId: Int? = null
+) {
+    drawableResId.action({
+        ImageUtil.setTintColor(this, it, tintColor)
+    }) {
+        ImageUtil.setTintColor(this, tintColor)
+    }
 }
 
 /**
@@ -96,7 +115,7 @@ fun ImageView.load(
 }
 
 /**
- * 通过uri加载图片
+ * 通过 uri 加载图片
  */
 fun getDrawableFromUri(uri: Uri): Drawable? {
     try {

@@ -16,7 +16,9 @@ inline fun <reified T : Fragment> Fragment.newInstanceFragment(vararg pair: Pair
     return requireContext().newInstanceFragment(*pair)
 }
 
-/**实例化 Fragment*/
+/**
+ * 实例化 Fragment
+ */
 inline fun <reified T : Fragment> Context.newInstanceFragment(): T {
     val args = Bundle()
     val className = T::class.java.name;
@@ -27,7 +29,9 @@ inline fun <reified T : Fragment> Context.newInstanceFragment(): T {
     return f as T
 }
 
-/**实例化 Fragment*/
+/**
+ * 实例化 Fragment
+ */
 inline fun <reified T : Fragment> Context.newInstanceFragment(args: Bundle?): T {
     val className = T::class.java.name;
     val clazz = FragmentFactory.loadFragmentClass(classLoader, className)
@@ -39,7 +43,9 @@ inline fun <reified T : Fragment> Context.newInstanceFragment(args: Bundle?): T 
     return f as T
 }
 
-/**实例化 Fragment*/
+/**
+ * 实例化 Fragment
+ */
 inline fun <reified T : Fragment> Context.newInstanceFragment(vararg pair: Pair<String, String>): T {
     val args = Bundle()
     pair.let {

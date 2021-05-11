@@ -69,7 +69,7 @@ fun <T> Activity.getSpValue(key: String, default: T, name: String = packageName)
         is Float -> getFloat(key, default)
         else -> deSerialization(getString(key, serialize(default)))
     }
-    return result as T
+    result as T
 }
 
 

@@ -12,12 +12,12 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 /**
- * 算法类型：用于指定生成AES的密钥
+ * 算法类型：用于指定生成 AES 的密钥
  */
 private const val KEY_ALGORITHM = "AES"
 
 /**
- * 加密器类型:加密算法为AES,加密模式为CFB,补码方式为NoPadding
+ * 加密器类型:加密算法为 AES,加密模式为 CFB,补码方式为 NoPadding
  */
 private const val AES_CFB_NOPADDING = "AES/CFB/NoPadding"
 

@@ -20,8 +20,14 @@ fun TextView.autoScaleTextSize(maxWidth: Int) {
     invalidate()
 }
 
-fun TextView.notEmpty(f: TextView.() -> Unit, t: TextView.() -> Unit) {
-    if (text.toString().isNotEmpty()) f() else t()
+/**
+ * 判断 text 是否为空 并传入相关操作
+ */
+fun TextView.textAction(
+    notEmptyAction: TextView.() -> Unit,
+    emptyAction: TextView.() -> Unit
+) {
+    if (text.toString().isNotEmpty()) notEmptyAction() else emptyAction()
 }
 
 fun TextView.textWatcher(watcher: KtxTextWatcher.() -> Unit) =

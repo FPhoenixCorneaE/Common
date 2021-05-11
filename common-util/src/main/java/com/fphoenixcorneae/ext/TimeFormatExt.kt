@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
 /**
- * 持续时间格式化
+ * 持续时间格式化：HH:mm
  */
 fun durationFormat(duration: Long): String {
     val minute = duration / 60
@@ -51,10 +51,10 @@ fun timeFormat(pattern: String, msecsValue: Long): String {
 }
 
 /**
- * 将日期转换到指定格式的字符串，如果转换失败将返回null。
+ * 将日期转换到指定格式的字符串，如果转换失败将返回 null。
  *
  * @param pattern 日期正则表达式，例如：yyyy-MM-dd HH:mm:ss
- * @param locale 具体时区、国家等相关信息
+ * @param locale  具体时区、国家等相关信息
  *
  * @return 目标字符串
  */
@@ -63,7 +63,8 @@ fun Date?.toDateStringOrNull(pattern: String, locale: Locale = Locale.getDefault
     return this?.run {
         try {
             formatter.format(this)
-        } catch (ex: Exception) {
+        } catch (e: Exception) {
+            e.logd()
             null
         }
     }

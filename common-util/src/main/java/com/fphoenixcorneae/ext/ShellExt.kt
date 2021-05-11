@@ -3,6 +3,9 @@ package com.fphoenixcorneae.ext
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
+/**
+ * 执行 cmd 命令
+ */
 fun executeCmd(command: String): String {
     val process = Runtime.getRuntime().exec(command)
 

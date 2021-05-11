@@ -1,34 +1,15 @@
 package com.fphoenixcorneae.ext
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
 import androidx.navigation.Navigator
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.fphoenixcorneae.util.R
-
-fun Activity.navigate(
-    @IdRes viewId: Int,
-    @IdRes resId: Int,
-    args: Bundle? = null,
-    navOptions: NavOptions? = navOptionsBuilder.build(),
-    navigatorExtras: Navigator.Extras? = null
-) {
-    return Navigation.findNavController(this, viewId)
-        .navigateTo(resId, args, navOptions, navigatorExtras)
-}
-
-fun Activity.navigateUp(
-    @IdRes viewId: Int
-): Boolean {
-    return Navigation.findNavController(this, viewId)
-        .navigateUp()
-}
 
 fun Fragment.navigate(
     @IdRes resId: Int,
@@ -36,18 +17,26 @@ fun Fragment.navigate(
     navOptions: NavOptions? = navOptionsBuilder.build(),
     navigatorExtras: Navigator.Extras? = null
 ) {
-    return NavHostFragment.findNavController(this)
+    return findNavController()
         .navigateTo(resId, args, navOptions, navigatorExtras)
 }
 
 fun Fragment.navigateUp(): Boolean {
-    return NavHostFragment.findNavController(this)
+    return findNavController()
         .navigateUp()
 }
 
 fun Fragment.popBackStack(): Boolean {
-    return NavHostFragment.findNavController(this)
+    return findNavController()
         .popBackStack()
+}
+
+fun Fragment.popBackStack(
+    @IdRes destinationId: Int,
+    inclusive: Boolean = false
+): Boolean {
+    return findNavController()
+        .popBackStack(destinationId, inclusive)
 }
 
 fun View.navigate(
@@ -56,21 +45,35 @@ fun View.navigate(
     navOptions: NavOptions? = navOptionsBuilder.build(),
     navigatorExtras: Navigator.Extras? = null
 ) {
-    return Navigation.findNavController(this).navigateTo(resId, args, navOptions, navigatorExtras)
+    return findNavController()
+        .navigateTo(resId, args, navOptions, navigatorExtras)
 }
 
 fun View.navigateUp(): Boolean {
-    return Navigation.findNavController(this)
+    return findNavController()
         .navigateUp()
+}
+
+fun View.popBackStack(): Boolean {
+    return findNavController()
+        .popBackStack()
+}
+
+fun View.popBackStack(
+    @IdRes destinationId: Int,
+    inclusive: Boolean = false
+): Boolean {
+    return findNavController()
+        .popBackStack(destinationId, inclusive)
 }
 
 var lastNavTime = 0L
 
 /**
- * 防止短时间内多次快速跳转Fragment出现的bug
+ * 防止短时间内多次快速跳转 Fragment 出现的 bug
  * @param resId     跳转的action Id
  * @param bundle    传递的参数
- * @param interval  多少毫秒内不可重复点击 默认0.5秒
+ * @param interval  多少毫秒内不可重复点击 默认 0.5 秒
  */
 fun NavController.navigateTo(
     resId: Int,
@@ -85,15 +88,15 @@ fun NavController.navigateTo(
         try {
             navigate(resId, bundle, navOptions, navigatorExtras)
         } catch (ignore: Exception) {
-            //防止出现 当 fragment 中 action 的 duration设置为 0 时，连续点击两个不同的跳转会导致如下崩溃 #issue53
+            // 防止出现 当 fragment 中 action 的 duration设置为 0 时，连续点击两个不同的跳转会导致如下崩溃 #issue53
             ignore.logd()
         }
     }
 }
 
 val navOptionsBuilder = NavOptions.Builder()
-    .setEnterAnim(R.anim.fragment_fade_enter)
-    .setExitAnim(R.anim.fragment_fade_exit)
-    .setPopEnterAnim(R.anim.fragment_fade_enter)
-    .setPopExitAnim(R.anim.fragment_fade_exit)
+    .setEnterAnim(R.anim.nav_default_enter_anim)
+    .setExitAnim(R.anim.nav_default_exit_anim)
+    .setPopEnterAnim(R.anim.nav_default_pop_enter_anim)
+    .setPopExitAnim(R.anim.nav_default_pop_exit_anim)
     .setLaunchSingleTop(true)

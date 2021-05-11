@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
  */
 fun EditText?.openKeyboard() {
     this?.let {
-        it.context.inputMethodManager?.apply {
+        it.context?.inputMethodManager?.apply {
             showSoftInput(it, InputMethodManager.RESULT_SHOWN)
             toggleSoftInput(
                 InputMethodManager.SHOW_FORCED,
@@ -28,7 +28,7 @@ fun EditText?.openKeyboard() {
  */
 fun EditText?.openKeyboardForced() {
     this?.let {
-        it.context.inputMethodManager?.apply {
+        it.context?.inputMethodManager?.apply {
             showSoftInput(it, InputMethodManager.SHOW_FORCED)
         }
     }
@@ -39,7 +39,7 @@ fun EditText?.openKeyboardForced() {
  */
 fun EditText?.closeKeyboard() {
     this?.let {
-        it.context.inputMethodManager?.apply {
+        it.context?.inputMethodManager?.apply {
             hideSoftInputFromWindow(it.windowToken, 0)
         }
     }
@@ -59,15 +59,15 @@ fun Activity?.closeKeyboard() {
 /**
  * 通过定时器强制隐藏虚拟键盘
  */
-fun View?.timerHideKeyboard() {
+fun View?.delayHideKeyboard(delay: Long = 10) {
     this?.let {
         Executors.newSingleThreadScheduledExecutor().schedule({
-            it.context.inputMethodManager?.apply {
+            it.context?.inputMethodManager?.apply {
                 if (isActive) {
                     hideSoftInputFromWindow(it.applicationWindowToken, 0)
                 }
             }
-        }, 10, TimeUnit.MILLISECONDS)
+        }, delay, TimeUnit.MILLISECONDS)
     }
 }
 
@@ -77,7 +77,7 @@ fun View?.timerHideKeyboard() {
  */
 fun EditText?.toggleKeyboard() {
     this?.let {
-        it.context.inputMethodManager?.apply {
+        it.context?.inputMethodManager?.apply {
             toggleSoftInput(
                 0,
                 InputMethodManager.HIDE_NOT_ALWAYS
@@ -91,7 +91,7 @@ fun EditText?.toggleKeyboard() {
  */
 fun EditText?.hideKeyboardForced() {
     this?.let {
-        it.context.inputMethodManager?.apply {
+        it.context?.inputMethodManager?.apply {
             if (isActive) {
                 hideSoftInputFromWindow(it.windowToken, 0)
             }
@@ -103,7 +103,7 @@ fun EditText?.hideKeyboardForced() {
  * 输入法是否显示
  */
 fun EditText.isKeyboardShowing(): Boolean {
-    return context.inputMethodManager?.isActive ?: false
+    return context?.inputMethodManager?.isActive ?: false
 }
 
 /**
@@ -126,6 +126,7 @@ fun Window.fixSoftInputLeaks() {
                     leakViewField[it] = null
                 }
             } catch (ignore: Throwable) {
+                ignore.logd()
             }
         }
     }

@@ -11,8 +11,7 @@ import android.net.Uri
  * @param text 文本
  */
 fun Context.copyText(text: CharSequence?) {
-    val clipboard = clipboardManager
-    clipboard?.setPrimaryClip(ClipData.newPlainText("text", text))
+    clipboardManager?.setPrimaryClip(ClipData.newPlainText("text", text))
 }
 
 /**
@@ -22,8 +21,8 @@ fun Context.copyText(text: CharSequence?) {
  */
 val clipboardText: CharSequence?
     get() {
-        val clipboard = appContext.clipboardManager
-        val clip = clipboard?.primaryClip
+        val clipboardManager = appContext.clipboardManager
+        val clip = clipboardManager?.primaryClip
         return when {
             clip != null && clip.itemCount > 0 -> {
                 clip.getItemAt(0).coerceToText(appContext)
@@ -35,13 +34,12 @@ val clipboardText: CharSequence?
     }
 
 /**
- * 复制uri到剪贴板
+ * 复制 uri 到剪贴板
  *
  * @param uri uri
  */
 fun Context.copyUri(uri: Uri?) {
-    val clipboard = clipboardManager
-    clipboard?.setPrimaryClip(
+    clipboardManager?.setPrimaryClip(
         ClipData.newUri(
             appContext.contentResolver,
             "uri",
@@ -57,8 +55,8 @@ fun Context.copyUri(uri: Uri?) {
  */
 val clipboardUri: Uri?
     get() {
-        val clipboard = appContext.clipboardManager
-        val clip = clipboard?.primaryClip
+        val clipboardManager = appContext.clipboardManager
+        val clip = clipboardManager?.primaryClip
         return when {
             clip != null && clip.itemCount > 0 -> {
                 clip.getItemAt(0).uri
@@ -75,8 +73,7 @@ val clipboardUri: Uri?
  * @param intent 意图
  */
 fun Context.copyIntent(intent: Intent?) {
-    val clipboard = clipboardManager
-    clipboard?.setPrimaryClip(ClipData.newIntent("intent", intent))
+    clipboardManager?.setPrimaryClip(ClipData.newIntent("intent", intent))
 }
 
 /**
@@ -86,8 +83,8 @@ fun Context.copyIntent(intent: Intent?) {
  */
 val clipboardIntent: Intent?
     get() {
-        val clipboard = appContext.clipboardManager
-        val clip = clipboard?.primaryClip
+        val clipboardManager = appContext.clipboardManager
+        val clip = clipboardManager?.primaryClip
         return when {
             clip != null && clip.itemCount > 0 -> {
                 clip.getItemAt(0).intent
