@@ -61,16 +61,16 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation Deps.supportLibs
-    implementation Deps.kotlinLibs
-    implementation Deps.rxJava2Libs
-    implementation Deps.navigationLibs
-    implementation Deps.rxPermissions
-    implementation Deps.coilLibs
-    implementation Deps.gson
-    implementation Deps.logger
-    implementation project(path: ':common-util')
+    implementation(fileTree(dir: "libs", include: ["*.jar"]))
+    implementation(Deps.androidXLibs)
+    implementation(Deps.kotlinLibs)
+    implementation(Deps.rxJava2Libs)
+    implementation(Deps.navigationLibs)
+    implementation(Deps.rxPermissions)
+    implementation(Deps.coilLibs)
+    implementation(Deps.gson)
+    implementation(Deps.logger)
+    implementation(project(path: ':commonUtil'))
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

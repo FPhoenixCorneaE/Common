@@ -18,8 +18,9 @@ allprojects {
 
 ```groovy
 dependencies {
-	implementation "com.github.FPhoenixCorneaE:CommonUtil:1.0.8"
-	implementation "com.orhanobut:logger:2.2.0"
+	implementation "com.github.FPhoenixCorneaE:CommonUtil:1.0.9"
+	// logger
+    implementation "com.orhanobut:logger:2.2.0"
 }
 ```
 

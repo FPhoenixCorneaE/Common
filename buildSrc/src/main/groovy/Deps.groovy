@@ -10,43 +10,48 @@ class Deps {
             androidMaven: "com.github.dcendents:android-maven-gradle-plugin:$android_maven_gradle_plugin",
     ]
 
-    /** Android */
+    /** android */
     static android = [
             compileSdkVersion: 30,
             buildToolsVersion: "30.0.3",
             minSdkVersion    : 21,
             targetSdkVersion : 30,
-            versionCode      : 107,
-            versionName      : "1.0.7"
+            versionCode      : 109,
+            versionName      : "1.0.9"
     ]
 
-    /** Supports */
-    static support = [
-            appcompat         : "androidx.appcompat:appcompat:1.2.0",
-            constraintLayout  : "androidx.constraintlayout:constraintlayout:2.0.2",
-            lifecycleViewmodel: "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1",
-            viewpager2        : "androidx.viewpager2:viewpager2:1.0.0",
-            palette           : "androidx.palette:palette-ktx:1.0.0",
+    /** androidX */
+    static androidX = [
+            appcompat            : "androidx.appcompat:appcompat:1.2.0",
+            constraintLayout     : "androidx.constraintlayout:constraintlayout:2.0.4",
+            activityKtx          : "androidx.activity:activity-ktx:1.2.2",
+            fragmentKtx          : "androidx.fragment:fragment-ktx:1.3.3",
+            lifecycleViewmodelKtx: "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1",
+            viewpager2           : "androidx.viewpager2:viewpager2:1.0.0",
+            paletteKtx           : "androidx.palette:palette-ktx:1.0.0",
     ]
 
     /** navigation 扩展插件 */
     static navigation = [
-            common  : "androidx.navigation:navigation-common-ktx:$navigation_version",
-            fragment: "androidx.navigation:navigation-fragment-ktx:$navigation_version",
-            runtime : "androidx.navigation:navigation-runtime-ktx:$navigation_version",
-            ui      : "androidx.navigation:navigation-ui-ktx:$navigation_version",
+            commonKtx  : "androidx.navigation:navigation-common-ktx:$navigation_version",
+            fragmentKtx: "androidx.navigation:navigation-fragment-ktx:$navigation_version",
+            runtimeKtx : "androidx.navigation:navigation-runtime-ktx:$navigation_version",
+            uiKtx      : "androidx.navigation:navigation-ui-ktx:$navigation_version",
     ]
 
-    /** Kotlin */
+    /** kotlin */
     static kotlin = [
-            core        : "androidx.core:core-ktx:1.3.2",
-            activity    : "androidx.activity:activity-ktx:1.2.2",
-            fragment    : "androidx.fragment:fragment-ktx:1.3.3",
-            kotlinStdlib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
-            coroutines  : 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.2',
+            coreKtx: "androidx.core:core-ktx:1.3.2",
+            stdlib : "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
     ]
 
-    /** RxJava2 */
+    /** coroutines */
+    static coroutines = [
+            core   : "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3",
+            android: "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3"
+    ]
+
+    /** rxJava2 */
     static rxJava2 = [
             rxJava   : "io.reactivex.rxjava2:rxjava:2.1.16",
             rxAndroid: "io.reactivex.rxjava2:rxandroid:2.1.0",
@@ -67,14 +72,13 @@ class Deps {
     /** logger */
     static logger = "com.orhanobut:logger:2.2.0"
     /** 权限管理 */
-    static rxPermissions = 'com.github.tbruyelle:rxpermissions:0.10.2'
+    static rxPermissions = "com.github.tbruyelle:rxpermissions:0.10.2"
     /** Gson */
-    static gson = 'com.google.code.gson:gson:2.8.5'
+    static gson = "com.google.code.gson:gson:2.8.5"
     /** eventBus */
     static eventBus = "org.greenrobot:eventbus:3.2.0"
 
-
-    static supportLibs = support.values()
+    static androidXLibs = androidX.values()
     static navigationLibs = navigation.values()
     static kotlinLibs = kotlin.values()
     static rxJava2Libs = rxJava2.values()
