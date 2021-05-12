@@ -1,4 +1,4 @@
-class Config {
+class Deps {
     static gradle_version = '4.2.0'
     static kotlin_version = '1.5.0'
     static navigation_version = '2.3.5'
@@ -22,11 +22,11 @@ class Config {
 
     /** Supports */
     static support = [
-            appcompat          : "androidx.appcompat:appcompat:1.2.0",
-            constraintLayout   : "androidx.constraintlayout:constraintlayout:2.0.2",
-            lifecycleViewmodel : "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1",
-            viewpager2         : "androidx.viewpager2:viewpager2:1.0.0",
-            palette            : "androidx.palette:palette-ktx:1.0.0",
+            appcompat         : "androidx.appcompat:appcompat:1.2.0",
+            constraintLayout  : "androidx.constraintlayout:constraintlayout:2.0.2",
+            lifecycleViewmodel: "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1",
+            viewpager2        : "androidx.viewpager2:viewpager2:1.0.0",
+            palette           : "androidx.palette:palette-ktx:1.0.0",
     ]
 
     /** navigation 扩展插件 */
@@ -39,11 +39,11 @@ class Config {
 
     /** Kotlin */
     static kotlin = [
-            core            : "androidx.core:core-ktx:1.3.2",
-            activity        : "androidx.activity:activity-ktx:1.2.2",
-            fragment        : "androidx.fragment:fragment-ktx:1.3.3",
-            kotlinStdlibJdk7: "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
-            coroutines      : 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.2',
+            core        : "androidx.core:core-ktx:1.3.2",
+            activity    : "androidx.activity:activity-ktx:1.2.2",
+            fragment    : "androidx.fragment:fragment-ktx:1.3.3",
+            kotlinStdlib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
+            coroutines  : 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.2',
     ]
 
     /** RxJava2 */

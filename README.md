@@ -18,7 +18,8 @@ allprojects {
 
 ```groovy
 dependencies {
-	implementation 'com.github.FPhoenixCorneaE:CommonUtil:1.0.7'
+	implementation "com.github.FPhoenixCorneaE:CommonUtil:1.0.8"
+	implementation "com.orhanobut:logger:2.2.0"
 }
 ```
 
@@ -48,8 +49,6 @@ dependencies {
     implementation "com.google.code.gson:gson:2.8.5"
     // eventbus
     implementation "org.greenrobot:eventbus:3.2.0"
-    // logger
-    implementation "com.orhanobut:logger:2.2.0"
     // coil
     implementation "io.coil-kt:coil:1.2.0"
     // coil-gif

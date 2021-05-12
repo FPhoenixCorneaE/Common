@@ -1,17 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion Config.android.compileSdkVersion
-    buildToolsVersion Config.android.buildToolsVersion
+    compileSdkVersion Deps.android.compileSdkVersion
+    buildToolsVersion Deps.android.buildToolsVersion
 
     defaultConfig {
         applicationId "com.fphoenixcorneae.util.demo"
-        minSdkVersion Config.android.minSdkVersion
-        targetSdkVersion Config.android.targetSdkVersion
-        versionCode Config.android.versionCode
-        versionName Config.android.versionName
+        minSdkVersion Deps.android.minSdkVersion
+        targetSdkVersion Deps.android.targetSdkVersion
+        versionCode Deps.android.versionCode
+        versionName Deps.android.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -29,7 +28,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
     dexOptions {
@@ -38,6 +37,10 @@ android {
 
     lintOptions {
         abortOnError false
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 
     packagingOptions {
@@ -49,7 +52,7 @@ android {
             eachDependency { DependencyResolveDetails details ->
                 details.requested.with {
                     if (group == "org.jetbrains.kotlin" && name == "kotlin-stdlib") {
-                        details.useTarget(group: group, name: name, version: "${Config.kotlin_version}")
+                        details.useTarget(group: group, name: name, version: "${Deps.kotlin_version}")
                     }
                 }
             }
@@ -59,14 +62,14 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation Config.supportLibs
-    implementation Config.kotlinLibs
-    implementation Config.rxJava2Libs
-    implementation Config.navigationLibs
-    implementation Config.rxPermissions
-    implementation Config.coilLibs
-    implementation Config.gson
-    implementation Config.logger
+    implementation Deps.supportLibs
+    implementation Deps.kotlinLibs
+    implementation Deps.rxJava2Libs
+    implementation Deps.navigationLibs
+    implementation Deps.rxPermissions
+    implementation Deps.coilLibs
+    implementation Deps.gson
+    implementation Deps.logger
     implementation project(path: ':common-util')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

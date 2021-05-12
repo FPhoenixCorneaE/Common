@@ -11,17 +11,21 @@ import com.fphoenixcorneae.ext.toastAliPayStyle
 import com.fphoenixcorneae.ext.toastQQStyle
 import com.fphoenixcorneae.ext.view.queryTextListener
 import com.fphoenixcorneae.ext.view.textAction
-import kotlinx.android.synthetic.main.activity_main.*
+import com.fphoenixcorneae.util.demo.databinding.ActivityMainBinding
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var mViewBinding: ActivityMainBinding
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mViewBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(mViewBinding.root)
 
-        btnTest.setOnClickListener {
+        mViewBinding.btnTest.setOnClickListener {
             //            toast("测试测试测试！！！")
             toastAliPayStyle("测试测试测试！！！")
         }
@@ -39,7 +43,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         })
 
-        svSearch.queryTextListener {
+        mViewBinding.svSearch.queryTextListener {
             onQueryTextChange {
                 toastQQStyle(it)
             }
