@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.fphoenixcorneae.dsl.layout.TextView
 import com.fphoenixcorneae.ext.action
+import com.fphoenixcorneae.ext.algorithm.*
 import com.fphoenixcorneae.ext.logd
 import com.fphoenixcorneae.ext.toastAliPayStyle
 import com.fphoenixcorneae.ext.toastQQStyle
@@ -50,6 +51,16 @@ class MainActivity : AppCompatActivity() {
             onQueryTextSubmit {
                 toastQQStyle(it)
             }
+        }
+
+        val origin2Md5 = "a123456"
+        ("md5: ${origin2Md5.md5()}\n\n" +
+            "sha1: ${origin2Md5.sha1()}\n\n" +
+            "sha224: ${origin2Md5.sha224()}\n\n" +
+            "sha256: ${origin2Md5.sha256()}\n\n" +
+            "sha384: ${origin2Md5.sha384()}\n\n" +
+            "sha512: ${origin2Md5.sha512()}").also {
+            mViewBinding.tvMd5.text = it
         }
     }
 }

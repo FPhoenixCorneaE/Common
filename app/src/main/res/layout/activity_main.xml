@@ -15,12 +15,19 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="16dp"
-            android:text="测试" />
+            android:text="测试"
+            tools:ignore="HardcodedText" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/svSearch"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_margin="16dp" />
+
+        <TextView
+            android:id="@+id/tvMd5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
