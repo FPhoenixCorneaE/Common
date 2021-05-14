@@ -5,11 +5,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.fphoenixcorneae.dsl.layout.TextView
-import com.fphoenixcorneae.ext.action
+import com.fphoenixcorneae.ext.*
 import com.fphoenixcorneae.ext.algorithm.*
-import com.fphoenixcorneae.ext.logd
-import com.fphoenixcorneae.ext.toastAliPayStyle
-import com.fphoenixcorneae.ext.toastQQStyle
 import com.fphoenixcorneae.ext.view.queryTextListener
 import com.fphoenixcorneae.ext.view.textAction
 import com.fphoenixcorneae.util.demo.databinding.ActivityMainBinding
@@ -62,5 +59,23 @@ class MainActivity : AppCompatActivity() {
             "sha512: ${origin2Md5.sha512()}").also {
             mViewBinding.tvMd5.text = it
         }
+
+        val fruit = Fruit(1, Watermalon(2f, 30f))
+        val clone = fruit.copy()
+        val deepClone = fruit.deepClone(Fruit::class.java)
+        // 判断 Watermalon 对象是否相同，预期值：true
+        (fruit.watermalon === clone.watermalon).toString().logd("clone")
+        // 判断 Watermalon 对象是否相同，预期值：false
+        (fruit.watermalon === deepClone?.watermalon).toString().logd("deepClone")
     }
 }
+
+data class Fruit(
+    val type: Int,
+    val watermalon: Watermalon
+) : Cloneable
+
+data class Watermalon(
+    val weight: Float,
+    val size: Float
+)

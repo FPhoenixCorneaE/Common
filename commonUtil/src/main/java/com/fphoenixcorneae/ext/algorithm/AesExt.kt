@@ -67,7 +67,7 @@ private fun toKey(key: ByteArray): SecretKey = SecretKeySpec(key, KEY_ALGORITHM)
 private fun initCipher(mode: Int, key: ByteArray, iv: ByteArray, cipherAlgorithm: String): Cipher {
     val k = toKey(key)
     val cipher = Cipher.getInstance(cipherAlgorithm)
-    val cipherAlgorithm = cipherAlgorithm.toUpperCase(Locale.getDefault())
+    val cipherAlgorithm = cipherAlgorithm.uppercase(Locale.getDefault())
     if (cipherAlgorithm.contains("CFB") || cipherAlgorithm.contains("CBC")
         || cipherAlgorithm.contains("CTR")
     )
