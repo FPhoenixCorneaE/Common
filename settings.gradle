@@ -1,3 +1,0 @@
-include ':commonUtil'
-include ':app'
-rootProject.name = "CommonUtil"

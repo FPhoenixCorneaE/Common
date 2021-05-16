@@ -1,5 +1,5 @@
 # CommonUtil
-通用工具类、Kotlin 扩展类、Kotlin-Dsl（animation、layout）
+通用工具类库：Kotlin 扩展、Kotlin-Dsl（animation、layout）、权限申请、各种工具类。
 
 
 ### How to include it in your project:
@@ -18,9 +18,7 @@ allprojects {
 
 ```groovy
 dependencies {
-	implementation "com.github.FPhoenixCorneaE:CommonUtil:1.0.9"
-	// logger
-    implementation "com.orhanobut:logger:2.2.0"
+	implementation("com.github.FPhoenixCorneaE:CommonUtil:1.1.0")
 }
 ```
 
@@ -41,11 +39,6 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-runtime-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
-    // rxpermissions
-    implementation "com.github.tbruyelle:rxpermissions:0.10.2"
-    implementation "io.reactivex.rxjava2:rxjava:2.1.16"
-    implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
-    implementation "io.reactivex.rxjava2:rxkotlin:2.2.0"
     // Gson
     implementation "com.google.code.gson:gson:2.8.5"
     // eventbus

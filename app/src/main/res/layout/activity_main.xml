@@ -29,5 +29,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp" />
+
+        <Button
+            android:id="@+id/btnRequestPermissions"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="16dp"
+            android:text="申请权限"
+            tools:ignore="HardcodedText" />
+
+        <SeekBar
+            android:id="@+id/sbBrightness"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
