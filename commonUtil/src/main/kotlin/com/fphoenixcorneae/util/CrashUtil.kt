@@ -5,8 +5,8 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Environment
 import androidx.annotation.RequiresPermission
+import com.fphoenixcorneae.ext.appContext
 import com.fphoenixcorneae.ext.loggerD
-import com.fphoenixcorneae.util.ContextUtil.Companion.context
 import java.io.*
 import java.text.Format
 import java.text.SimpleDateFormat
@@ -113,11 +113,11 @@ class CrashUtil private constructor() {
             defaultDir =
                 when {
                     Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()
-                            && context.externalCacheDir != null -> {
-                        context.externalCacheDir.toString() + FILE_SEP + "crash" + FILE_SEP
+                            && appContext.externalCacheDir != null -> {
+                        appContext.externalCacheDir.toString() + FILE_SEP + "crash" + FILE_SEP
                     }
                     else -> {
-                        context.cacheDir.toString() + FILE_SEP + "crash" + FILE_SEP
+                        appContext.cacheDir.toString() + FILE_SEP + "crash" + FILE_SEP
                     }
                 }
             sOnCrashListener = onCrashListener

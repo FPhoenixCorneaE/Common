@@ -4,7 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.core.content.FileProvider
-import com.fphoenixcorneae.util.ContextUtil.Companion.context
+import com.fphoenixcorneae.ext.appContext
 import java.io.File
 
 /**
@@ -24,7 +24,7 @@ object FileProviderUtil {
 
     private fun getUriForFile24(file: File): Uri {
         return FileProvider.getUriForFile(
-            context,
+            appContext,
             "${AppUtil.packageName}.FileProvider",
             file
         )

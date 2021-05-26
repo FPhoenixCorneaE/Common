@@ -7,8 +7,8 @@ import android.provider.Settings.SettingNotFoundException
 import android.view.Window
 import androidx.annotation.IntRange
 import androidx.fragment.app.FragmentActivity
+import com.fphoenixcorneae.ext.appContext
 import com.fphoenixcorneae.permission.request
-import com.fphoenixcorneae.util.ContextUtil.Companion.context
 
 /**
  * 屏幕亮度工具类
@@ -24,7 +24,7 @@ class BrightnessUtil private constructor() {
         val isAutoBrightnessEnabled: Boolean
             get() = try {
                 val mode = Settings.System.getInt(
-                    context.contentResolver,
+                    appContext.contentResolver,
                     Settings.System.SCREEN_BRIGHTNESS_MODE
                 )
                 mode == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
@@ -45,9 +45,9 @@ class BrightnessUtil private constructor() {
         @SuppressLint("NewApi")
         fun setAutoBrightnessEnabled(enabled: Boolean): Boolean {
             return when {
-                Settings.System.canWrite(context) -> {
+                Settings.System.canWrite(appContext) -> {
                     Settings.System.putInt(
-                        context.contentResolver,
+                        appContext.contentResolver,
                         Settings.System.SCREEN_BRIGHTNESS_MODE,
                         when {
                             enabled -> Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
@@ -69,7 +69,7 @@ class BrightnessUtil private constructor() {
         val brightness: Int
             get() = try {
                 Settings.System.getInt(
-                    context.contentResolver,
+                    appContext.contentResolver,
                     Settings.System.SCREEN_BRIGHTNESS
                 )
             } catch (e: SettingNotFoundException) {
@@ -88,11 +88,11 @@ class BrightnessUtil private constructor() {
         @SuppressLint("NewApi")
         fun setBrightness(@IntRange(from = 0, to = 255) brightness: Int) {
             when {
-                Settings.System.canWrite(context) -> {
+                Settings.System.canWrite(appContext) -> {
                     if (!isAutoBrightnessEnabled) {
                         setAutoBrightnessEnabled(true)
                     }
-                    val resolver = context.contentResolver
+                    val resolver = appContext.contentResolver
                     Settings.System.putInt(
                         resolver,
                         Settings.System.SCREEN_BRIGHTNESS,
@@ -110,17 +110,17 @@ class BrightnessUtil private constructor() {
                             setAutoBrightnessEnabled(true)
                         }
                         onDenied {
-                            if (!Settings.System.canWrite(context)) {
+                            if (!Settings.System.canWrite(appContext)) {
                                 IntentUtil.openApplicationManageWriteSettings()
                             }
                         }
                         onShowRationale {
-                            if (!Settings.System.canWrite(context)) {
+                            if (!Settings.System.canWrite(appContext)) {
                                 IntentUtil.openApplicationManageWriteSettings()
                             }
                         }
                         onNeverAskAgain {
-                            if (!Settings.System.canWrite(context)) {
+                            if (!Settings.System.canWrite(appContext)) {
                                 IntentUtil.openApplicationManageWriteSettings()
                             }
                         }

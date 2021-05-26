@@ -1,10 +1,12 @@
 package com.fphoenixcorneae
 
+import android.app.Application
 import android.content.pm.ApplicationInfo
 import androidx.core.content.FileProvider
-import com.fphoenixcorneae.ext.appContext
 import com.fphoenixcorneae.ext.loggerD
-import com.fphoenixcorneae.util.*
+import com.fphoenixcorneae.util.AppUtil
+import com.fphoenixcorneae.util.ContextUtil
+import com.fphoenixcorneae.util.CrashUtil
 import com.fphoenixcorneae.util.toast.ToastUtil
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
@@ -14,18 +16,16 @@ import com.orhanobut.logger.PrettyFormatStrategy
  * 工具集文件提供者:
  * 1、初始化 ContextUtil;
  * 2、初始化 ToastUtil;
- * 3、初始化 AudioUtil;
+ * 3、初始化 CrashUtil;
  * 4、初始化日志打印配置;
  */
-class CommonUtilFileProvider : FileProvider() {
+class CommonFileProvider : FileProvider() {
 
     override fun onCreate(): Boolean {
         // 初始化 ContextUtil
         ContextUtil.init(context!!)
         // 初始化 ToastUtil
-        ToastUtil.init(appContext)
-        // 初始化 AudioUtil
-        AudioUtil.init()
+        ToastUtil.init(context!!.applicationContext as Application)
         // 初始化 CrashUtil
         initCrashUtil()
         // 初始化日志打印配置
@@ -64,7 +64,8 @@ class CommonUtilFileProvider : FileProvider() {
         Logger.addLogAdapter(object : AndroidLogAdapter(formatStrategy) {
             override fun isLoggable(priority: Int, tag: String?): Boolean {
                 // Module 默认会提供 Release 版给其他 Module 或工程使用，BuildConfig.DEBUG 会始终为 false
-                return context!!.applicationInfo != null && (context!!.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+                return context!!.applicationInfo != null
+                    && (context!!.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
             }
         })
     }

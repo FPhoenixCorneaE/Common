@@ -14,8 +14,8 @@ import android.os.Process
 import android.provider.Settings
 import android.text.TextUtils
 import androidx.annotation.RequiresPermission
+import com.fphoenixcorneae.ext.appContext
 import com.fphoenixcorneae.ext.loggerD
-import com.fphoenixcorneae.util.ContextUtil.Companion.context
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
@@ -38,7 +38,7 @@ class ProcessUtil private constructor() {
         val foregroundProcessName: String?
             get() {
                 val am =
-                    context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                    appContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
                 val pInfo = am.runningAppProcesses
                 if (pInfo != null && pInfo.size > 0) {
                     for (aInfo in pInfo) {
@@ -50,7 +50,7 @@ class ProcessUtil private constructor() {
                     }
                 }
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-                    val pm = context.packageManager
+                    val pm = appContext.packageManager
                     val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
                     val list =
                         pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
@@ -65,9 +65,9 @@ class ProcessUtil private constructor() {
                     try {
                         // Access to usage information.
                         val info =
-                            pm.getApplicationInfo(context.packageName, 0)
+                            pm.getApplicationInfo(appContext.packageName, 0)
                         val aom =
-                            context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+                            appContext.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
                         if (aom.checkOpNoThrow(
                                 AppOpsManager.OPSTR_GET_USAGE_STATS,
                                 info.uid,
@@ -75,7 +75,7 @@ class ProcessUtil private constructor() {
                             ) != AppOpsManager.MODE_ALLOWED
                         ) {
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            context.startActivity(intent)
+                            appContext.startActivity(intent)
                         }
                         if (aom.checkOpNoThrow(
                                 AppOpsManager.OPSTR_GET_USAGE_STATS,
@@ -89,7 +89,7 @@ class ProcessUtil private constructor() {
                             )
                             return ""
                         }
-                        val usageStatsManager = context
+                        val usageStatsManager = appContext
                             .getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
                         var usageStatsList: List<UsageStats>? = null
                         val endTime = System.currentTimeMillis()
@@ -129,7 +129,7 @@ class ProcessUtil private constructor() {
         val allBackgroundProcesses: Set<String>
             get() {
                 val am =
-                    context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                    appContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
                 val info = am.runningAppProcesses
                 val set: MutableSet<String> = HashSet()
                 if (info != null) {
@@ -150,7 +150,7 @@ class ProcessUtil private constructor() {
         @RequiresPermission(permission.KILL_BACKGROUND_PROCESSES)
         fun killAllBackgroundProcesses(): Set<String> {
             val am =
-                context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                appContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
             var info = am.runningAppProcesses
             val set: MutableSet<String> = HashSet()
             if (info == null) {
@@ -182,7 +182,7 @@ class ProcessUtil private constructor() {
         @RequiresPermission(permission.KILL_BACKGROUND_PROCESSES)
         fun killBackgroundProcesses(packageName: String): Boolean {
             val am =
-                context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                appContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
             var info = am.runningAppProcesses
             if (info == null || info.size == 0) {
                 return true
@@ -210,7 +210,7 @@ class ProcessUtil private constructor() {
          * @return `true`: yes<br></br>`false`: no
          */
         val isMainProcess: Boolean
-            get() = context.packageName == currentProcessName
+            get() = appContext.packageName == currentProcessName
 
         /**
          * Return the name of current process.
@@ -247,7 +247,7 @@ class ProcessUtil private constructor() {
         private val currentProcessNameByAms: String
             get() {
                 val am =
-                    context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                    appContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
                 val info = am.runningAppProcesses
                 if (info == null || info.size == 0) {
                     return ""
@@ -267,7 +267,7 @@ class ProcessUtil private constructor() {
             get() {
                 var processName = ""
                 try {
-                    val app = context
+                    val app = appContext
                     val loadedApkField = app.javaClass.getField("mLoadedApk")
                     loadedApkField.isAccessible = true
                     val loadedApk = loadedApkField[app]

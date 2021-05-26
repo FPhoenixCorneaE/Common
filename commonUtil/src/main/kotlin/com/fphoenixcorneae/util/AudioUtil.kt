@@ -43,11 +43,9 @@ object AudioUtil {
      */
     val mThreadPool by lazy { Executors.newFixedThreadPool(100) }
 
-    @JvmStatic
-    fun init() {
+    init {
         mAssetManager = mContext.assets
         initAudioTrack()
-        muteSystemTouch()
     }
 
     private fun initAudioTrack() {
@@ -97,11 +95,11 @@ object AudioUtil {
             )
             mAudioManager?.unloadSoundEffects()
         }
-
     }
 
 
     fun playAudio(soundName: String) {
+        muteSystemTouch()
         playByAudioTrack(soundName)
     }
 

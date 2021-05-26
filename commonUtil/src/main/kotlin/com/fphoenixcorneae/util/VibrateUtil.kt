@@ -6,7 +6,7 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.annotation.RequiresPermission
-import com.fphoenixcorneae.util.ContextUtil.Companion.context
+import com.fphoenixcorneae.ext.appContext
 
 /**
  * 震动工具类
@@ -25,7 +25,7 @@ class VibrateUtil private constructor() {
         @RequiresPermission(permission.VIBRATE)
         fun vibrate(milliseconds: Long) {
             val vibrator =
-                context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                appContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             when {
                 vibrator.hasVibrator() -> { // 判断手机硬件是否有振动器
                     when {
@@ -56,7 +56,7 @@ class VibrateUtil private constructor() {
         @RequiresPermission(permission.VIBRATE)
         fun vibrate(pattern: LongArray?, repeat: Int) {
             val vibrator =
-                context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                appContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             when {
                 vibrator.hasVibrator() -> { // 判断手机硬件是否有振动器
                     when {
@@ -79,7 +79,7 @@ class VibrateUtil private constructor() {
         @RequiresPermission(permission.VIBRATE)
         fun cancel() {
             val vibrator =
-                context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                appContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             when {
                 vibrator.hasVibrator() -> { // 判断手机硬件是否有振动器
                     vibrator.cancel()

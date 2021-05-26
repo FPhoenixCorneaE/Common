@@ -19,7 +19,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.IntDef
 import androidx.annotation.IntRange
 import androidx.core.content.ContextCompat
-import com.fphoenixcorneae.util.ContextUtil.Companion.context
+import com.fphoenixcorneae.ext.appContext
 import java.lang.ref.WeakReference
 
 /**
@@ -676,7 +676,7 @@ class SpannableStringUtil private constructor() {
                 when {
                     imageIsBitmap -> {
                         mBuilder.setSpan(
-                            CustomImageSpan(context, bitmap, align),
+                            CustomImageSpan(appContext, bitmap, align),
                             start,
                             end,
                             flag
@@ -691,7 +691,7 @@ class SpannableStringUtil private constructor() {
                     }
                     imageIsUri -> {
                         mBuilder.setSpan(
-                            CustomImageSpan(context, uri, align),
+                            CustomImageSpan(appContext, uri, align),
                             start,
                             end,
                             flag
@@ -702,7 +702,7 @@ class SpannableStringUtil private constructor() {
                     else -> {
                         mBuilder.setSpan(
                             CustomImageSpan(
-                                context,
+                                appContext,
                                 resourceId,
                                 align
                             ), start, end, flag

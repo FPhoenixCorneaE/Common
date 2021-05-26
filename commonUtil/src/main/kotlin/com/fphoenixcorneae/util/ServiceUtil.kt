@@ -4,7 +4,7 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import com.fphoenixcorneae.util.ContextUtil.Companion.context
+import com.fphoenixcorneae.ext.appContext
 import java.util.*
 
 /**
@@ -21,7 +21,7 @@ class ServiceUtil private constructor() {
         val allRunningServices: Set<*>?
             get() {
                 val am =
-                    context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                    appContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
                 val info =
                     am.getRunningServices(0x7FFFFFFF)
                 val names: MutableSet<String> =
@@ -54,8 +54,8 @@ class ServiceUtil private constructor() {
          * @param cls The service class.
          */
         fun startService(cls: Class<*>?) {
-            val intent = Intent(context, cls)
-            context.startService(intent)
+            val intent = Intent(appContext, cls)
+            appContext.startService(intent)
         }
 
         /**
@@ -80,8 +80,8 @@ class ServiceUtil private constructor() {
          * @return `true`: success<br></br>`false`: fail
          */
         fun stopService(cls: Class<*>?): Boolean {
-            val intent = Intent(context, cls)
-            return context.stopService(intent)
+            val intent = Intent(appContext, cls)
+            return appContext.stopService(intent)
         }
 
         /**
@@ -133,8 +133,8 @@ class ServiceUtil private constructor() {
             conn: ServiceConnection,
             flags: Int
         ) {
-            val intent = Intent(context, cls)
-            context.bindService(intent, conn, flags)
+            val intent = Intent(appContext, cls)
+            appContext.bindService(intent, conn, flags)
         }
 
         /**
@@ -143,7 +143,7 @@ class ServiceUtil private constructor() {
          * @param conn The ServiceConnection object.
          */
         fun unbindService(conn: ServiceConnection) {
-            context.unbindService(conn)
+            appContext.unbindService(conn)
         }
 
         /**
@@ -164,7 +164,7 @@ class ServiceUtil private constructor() {
          */
         fun isServiceRunning(className: String): Boolean {
             val am =
-                context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                appContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
             val info =
                 am.getRunningServices(0x7FFFFFFF)
             if (info == null || info.size == 0) {

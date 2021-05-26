@@ -2,8 +2,8 @@ package com.fphoenixcorneae.util
 
 import android.content.res.Resources
 import android.util.DisplayMetrics
+import com.fphoenixcorneae.ext.appContext
 import com.fphoenixcorneae.ext.loggerE
-import com.fphoenixcorneae.util.ContextUtil.Companion.context
 import java.lang.reflect.Field
 import java.util.*
 
@@ -74,7 +74,7 @@ class AdaptScreenUtil private constructor() {
          */
         fun pt2Px(ptValue: Float): Int {
             val metrics =
-                context.resources.displayMetrics
+                appContext.resources.displayMetrics
             return (ptValue * metrics.xdpi / 72f + 0.5).toInt()
         }
 
@@ -86,7 +86,7 @@ class AdaptScreenUtil private constructor() {
          */
         fun px2Pt(pxValue: Float): Int {
             val metrics =
-                context.resources.displayMetrics
+                appContext.resources.displayMetrics
             return (pxValue * 72 / metrics.xdpi + 0.5).toInt()
         }
 
@@ -95,7 +95,7 @@ class AdaptScreenUtil private constructor() {
             newXdpi: Float
         ) {
             resources.displayMetrics.xdpi = newXdpi
-            context.resources.displayMetrics.xdpi = newXdpi
+            appContext.resources.displayMetrics.xdpi = newXdpi
             applyOtherDisplayMetrics(resources, newXdpi)
         }
 
