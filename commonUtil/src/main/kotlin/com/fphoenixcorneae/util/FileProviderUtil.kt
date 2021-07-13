@@ -14,7 +14,7 @@ import java.io.File
  */
 object FileProviderUtil {
 
-    private fun getUriForFile(file: File): Uri {
+    fun getUriForFile(file: File): Uri {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             getUriForFile24(file)
         } else {
@@ -22,7 +22,7 @@ object FileProviderUtil {
         }
     }
 
-    private fun getUriForFile24(file: File): Uri {
+    fun getUriForFile24(file: File): Uri {
         return FileProvider.getUriForFile(
             appContext,
             "${AppUtil.packageName}.FileProvider",
