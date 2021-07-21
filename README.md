@@ -1,6 +1,7 @@
 # CommonUtil
 通用工具类库：Kotlin 扩展、Kotlin-Dsl（animation、layout）、权限申请、各种工具类。
 
+[![](https://jitpack.io/v/FPhoenixCorneaE/CommonUtil.svg)](https://jitpack.io/#FPhoenixCorneaE/CommonUtil)
 
 ### How to include it in your project:
 **Step 1.** Add the JitPack repository to your build file
