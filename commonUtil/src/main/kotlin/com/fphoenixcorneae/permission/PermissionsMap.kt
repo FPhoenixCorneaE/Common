@@ -22,5 +22,4 @@ internal object PermissionsMap {
             map.remove(requestCode)
         }
     }
-
 }

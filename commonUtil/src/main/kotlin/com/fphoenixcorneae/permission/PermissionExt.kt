@@ -70,14 +70,16 @@ fun FragmentActivity.request(vararg permissions: String) {
 
 fun FragmentActivity.request(
     vararg permissions: String,
-    callbacks: (PermissionsCallbackDSL.() -> Unit)? = null
+    callbacks: (PermissionsCallbackDSL.() -> Unit)? = null,
 ) {
 
-    val permissionsCallback = PermissionsCallbackDSL().apply { callbacks?.invoke(this) }
+    val permissionsCallback = PermissionsCallbackDSL().apply {
+        callbacks?.invoke(this)
+    }
     val requestCode = PermissionsMap.put(permissionsCallback)
 
     val needRequestPermissions = permissions.filter {
-        "$it isGranted: ${isGranted(it)}  isRevoked: ${isRevoked(it)}".logd("Requesting permission ")
+        "$it isGranted: ${isGranted(it)}  isRevoked: ${isRevoked(it)}".logd("requestPermissions")
         !isGranted(it) || isRevoked(it)
     }
 
@@ -104,7 +106,6 @@ fun FragmentActivity.request(
             )
         }
 
-
         if (shouldNotShowRationalePermissions.isNotEmpty()) {
             getKtxPermissionFragment(this).requestPermissionsByFragment(
                 shouldNotShowRationalePermissions.toTypedArray(),
@@ -126,10 +127,10 @@ private fun getKtxPermissionFragment(activity: FragmentActivity): KtxPermissionF
 
 fun Activity.isGranted(permission: String): Boolean {
     return Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+        ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 }
 
 fun Activity.isRevoked(permission: String): Boolean {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-            packageManager.isPermissionRevokedByPolicy(permission, packageName)
+        packageManager.isPermissionRevokedByPolicy(permission, packageName)
 }

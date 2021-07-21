@@ -29,7 +29,7 @@ class PermissionsCallbackDSL : PermissionsCallback {
         onDenied = func
     }
 
-    fun onShowRationale(func: (request: PermissionRequest) -> Unit) {
+    fun onShowRationale(func: (permissionRequest: PermissionRequest) -> Unit) {
         onShowRationale = func
     }
 
@@ -45,8 +45,8 @@ class PermissionsCallbackDSL : PermissionsCallback {
         onDenied.invoke(permissions)
     }
 
-    override fun onShowRationale(request: PermissionRequest) {
-        onShowRationale.invoke(request)
+    override fun onShowRationale(permissionRequest: PermissionRequest) {
+        onShowRationale.invoke(permissionRequest)
     }
 
     override fun onNeverAskAgain(permissions: List<String>) {

@@ -2,7 +2,6 @@ package com.fphoenixcorneae.util.demo
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.fphoenixcorneae.dsl.layout.TextView
@@ -12,7 +11,7 @@ import com.fphoenixcorneae.ext.view.queryTextListener
 import com.fphoenixcorneae.ext.view.setOnSeekBarChangeListener
 import com.fphoenixcorneae.ext.view.textAction
 import com.fphoenixcorneae.permission.request
-import com.fphoenixcorneae.permission.requestCameraPermission
+import com.fphoenixcorneae.permission.requestPhonePermission
 import com.fphoenixcorneae.util.BrightnessUtil
 import com.fphoenixcorneae.util.IntentUtil
 import com.fphoenixcorneae.util.demo.databinding.ActivityMainBinding
@@ -58,11 +57,11 @@ class MainActivity : AppCompatActivity() {
 
         val origin2Md5 = "a123456"
         ("md5: ${origin2Md5.md5()}\n\n" +
-                "sha1: ${origin2Md5.sha1()}\n\n" +
-                "sha224: ${origin2Md5.sha224()}\n\n" +
-                "sha256: ${origin2Md5.sha256()}\n\n" +
-                "sha384: ${origin2Md5.sha384()}\n\n" +
-                "sha512: ${origin2Md5.sha512()}").also {
+            "sha1: ${origin2Md5.sha1()}\n\n" +
+            "sha224: ${origin2Md5.sha224()}\n\n" +
+            "sha256: ${origin2Md5.sha256()}\n\n" +
+            "sha384: ${origin2Md5.sha384()}\n\n" +
+            "sha512: ${origin2Md5.sha512()}").also {
             mViewBinding.tvMd5.text = it
         }
 
@@ -77,24 +76,7 @@ class MainActivity : AppCompatActivity() {
 
         // 申请权限
         mViewBinding.btnRequestPermissions.setOnClickListener {
-            requestCameraPermission {
-                onGranted {
-                    "onGranted".logd("Requesting permission ")
-                    IntentUtil.startActivity(this@MainActivity, MediaStore.ACTION_IMAGE_CAPTURE)
-                }
-                onDenied {
-                    "onDenied".logd("Requesting permission ")
-                    request(*it.toTypedArray())
-                }
-                onShowRationale {
-                    "onShowRationale".logd("Requesting permission ")
-                    request(*it.permissions.toTypedArray())
-                }
-                onNeverAskAgain {
-                    "onNeverAskAgain".logd("Requesting permission ")
-                    IntentUtil.openApplicationDetailsSettings()
-                }
-            }
+            requestPermissions()
         }
 
         // 设置亮度
@@ -104,14 +86,35 @@ class MainActivity : AppCompatActivity() {
             }
         )
     }
+
+    private fun requestPermissions() {
+        requestPhonePermission {
+            onGranted {
+                "onGranted".logd("requestPermissions")
+                // TODO
+            }
+            onDenied {
+                "onDenied".logd("requestPermissions")
+                requestPermissions()
+            }
+            onShowRationale {
+                "onShowRationale".logd("requestPermissions")
+                it.retry()
+            }
+            onNeverAskAgain {
+                "onNeverAskAgain".logd("requestPermissions")
+                IntentUtil.openApplicationDetailsSettings()
+            }
+        }
+    }
 }
 
 data class Fruit(
     val type: Int,
-    val watermalon: Watermalon
+    val watermalon: Watermalon,
 ) : Cloneable
 
 data class Watermalon(
     val weight: Float,
-    val size: Float
+    val size: Float,
 )
