@@ -57,7 +57,7 @@ object ThreadUtil {
     fun getFixedPool(
         @IntRange(from = 1) size: Int,
         @IntRange(from = 1, to = 10) priority: Int
-    ): ExecutorService? {
+    ): ExecutorService {
         return getPoolByTypeAndPriority(size, priority)
     }
 
@@ -84,7 +84,7 @@ object ThreadUtil {
             from = 1,
             to = 10
         ) priority: Int
-    ): ExecutorService? {
+    ): ExecutorService {
         return getPoolByTypeAndPriority(
             TYPE_SINGLE.toInt(),
             priority
@@ -114,7 +114,7 @@ object ThreadUtil {
             from = 1,
             to = 10
         ) priority: Int = Thread.NORM_PRIORITY
-    ): ExecutorService? {
+    ): ExecutorService {
         return getPoolByTypeAndPriority(
             TYPE_CACHED.toInt(),
             priority
@@ -142,7 +142,7 @@ object ThreadUtil {
             from = 1,
             to = 10
         ) priority: Int
-    ): ExecutorService? {
+    ): ExecutorService {
         return getPoolByTypeAndPriority(
             TYPE_IO.toInt(),
             priority
@@ -172,7 +172,7 @@ object ThreadUtil {
             from = 1,
             to = 10
         ) priority: Int
-    ): ExecutorService? {
+    ): ExecutorService {
         return getPoolByTypeAndPriority(
             TYPE_CPU.toInt(),
             priority
@@ -1228,7 +1228,7 @@ object ThreadUtil {
         }
     }
 
-    private fun getPoolByTypeAndPriority(type: Int): ExecutorService? {
+    private fun getPoolByTypeAndPriority(type: Int): ExecutorService {
         return getPoolByTypeAndPriority(
             type,
             Thread.NORM_PRIORITY
@@ -1238,7 +1238,7 @@ object ThreadUtil {
     private fun getPoolByTypeAndPriority(
         type: Int,
         priority: Int
-    ): ExecutorService? {
+    ): ExecutorService {
         synchronized(TYPE_PRIORITY_POOLS) {
             var pool: ExecutorService?
             var priorityPools = TYPE_PRIORITY_POOLS[type]
@@ -1259,7 +1259,7 @@ object ThreadUtil {
     }
 
     private val globalDeliver: Executor?
-        private get() {
+        get() {
             if (sDeliver == null) {
                 sDeliver = object : Executor {
                     private val mHandler =
@@ -1288,7 +1288,7 @@ object ThreadUtil {
             AtomicInteger()
         private val mWorkQueue: RunnableLinkedBlockingQueue
         private val submittedCount: Int
-            private get() = mSubmittedCount.get()
+            get() = mSubmittedCount.get()
 
         override fun afterExecute(
             r: Runnable,
@@ -1387,7 +1387,7 @@ object ThreadUtil {
         }
     }
 
-    private class ThreadFactoryImpl @JvmOverloads internal constructor(
+    private class ThreadFactoryImpl @JvmOverloads constructor(
         prefix: String,
         priority: Int,
         isDaemon: Boolean = false
@@ -1412,8 +1412,7 @@ object ThreadUtil {
         }
 
         companion object {
-            private val POOL_NUMBER =
-                AtomicInteger(1)
+            private val POOL_NUMBER = AtomicInteger(1)
             private const val serialVersionUID = -9209200509960368598L
         }
 
@@ -1619,6 +1618,5 @@ object ThreadUtil {
 
     private class TaskInfo(val mService: ExecutorService?) {
         var mTimerTask: TimerTask? = null
-
     }
 }

@@ -6,7 +6,7 @@ interface PermissionsCallback {
 
     fun onDenied(permissions: List<String>)
 
-    fun onShowRationale(request: PermissionRequest)
+    fun onShowRationale(permissionRequest: PermissionRequest)
 
     fun onNeverAskAgain(permissions: List<String>)
 }
