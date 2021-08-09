@@ -1,6 +1,7 @@
 package com.fphoenixcorneae.compat
 
 import android.R
+import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Build
 import android.view.View
@@ -18,6 +19,8 @@ class KeyboardConflictCompat private constructor(window: Window) {
     private var contentHeight = 0
     private var isFirst = true
     private val statusBarHeight: Int
+
+    @SuppressLint("ObsoleteSdkInt")
     private fun possiblyResizeChildOfContent() {
         val usableHeightNow = computeUsableHeight()
         if (usableHeightNow != usableHeightPrevious) {
@@ -47,8 +50,10 @@ class KeyboardConflictCompat private constructor(window: Window) {
     }
 
     companion object {
-        fun assistWindow(window: Window) {
-            KeyboardConflictCompat(window)
+        fun assistWindow(window: Window?) {
+            window?.let {
+                KeyboardConflictCompat(it)
+            }
         }
     }
 
