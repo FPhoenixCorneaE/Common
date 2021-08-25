@@ -10,7 +10,6 @@ import com.fphoenixcorneae.ext.algorithm.*
 import com.fphoenixcorneae.ext.view.queryTextListener
 import com.fphoenixcorneae.ext.view.setOnSeekBarChangeListener
 import com.fphoenixcorneae.ext.view.textAction
-import com.fphoenixcorneae.permission.request
 import com.fphoenixcorneae.permission.requestPhonePermission
 import com.fphoenixcorneae.util.BrightnessUtil
 import com.fphoenixcorneae.util.IntentUtil
@@ -21,16 +20,19 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mViewBinding: ActivityMainBinding
+    private val appViewModel by androidViewModel<AppViewModel>()
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mViewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mViewBinding.root)
+        initObserver()
 
         mViewBinding.btnTest.setOnClickListener {
             //            toast("测试测试测试！！！")
             toastAliPayStyle("测试测试测试！！！")
+            appViewModel.setGlobalString("测试 Global.")
         }
 
         val job: Job = lifecycleScope.launch { }
@@ -85,6 +87,12 @@ class MainActivity : AppCompatActivity() {
                 BrightnessUtil.setBrightness(progress)
             }
         )
+    }
+
+    private fun initObserver() {
+        appViewModel.global.observe(this) {
+            "MainActivity: $it".logd("GlobalAndroid")
+        }
     }
 
     private fun requestPermissions() {
