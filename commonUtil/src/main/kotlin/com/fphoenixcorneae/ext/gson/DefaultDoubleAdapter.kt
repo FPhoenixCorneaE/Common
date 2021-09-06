@@ -4,10 +4,10 @@ import com.google.gson.*
 import java.lang.reflect.Type
 
 /**
- * Gson解析默认Double类型适配器
+ * Gson 解析默认 Double 类型适配器
  */
-class DefaultDoubleAdapter : JsonSerializer<Double>,
-    JsonDeserializer<Double> {
+class DefaultDoubleAdapter : JsonSerializer<Double>, JsonDeserializer<Double> {
+
     @Throws(JsonParseException::class)
     override fun deserialize(
         json: JsonElement,

@@ -8,8 +8,8 @@ import com.google.gson.reflect.TypeToken
 import java.io.Reader
 import java.lang.reflect.Type
 
-val GSON = createGson(true)
-val GSON_NO_NULLS = createGson(false)
+val GSON: Gson = createGsonBuilder(true).create()
+val GSON_NO_NULLS: Gson = createGsonBuilder(false).create()
 
 /**
  * Serializes an object into json.
@@ -63,7 +63,6 @@ fun <T> String?.toObject(type: Class<T>): T? {
 /**
  * Converts [String] to given type.
  *
- * @param json the json to convert.
  * @param type type type json will be converted to.
  * @return instance of type
  */
@@ -94,7 +93,6 @@ fun <T> Reader.toObject(type: Class<T>): T? {
 /**
  * Converts [Reader] to given type.
  *
- * @param reader the reader to convert.
  * @param type   type type json will be converted to.
  * @return instance of type
  */
@@ -160,19 +158,19 @@ fun getType(rawType: Type, vararg typeArguments: Type): Type {
 }
 
 /**
- * Create a pre-configured [Gson] instance.
+ * Create a pre-configured [GsonBuilder] instance.
  *
  * @param serializeNulls determines if nulls will be serialized.
- * @return [Gson] instance.
+ * @return [GsonBuilder] instance.
  */
-private fun createGson(serializeNulls: Boolean): Gson {
+fun createGsonBuilder(serializeNulls: Boolean = true): GsonBuilder {
     val builder = GsonBuilder()
     if (serializeNulls) {
-        // 如果不设置serializeNulls,序列化时默认忽略Null
+        // 如果不设置 serializeNulls,序列化时默认忽略Null
         builder.serializeNulls()
     }
     return builder
-        // 使打印的json字符串更美观，如果不设置，打印出来的字符串不分行
+        // 使打印的 json 字符串更美观，如果不设置，打印出来的字符串不分行
         .setPrettyPrinting()
         // 自定义类型适配器
         .registerTypeAdapter(Boolean::class.java, DefaultBooleanAdapter())
@@ -181,5 +179,5 @@ private fun createGson(serializeNulls: Boolean): Gson {
         .registerTypeAdapter(Int::class.java, DefaultIntegerAdapter())
         .registerTypeAdapter(Long::class.java, DefaultLongAdapter())
         .registerTypeAdapter(String::class.java, DefaultStringAdapter())
-        .create()
+        .registerTypeAdapter(CharSequence::class.java, DefaultCharSequenceAdapter())
 }

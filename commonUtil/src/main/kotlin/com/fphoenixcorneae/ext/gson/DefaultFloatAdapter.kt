@@ -4,10 +4,10 @@ import com.google.gson.*
 import java.lang.reflect.Type
 
 /**
- * Gson解析默认Float类型适配器
+ * Gson 解析默认 Float 类型适配器
  */
-class DefaultFloatAdapter : JsonSerializer<Float>,
-    JsonDeserializer<Float> {
+class DefaultFloatAdapter : JsonSerializer<Float>, JsonDeserializer<Float> {
+
     @Throws(JsonParseException::class)
     override fun deserialize(
         json: JsonElement,

@@ -4,10 +4,10 @@ import com.google.gson.*
 import java.lang.reflect.Type
 
 /**
- * Gson解析默认Boolean类型适配器
+ * Gson 解析默认 Boolean 类型适配器
  */
-class DefaultBooleanAdapter : JsonSerializer<Boolean>,
-    JsonDeserializer<Boolean> {
+class DefaultBooleanAdapter : JsonSerializer<Boolean>, JsonDeserializer<Boolean> {
+
     @Throws(JsonParseException::class)
     override fun deserialize(
         json: JsonElement,
