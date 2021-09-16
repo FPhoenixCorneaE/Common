@@ -68,6 +68,7 @@ fun View.popBackStack(
 }
 
 var lastNavTime = 0L
+var lastResId = 0
 
 /**
  * 防止短时间内多次快速跳转 Fragment 出现的 bug
@@ -83,14 +84,18 @@ fun NavController.navigateTo(
     interval: Long = 500
 ) {
     val currentTime = System.currentTimeMillis()
-    if (currentTime >= lastNavTime + interval) {
+    if (resId == lastResId && currentTime - lastNavTime < interval) {
+        return
+    }
+
+    try {
+        navigate(resId, bundle, navOptions, navigatorExtras)
+    } catch (ignore: Exception) {
+        // 防止出现 当 fragment 中 action 的 duration设置为 0 时，连续点击两个不同的跳转会导致如下崩溃 #issue53
+        ignore.printStackTrace()
+    } finally {
         lastNavTime = currentTime
-        try {
-            navigate(resId, bundle, navOptions, navigatorExtras)
-        } catch (ignore: Exception) {
-            // 防止出现 当 fragment 中 action 的 duration设置为 0 时，连续点击两个不同的跳转会导致如下崩溃 #issue53
-            ignore.logd()
-        }
+        lastResId = resId
     }
 }
 
