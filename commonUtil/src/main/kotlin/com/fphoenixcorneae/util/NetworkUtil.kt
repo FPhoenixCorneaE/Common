@@ -42,13 +42,13 @@ class NetworkUtil private constructor() {
                 val connectivityManager = appContext.connectivityManager
                 return when {
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
-                        // Android 6.0以上可用方法
-                        // 当NetworkCapabilities的描述中有VALIDATED这个描述时，此网络是真正可用的
+                        // Android 6.0 以上可用方法
+                        // 当 NetworkCapabilities 的描述中有 INTERNET&&VALIDATED 这个描述时，此网络是真正可用的
                         val networkCapabilities =
                             connectivityManager?.getNetworkCapabilities(connectivityManager.activeNetwork)
-                        networkCapabilities != null && networkCapabilities.hasCapability(
-                            NetworkCapabilities.NET_CAPABILITY_VALIDATED
-                        )
+                        networkCapabilities != null
+                                && networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                                && networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
                     }
                     else -> {
                         val info = connectivityManager?.activeNetworkInfo
@@ -62,14 +62,13 @@ class NetworkUtil private constructor() {
          */
         val isWifiConnected: Boolean
             get() {
-                val connectivityManager =appContext.connectivityManager
+                val connectivityManager = appContext.connectivityManager
                 return when {
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
                         val networkCapabilities =
                             connectivityManager?.getNetworkCapabilities(connectivityManager.activeNetwork)
-                        networkCapabilities != null && networkCapabilities.hasTransport(
-                            NetworkCapabilities.TRANSPORT_WIFI
-                        )
+                        networkCapabilities != null
+                                && networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
                     }
                     else -> {
                         val networkInfo = connectivityManager?.activeNetworkInfo
@@ -83,14 +82,13 @@ class NetworkUtil private constructor() {
          */
         val isMobileConnected: Boolean
             get() {
-                val connectivityManager =appContext.connectivityManager
+                val connectivityManager = appContext.connectivityManager
                 return when {
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
                         val networkCapabilities =
                             connectivityManager?.getNetworkCapabilities(connectivityManager.activeNetwork)
-                        networkCapabilities != null && networkCapabilities.hasTransport(
-                            NetworkCapabilities.TRANSPORT_CELLULAR
-                        )
+                        networkCapabilities != null
+                                && networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
                     }
                     else -> {
                         val networkInfo = connectivityManager?.activeNetworkInfo
@@ -104,7 +102,7 @@ class NetworkUtil private constructor() {
          */
         val connectedType: Int
             get() {
-                val mConnectivityManager =appContext.connectivityManager
+                val mConnectivityManager = appContext.connectivityManager
                 val mNetworkInfo = mConnectivityManager?.activeNetworkInfo
                 return if (mNetworkInfo != null && mNetworkInfo.isConnected) mNetworkInfo.type else -1
             }
@@ -199,43 +197,43 @@ class NetworkUtil private constructor() {
         /**
          * Get dns1
          */
-        val dnS1: String?
+        val dnS1: String
             get() = getPropInfo(DNS1)
 
         /**
          * Get dns2
          */
-        val dnS2: String?
+        val dnS2: String
             get() = getPropInfo(DNS2)
 
         /**
          * Get ethernet gateway
          */
-        val ethernetGateway: String?
+        val ethernetGateway: String
             get() = getPropInfo(ETHERNET_GATEWAY)
 
         /**
          * Get wlan gateway
          */
-        val wlanGateway: String?
+        val wlanGateway: String
             get() = getPropInfo(WLAN_GATEWAY)
 
         /**
          * Get ethernet mask
          */
-        val ethernetMask: String?
+        val ethernetMask: String
             get() = getPropInfo(ETHERNET_MASK)
 
         /**
          * Get wlan mask
          */
-        val wlanMask: String?
+        val wlanMask: String
             get() = getPropInfo(WLAN_MASK)
 
         /**
          * Get prop information by different interface name
          */
-        private fun getPropInfo(interfaceName: String): String? {
+        private fun getPropInfo(interfaceName: String): String {
             var re = ""
             try {
                 val process = Runtime.getRuntime().exec("getprop")
