@@ -2,7 +2,6 @@ package com.fphoenixcorneae.util
 
 import android.content.res.AssetFileDescriptor
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.content.res.XmlResourceParser
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
@@ -32,9 +31,14 @@ class ResourceUtil private constructor() {
         try {
             val inputReader = InputStreamReader(getRaw(resId))
             val bufReader = BufferedReader(inputReader)
-            var line: String? = null
+            var line: String?
             val result = StringBuilder()
-            while ({ line = bufReader.readLine(); line }() != null) {
+            while (
+                run {
+                    line = bufReader.readLine()
+                    line
+                } != null
+            ) {
                 result.append(line)
             }
             return result.toString()
@@ -48,56 +52,56 @@ class ResourceUtil private constructor() {
     companion object {
 
         fun getLayoutId(name: String): Int {
-            return Resources.getSystem().getIdentifier(
+            return appContext.resources.getIdentifier(
                 name, "layout",
                 AppUtil.packageName
             )
         }
 
         fun getStringId(name: String): Int {
-            return Resources.getSystem().getIdentifier(
+            return appContext.resources.getIdentifier(
                 name, "string",
                 AppUtil.packageName
             )
         }
 
         fun getDrawableId(name: String): Int {
-            return Resources.getSystem().getIdentifier(
+            return appContext.resources.getIdentifier(
                 name, "drawable",
                 AppUtil.packageName
             )
         }
 
         fun getMipmapId(name: String): Int {
-            return Resources.getSystem().getIdentifier(
+            return appContext.resources.getIdentifier(
                 name, "mipmap",
                 AppUtil.packageName
             )
         }
 
         fun getStyleId(name: String): Int {
-            return Resources.getSystem().getIdentifier(
+            return appContext.resources.getIdentifier(
                 name, "style",
                 AppUtil.packageName
             )
         }
 
         fun getId(name: String): Int {
-            return Resources.getSystem().getIdentifier(
+            return appContext.resources.getIdentifier(
                 name, "id",
                 AppUtil.packageName
             )
         }
 
         fun getColorId(name: String): Int {
-            return Resources.getSystem().getIdentifier(
+            return appContext.resources.getIdentifier(
                 name, "color",
                 AppUtil.packageName
             )
         }
 
         fun getArrayId(name: String): Int {
-            return Resources.getSystem().getIdentifier(
+            return appContext.resources.getIdentifier(
                 name, "array",
                 AppUtil.packageName
             )
@@ -107,7 +111,7 @@ class ResourceUtil private constructor() {
          * Get raw file, ui/raw/file
          */
         fun getRaw(@RawRes resId: Int): InputStream {
-            return Resources.getSystem().openRawResource(resId)
+            return appContext.resources.openRawResource(resId)
         }
 
         /**
@@ -115,14 +119,14 @@ class ResourceUtil private constructor() {
          * uncompressed data, which typically includes things like mp3 files and png images.
          */
         fun getRawFd(@RawRes resId: Int): AssetFileDescriptor {
-            return Resources.getSystem().openRawResourceFd(resId)
+            return appContext.resources.openRawResourceFd(resId)
         }
 
         /**
          * Get xml file, ui/xml/file
          */
         fun getXml(@XmlRes resId: Int): XmlResourceParser {
-            return Resources.getSystem().getXml(resId)
+            return appContext.resources.getXml(resId)
         }
 
         /**
@@ -136,21 +140,21 @@ class ResourceUtil private constructor() {
          * Get string, ui/values/__picker_strings.xml
          */
         fun getString(@StringRes resId: Int): String {
-            return Resources.getSystem().getString(resId)
+            return appContext.resources.getString(resId)
         }
 
         /**
          * Get string array, ui/values/__picker_strings.xml
          */
         fun getStringArray(@ArrayRes resId: Int): Array<String> {
-            return Resources.getSystem().getStringArray(resId)
+            return appContext.resources.getStringArray(resId)
         }
 
         /**
          * Get int array, ui/values/__picker_strings.xml
          */
         fun getIntArray(@ArrayRes resId: Int): IntArray {
-            return Resources.getSystem().getIntArray(resId)
+            return appContext.resources.getIntArray(resId)
         }
 
         /**
@@ -166,7 +170,7 @@ class ResourceUtil private constructor() {
         fun getFont(@FontRes resId: Int): Typeface? {
             return when {
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
-                    Resources.getSystem().getFont(resId)
+                    appContext.resources.getFont(resId)
                 }
                 else -> {
                     ResourcesCompat.getFont(appContext, resId)
@@ -188,7 +192,7 @@ class ResourceUtil private constructor() {
          * 获取某个dimen的值,如果是dp或sp的单位,将其乘以density,如果是px,则不乘   返回float
          */
         fun getDimension(@DimenRes resId: Int): Float {
-            return Resources.getSystem().getDimension(resId)
+            return appContext.resources.getDimension(resId)
         }
 
         /**
@@ -198,7 +202,7 @@ class ResourceUtil private constructor() {
          * 获取某个dimen的值,如果是dp或sp的单位,将其乘以density,如果是px,则不乘  返回int
          */
         fun getDimensionPixelOffset(@DimenRes resId: Int): Int {
-            return Resources.getSystem().getDimensionPixelOffset(resId)
+            return appContext.resources.getDimensionPixelOffset(resId)
         }
 
         /**
@@ -208,7 +212,7 @@ class ResourceUtil private constructor() {
          * 不管写的是dp还是sp还是px,都会乘以density.
          */
         fun getDimensionPixelSize(@DimenRes resId: Int): Int {
-            return Resources.getSystem().getDimensionPixelSize(resId)
+            return appContext.resources.getDimensionPixelSize(resId)
         }
     }
 }

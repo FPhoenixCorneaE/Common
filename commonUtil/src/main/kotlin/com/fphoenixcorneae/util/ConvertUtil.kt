@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import com.fphoenixcorneae.annotation.MemoryUnit
 import com.fphoenixcorneae.annotation.TimeUnit
+import com.fphoenixcorneae.ext.appContext
 import java.io.*
 import java.nio.charset.Charset
 import kotlin.experimental.or
@@ -619,7 +620,7 @@ class ConvertUtil private constructor() {
          */
         fun bitmap2Drawable(bitmap: Bitmap?): Drawable? {
             return if (bitmap == null) null else BitmapDrawable(
-                Resources.getSystem(),
+                appContext.resources,
                 bitmap
             )
         }
