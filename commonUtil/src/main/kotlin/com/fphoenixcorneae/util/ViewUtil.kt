@@ -3,6 +3,7 @@ package com.fphoenixcorneae.util
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
@@ -214,6 +215,7 @@ class ViewUtil private constructor() {
         }
 
         var popupWindow: PopupWindow? = null
+
         /**
          * 显示PopupWindow
          *
@@ -335,11 +337,11 @@ class ViewUtil private constructor() {
          * @return
          */
         fun getStatusBarHeight(context: Context): Int {
+            val resources = Resources.getSystem()
             var result = 0
-            val resourceId =
-                context.resources.getIdentifier("status_bar_height", "dimen", "android")
+            val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
             if (resourceId > 0) {
-                result = context.resources.getDimensionPixelSize(resourceId)
+                result = resources.getDimensionPixelSize(resourceId)
             }
             return result
         }

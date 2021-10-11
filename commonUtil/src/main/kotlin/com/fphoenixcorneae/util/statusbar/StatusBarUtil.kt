@@ -3,6 +3,7 @@ package com.fphoenixcorneae.util.statusbar
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.view.View
@@ -312,9 +313,9 @@ object StatusBarUtil {
      */
     @JvmStatic
     fun getStatusBarHeight(context: Context): Int {
-        val resourceId =
-            context.resources.getIdentifier("status_bar_height", "dimen", "android")
-        return context.resources.getDimensionPixelSize(resourceId)
+        val resources = Resources.getSystem()
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        return resources.getDimensionPixelSize(resourceId)
     }
 
     /**
@@ -324,9 +325,9 @@ object StatusBarUtil {
      * @return
      */
     fun getNavigationBarHeight(context: Context): Int {
-        val resourceId =
-            context.resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        return context.resources.getDimensionPixelSize(resourceId)
+        val resources = Resources.getSystem()
+        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        return resources.getDimensionPixelSize(resourceId)
     }
 
     /**

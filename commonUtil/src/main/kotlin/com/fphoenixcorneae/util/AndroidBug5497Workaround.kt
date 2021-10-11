@@ -2,6 +2,7 @@ package com.fphoenixcorneae.util
 
 import android.R
 import android.app.Activity
+import android.content.res.Resources
 import android.graphics.Rect
 import android.os.Build
 import android.view.View
@@ -61,9 +62,10 @@ class AndroidBug5497Workaround private constructor(activity: Activity) {
     }
 
     init {
-        //获取状态栏的高度
-        val resourceId = activity.resources.getIdentifier("status_bar_height", "dimen", "android")
-        statusBarHeight = activity.resources.getDimensionPixelSize(resourceId)
+        // 获取状态栏的高度
+        val resources = Resources.getSystem()
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        statusBarHeight = resources.getDimensionPixelSize(resourceId)
         this.activity = activity
         val content = activity.findViewById<View>(R.id.content) as FrameLayout
         mChildOfContent = content.getChildAt(0)
