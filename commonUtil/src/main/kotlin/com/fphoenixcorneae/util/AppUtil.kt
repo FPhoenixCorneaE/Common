@@ -230,18 +230,17 @@ class AppUtil private constructor() {
         }
 
         /**
-         * Judge whether an app is debuggable
+         * Judge whether an app is debugDN
          */
-        val isDebuggable: Boolean
+        val isDebugDN: Boolean
             get() {
                 val context = appContext
                 var debuggable = false
                 try {
-                    val packageInfo =
-                        context.packageManager.getPackageInfo(
-                            packageName,
-                            PackageManager.GET_SIGNATURES
-                        )
+                    val packageInfo = context.packageManager.getPackageInfo(
+                        packageName,
+                        PackageManager.GET_SIGNATURES
+                    )
                     val signatures = packageInfo.signatures
                     for (signature in signatures) {
                         val cf = CertificateFactory.getInstance("X.509")
@@ -258,6 +257,15 @@ class AppUtil private constructor() {
                 }
                 return debuggable
             }
+
+        /**
+         * Judge whether an app is debuggable
+         */
+        fun isDebuggable(): Boolean {
+            val context = appContext
+            return context.applicationInfo != null
+                    && (context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+        }
 
         /**
          * Return whether it is a system application.
