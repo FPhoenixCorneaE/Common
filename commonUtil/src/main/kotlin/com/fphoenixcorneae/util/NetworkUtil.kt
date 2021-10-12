@@ -48,7 +48,6 @@ class NetworkUtil private constructor() {
                             connectivityManager?.getNetworkCapabilities(connectivityManager.activeNetwork)
                         networkCapabilities != null
                                 && networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                                && networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
                     }
                     else -> {
                         val info = connectivityManager?.activeNetworkInfo
@@ -69,6 +68,7 @@ class NetworkUtil private constructor() {
                             connectivityManager?.getNetworkCapabilities(connectivityManager.activeNetwork)
                         networkCapabilities != null
                                 && networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                                && networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
                     }
                     else -> {
                         val networkInfo = connectivityManager?.activeNetworkInfo
