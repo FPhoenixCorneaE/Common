@@ -37,7 +37,7 @@ class AppUtil private constructor() {
 
     companion object {
 
-        private val DEBUG_DN = X500Principal("CN=Android Debug,O=Android,C=US")
+        private val DEBUG_DN = X500Principal("CN=Android Debug, O=Android, C=US")
 
         /**
          * Get package name
