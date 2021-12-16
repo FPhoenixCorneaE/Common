@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.view.Surface
 import android.view.View
 import android.view.Window
+import android.view.WindowManager
 import androidx.annotation.RequiresPermission
 
 /**
@@ -178,4 +179,45 @@ val Activity.titleBarHeight: Int
                 titleBarHeight
             }
         }
+
+/**
+ * 是否是全屏
+ */
+val Activity.isFullscreen: Boolean
+    get() = run {
+        val fullscreenFlag = WindowManager.LayoutParams.FLAG_FULLSCREEN
+        window.attributes.flags and fullscreenFlag == fullscreenFlag
+    }
+
+/**
+ * 设置屏幕为全屏
+ */
+fun Activity.setFullscreen() {
+    window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+}
+
+/**
+ * 设置屏幕为非全屏
+ */
+fun Activity.setNonFullscreen() {
+    window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+}
+
+/**
+ * 切换全屏
+ */
+fun Activity.toggleFullscreen() {
+    if (isFullscreen) {
+        setNonFullscreen()
+    } else {
+        setFullscreen()
+    }
+}
+
+/**
+ * 是否是平板
+ */
+val isTablet: Boolean
+    get() =
+        Resources.getSystem().configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
 

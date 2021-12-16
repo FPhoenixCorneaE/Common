@@ -3,7 +3,7 @@ package com.fphoenixcorneae.ext.view
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.fphoenixcorneae.ext.dp2Px
+import com.fphoenixcorneae.ext.dp
 
 fun RecyclerView.itemPadding(top: Int, bottom: Int, left: Int = 0, right: Int = 0) {
     addItemDecoration(PaddingItemDecoration(top, bottom, left, right))
@@ -28,6 +28,6 @@ class PaddingItemDecoration(
         state: RecyclerView.State
     ) {
         super.getItemOffsets(outRect, view, parent, state)
-        outRect[mLeft.dp2Px(), mTop.dp2Px(), mRight.dp2Px()] = mBottom.dp2Px()
+        outRect[mLeft.dp, mTop.dp, mRight.dp] = mBottom.dp
     }
 }

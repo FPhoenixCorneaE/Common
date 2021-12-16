@@ -18,7 +18,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.PopupWindow
 import android.widget.TextView
-import com.fphoenixcorneae.ext.dp2Px
+import com.fphoenixcorneae.ext.dp
 import java.util.*
 
 /**
@@ -81,10 +81,10 @@ class ViewUtil private constructor() {
             val bottomPx: Int
             when {
                 isDp -> {
-                    leftPx = left.dp2Px()
-                    topPx = top.dp2Px()
-                    rightPx = right.dp2Px()
-                    bottomPx = bottom.dp2Px()
+                    leftPx = left.dp
+                    topPx = top.dp
+                    rightPx = right.dp
+                    bottomPx = bottom.dp
                 }
                 else -> {
                     leftPx = left.toInt()
@@ -127,10 +127,10 @@ class ViewUtil private constructor() {
             val bottomPx: Int
             when {
                 isDp -> {
-                    leftPx = left.dp2Px()
-                    topPx = top.dp2Px()
-                    rightPx = right.dp2Px()
-                    bottomPx = bottom.dp2Px()
+                    leftPx = left.dp
+                    topPx = top.dp
+                    rightPx = right.dp
+                    bottomPx = bottom.dp
                 }
                 else -> {
                     leftPx = left.toInt()

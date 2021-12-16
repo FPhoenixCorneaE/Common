@@ -3,7 +3,7 @@ import com.fphoenixcorneae.plugin.Deps
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("com.fphoenixcorneae.plugin")
+    id("com.FPhoenixCorneaE.plugin")
 }
 
 android {
