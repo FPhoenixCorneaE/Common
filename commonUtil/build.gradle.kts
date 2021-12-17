@@ -9,16 +9,14 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Deps.Android.compileSdkVersion)
-    buildToolsVersion(Deps.Android.buildToolsVersion)
+    compileSdk = Deps.Android.compileSdkVersion
+    buildToolsVersion = Deps.Android.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion(Deps.Android.minSdkVersion)
-        targetSdkVersion(Deps.Android.targetSdkVersion)
-        versionCode = Deps.Android.versionCode
-        versionName = Deps.Android.versionName
-
-        setConsumerProguardFiles(listOf("consumer-rules.pro"))
+        minSdk = Deps.Android.minSdkVersion
+        targetSdk = Deps.Android.targetSdkVersion
+        consumerProguardFile("consumer-rules.pro")
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -50,24 +48,22 @@ android {
     }
 
     compileOptions {
-        targetCompatibility = JavaVersion.VERSION_1_8
-        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
     testOptions {
-        unitTests.isIncludeAndroidResources = true
-        unitTests.isReturnDefaultValues = true
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
     }
 
-    dexOptions {
-        jumboMode = true
-    }
-
-    lintOptions {
+    lint {
         isCheckReleaseBuilds = false
         isAbortOnError = false
     }

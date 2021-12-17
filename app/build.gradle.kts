@@ -7,17 +7,17 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Deps.Android.compileSdkVersion)
-    buildToolsVersion(Deps.Android.buildToolsVersion)
+    compileSdk = Deps.Android.compileSdkVersion
+    buildToolsVersion = Deps.Android.buildToolsVersion
 
     defaultConfig {
-        applicationId("com.fphoenixcorneae.util.demo")
-        minSdkVersion(Deps.Android.minSdkVersion)
-        targetSdkVersion(Deps.Android.targetSdkVersion)
+        applicationId = "com.fphoenixcorneae.util.demo"
+        minSdk = Deps.Android.minSdkVersion
+        targetSdk = Deps.Android.targetSdkVersion
         versionCode = Deps.Android.versionCode
         versionName = Deps.Android.versionName
 
-        testInstrumentationRunner("androidx.test.runner.AndroidJUnitRunner")
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -49,19 +49,15 @@ android {
     }
 
     compileOptions {
-        targetCompatibility = JavaVersion.VERSION_1_8
-        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
-    dexOptions {
-        jumboMode = true
-    }
-
-    lintOptions {
+    lint {
         isCheckReleaseBuilds = false
         isAbortOnError = false
     }

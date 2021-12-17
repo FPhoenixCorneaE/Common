@@ -47,7 +47,7 @@ class ContextUtil private constructor() {
             sContext = context.applicationContext as Application
             // 注册应用生命周期回调
             sContext?.registerActivityLifecycleCallbacks(sActivityLifecycleCallbacks)
-            sThreadPool?.execute { AdaptScreenUtil.preLoad() }
+            sThreadPool.execute { AdaptScreenUtil.preLoad() }
         }
 
         /**
