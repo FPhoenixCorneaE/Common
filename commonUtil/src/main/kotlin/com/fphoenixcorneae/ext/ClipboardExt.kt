@@ -1,96 +1,68 @@
 package com.fphoenixcorneae.ext
 
 import android.content.ClipData
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 
 /**
  * 复制文本到剪贴板
- *
- * @param text 文本
  */
-fun Context.copyText(text: CharSequence?) {
-    clipboardManager?.setPrimaryClip(ClipData.newPlainText("text", text))
-}
+fun CharSequence?.copy2Clipboard() =
+    appContext.clipboardManager
+        ?.setPrimaryClip(ClipData.newPlainText("text", this))
 
 /**
- * 获取剪贴板的文本
- *
- * @return 剪贴板的文本
+ * 获取剪贴板的文本, it is called in the post(Runnable).
  */
-val clipboardText: CharSequence?
-    get() {
-        val clipboardManager = appContext.clipboardManager
-        val clip = clipboardManager?.primaryClip
-        return when {
-            clip != null && clip.itemCount > 0 -> {
-                clip.getItemAt(0).coerceToText(appContext)
-            }
-            else -> {
+fun getClipboardText(): CharSequence? =
+    appContext.clipboardManager
+        ?.primaryClip
+        ?.run {
+            if (itemCount > 0) {
+                getItemAt(0).coerceToText(appContext)
+            } else {
                 null
             }
         }
-    }
 
 /**
- * 复制 uri 到剪贴板
- *
- * @param uri uri
+ * 复制Uri到剪贴板
  */
-fun Context.copyUri(uri: Uri?) {
-    clipboardManager?.setPrimaryClip(
-        ClipData.newUri(
-            appContext.contentResolver,
-            "uri",
-            uri
-        )
-    )
-}
+fun Uri?.copy2Clipboard() =
+    appContext.clipboardManager
+        ?.setPrimaryClip(ClipData.newUri(appContext.contentResolver, "uri", this))
 
 /**
- * 获取剪贴板的uri
- *
- * @return 剪贴板的uri
+ * 获取剪贴板的Uri, it is called in the post(Runnable).
  */
-val clipboardUri: Uri?
-    get() {
-        val clipboardManager = appContext.clipboardManager
-        val clip = clipboardManager?.primaryClip
-        return when {
-            clip != null && clip.itemCount > 0 -> {
-                clip.getItemAt(0).uri
-            }
-            else -> {
+fun getClipboardUri(): Uri? =
+    appContext.clipboardManager
+        ?.primaryClip
+        ?.run {
+            if (itemCount > 0) {
+                getItemAt(0).uri
+            } else {
                 null
             }
         }
-    }
 
 /**
  * 复制意图到剪贴板
- *
- * @param intent 意图
  */
-fun Context.copyIntent(intent: Intent?) {
-    clipboardManager?.setPrimaryClip(ClipData.newIntent("intent", intent))
-}
+fun Intent.copy2Clipboard() =
+    appContext.clipboardManager
+        ?.setPrimaryClip(ClipData.newIntent("intent", this))
 
 /**
- * 获取剪贴板的意图
- *
- * @return 剪贴板的意图
+ * 获取剪贴板的意图, it is called in the post(Runnable).
  */
-val clipboardIntent: Intent?
-    get() {
-        val clipboardManager = appContext.clipboardManager
-        val clip = clipboardManager?.primaryClip
-        return when {
-            clip != null && clip.itemCount > 0 -> {
-                clip.getItemAt(0).intent
-            }
-            else -> {
+fun getClipboardIntent(): Intent? =
+    appContext.clipboardManager
+        ?.primaryClip
+        ?.run {
+            if (itemCount > 0) {
+                getItemAt(0).intent
+            } else {
                 null
             }
         }
-    }
