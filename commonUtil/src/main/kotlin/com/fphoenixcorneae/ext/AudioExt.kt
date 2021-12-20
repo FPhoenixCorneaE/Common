@@ -4,36 +4,37 @@ import android.media.AudioManager
 
 /**
  * 获取当前媒体音量
- *
- * [AudioManager.STREAM_SYSTEM]     系统声音
- * [AudioManager.STREAM_VOICE_CALL] 通话声音
- * [AudioManager.STREAM_RING]       铃声声音
- * [AudioManager.STREAM_MUSIC]      媒体声音
- * [AudioManager.STREAM_ALARM]      提示声音
+ * * [AudioManager.STREAM_SYSTEM]       系统声音
+ * * [AudioManager.STREAM_VOICE_CALL]   通话声音
+ * * [AudioManager.STREAM_RING]         铃声声音
+ * * [AudioManager.STREAM_MUSIC]        媒体声音
+ * * [AudioManager.STREAM_ALARM]        提示声音
+ * * [AudioManager.STREAM_NOTIFICATION] 通知声音
  */
-fun AudioManager.getStreamVolume(
+fun getStreamVolume(
     streamType: Int = AudioManager.STREAM_MUSIC
-) = getStreamVolume(streamType)
+): Int =
+    appContext.audioManager?.getStreamVolume(streamType) ?: 0
 
 /**
  * 获取最大音量
- *
- * [AudioManager.STREAM_SYSTEM]     系统声音
- * [AudioManager.STREAM_VOICE_CALL] 通话声音
- * [AudioManager.STREAM_RING]       铃声声音
- * [AudioManager.STREAM_MUSIC]      媒体声音
- * [AudioManager.STREAM_ALARM]      提示声音
+ * * [AudioManager.STREAM_SYSTEM]       系统声音
+ * * [AudioManager.STREAM_VOICE_CALL]   通话声音
+ * * [AudioManager.STREAM_RING]         铃声声音
+ * * [AudioManager.STREAM_MUSIC]        媒体声音
+ * * [AudioManager.STREAM_ALARM]        提示声音
+ * * [AudioManager.STREAM_NOTIFICATION] 通知声音
  */
-fun AudioManager.getStreamMaxVolume(
+fun getStreamMaxVolume(
     streamType: Int = AudioManager.STREAM_MUSIC
-) = getStreamMaxVolume(streamType)
+): Int =
+    appContext.audioManager?.getStreamMaxVolume(streamType) ?: 0
 
 /**
  * 设置音量
  */
-fun AudioManager.setStreamVolume(
+fun setStreamVolume(
     volumeValue: Int,
     streamType: Int = AudioManager.STREAM_MUSIC
-) {
-    setStreamVolume(streamType, volumeValue, 0)
-}
+) =
+    appContext.audioManager?.setStreamVolume(streamType, volumeValue, 0)
