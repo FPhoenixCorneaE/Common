@@ -568,13 +568,11 @@ class AppUtil private constructor() {
             val signature = getAppSignature(packageName)
             return when {
                 signature.isEmpty() -> ""
-                else -> ConvertUtil.bytes2HexString(
-                    hashTemplate(
-                        signature.toByteArray(),
-                        algorithm
-                    )
-                )
-                    .replace("(?<=[0-9A-F]{2})[0-9A-F]{2}".toRegex(), ":$0")
+                else -> hashTemplate(
+                    signature.toByteArray(),
+                    algorithm
+                ).toHexString()
+                    ?.replace("(?<=[0-9A-F]{2})[0-9A-F]{2}".toRegex(), ":$0")
             }
         }
 

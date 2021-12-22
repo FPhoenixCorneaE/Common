@@ -14,7 +14,7 @@ import coil.Coil
 import coil.request.ImageRequest
 import com.fphoenixcorneae.ext.action
 import com.fphoenixcorneae.ext.appContext
-import com.fphoenixcorneae.util.ConvertUtil
+import com.fphoenixcorneae.ext.toDrawable
 import com.fphoenixcorneae.util.ImageUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -124,7 +124,7 @@ fun getDrawableFromUri(uri: Uri): Drawable? {
         val fileDescriptor: FileDescriptor? = parcelFileDescriptor?.fileDescriptor
         val image: Bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
         parcelFileDescriptor?.close()
-        return ConvertUtil.bitmap2Drawable(image)
+        return image.toDrawable()
     } catch (e: Exception) {
         e.printStackTrace()
     }

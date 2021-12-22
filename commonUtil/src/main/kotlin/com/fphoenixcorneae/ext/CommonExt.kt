@@ -21,24 +21,6 @@ inline fun <reified T> T?.action(
 }
 
 /**
- * 判断任意一个字符串是否为空
- */
-fun String?.isSpace(): Boolean {
-    if (this.isNull()) {
-        return true
-    }
-    var i = 0
-    val len = this!!.length
-    while (i < len) {
-        if (!Character.isWhitespace(this[i])) {
-            return false
-        }
-        ++i
-    }
-    return true
-}
-
-/**
  * 判断任意一个对象是否为null
  */
 fun Any?.isNull(): Boolean {
