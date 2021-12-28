@@ -8,6 +8,7 @@ import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -210,10 +211,28 @@ fun View.getActivity(): Activity {
  * 视图请求焦点
  */
 fun View.setFocus(b: Boolean) {
-    if (b) {
-        requestFocus()
-    }
     isFocusable = b
     isFocusableInTouchMode = b
+    if (b) {
+        requestFocus()
+    } else {
+        clearFocus()
+    }
 }
+
+/**
+ * 触摸区域是否在View里边
+ */
+fun View.isTouchIntoArea(
+    motionEvent: MotionEvent
+): Boolean =
+    run {
+        val outLocation = intArrayOf(0, 0)
+        getLocationOnScreen(outLocation)
+        val left = outLocation[0]
+        val top = outLocation[1]
+        val right = left + width
+        val bottom = top + height
+        motionEvent.rawX > left && motionEvent.rawX < right && motionEvent.rawY > top && motionEvent.rawY < bottom
+    }
 

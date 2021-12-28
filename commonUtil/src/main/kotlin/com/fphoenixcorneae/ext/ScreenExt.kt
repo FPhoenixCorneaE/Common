@@ -1,6 +1,7 @@
 package com.fphoenixcorneae.ext
 
 import android.Manifest
+import android.R
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.RequiresPermission
+import kotlin.math.abs
 
 /**
  * 获取屏幕的宽度（单位：px）
@@ -179,6 +181,53 @@ val Activity.titleBarHeight: Int
                 titleBarHeight
             }
         }
+
+/**
+ * 获取导航栏高度
+ */
+val Activity.navigationBarHeight: Int
+    get() =
+        resources.run {
+            val resId = getIdentifier("navigation_bar_height", "dimen", "android")
+            runCatching {
+                getDimensionPixelSize(resId)
+            }.onFailure {
+                it.printStackTrace()
+            }.getOrDefault(0)
+        }
+
+private var sDecorViewDelta = 0
+
+/**
+ * 获取DecorView不可见高度
+ */
+fun Activity.getDecorViewInvisibleHeight(): Int {
+    val decorView = window.decorView
+    val outRect = Rect()
+    decorView.getWindowVisibleDisplayFrame(outRect)
+    val delta = abs(decorView.bottom - outRect.bottom)
+    return if (delta <= navigationBarHeight + statusBarHeight) {
+        sDecorViewDelta = delta
+        0
+    } else {
+        delta - sDecorViewDelta
+    }
+}
+
+/**
+ * 获取ContentView不可见高度
+ */
+fun Activity.getContentViewInvisibleHeight(): Int {
+    val contentView = window.findViewById<View>(R.id.content) ?: return 0
+    val outRect = Rect()
+    contentView.getWindowVisibleDisplayFrame(outRect)
+    val delta = abs(contentView.bottom - outRect.bottom)
+    return if (delta <= navigationBarHeight + statusBarHeight) {
+        0
+    } else {
+        delta
+    }
+}
 
 /**
  * 是否是全屏
