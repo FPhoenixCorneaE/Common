@@ -19,7 +19,7 @@ import com.orhanobut.logger.PrettyFormatStrategy
  * 3、初始化 CrashUtil;
  * 4、初始化日志打印配置;
  */
-class CommonFileProvider : FileProvider() {
+class CommonProvider : FileProvider() {
 
     override fun onCreate(): Boolean {
         // 初始化 ContextUtil

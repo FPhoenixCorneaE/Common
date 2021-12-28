@@ -62,7 +62,7 @@
         tools:targetApi="n">
         <!--  Android 7.0适配-应用之间共享文件  -->
         <provider
-            android:name="com.fphoenixcorneae.CommonFileProvider"
+            android:name="com.fphoenixcorneae.CommonProvider"
             android:authorities="${applicationId}.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true"
