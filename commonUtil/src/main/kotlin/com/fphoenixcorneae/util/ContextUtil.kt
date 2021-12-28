@@ -192,7 +192,7 @@ class ActivityLifecycleCallbacksImpl : ActivityLifecycleCallbacks {
         logActivityLifecycle("onDestroyed(): ", activity)
         mActivityList.remove(activity)
         consumeOnActivityDestroyedListener(activity)
-        activity.window.fixSoftInputLeaks()
+        activity.fixSoftInputLeaks()
     }
 
     /**
@@ -292,8 +292,7 @@ class ActivityLifecycleCallbacksImpl : ActivityLifecycleCallbacks {
             return
         }
         try {
-            val sDurationScaleField =
-                ValueAnimator::class.java.getDeclaredField("sDurationScale")
+            val sDurationScaleField = ValueAnimator::class.java.getDeclaredField("sDurationScale")
             sDurationScaleField.isAccessible = true
             val sDurationScale = sDurationScaleField[null] as Float
             if (sDurationScale == 0f) {
