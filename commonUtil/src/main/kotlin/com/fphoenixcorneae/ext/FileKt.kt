@@ -1,11 +1,23 @@
 package com.fphoenixcorneae.ext
 
+import android.annotation.SuppressLint
+import android.content.ContentResolver
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.os.StatFs
+import android.text.TextUtils
 import java.io.*
+import java.net.URL
 import java.nio.charset.Charset
 import java.security.DigestInputStream
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.*
+import javax.net.ssl.HttpsURLConnection
+import kotlin.experimental.and
+
+val LINE_SEPARATOR = System.getProperty("line.separator")
 
 /**
  * 根据文件路径获取文件
@@ -13,8 +25,12 @@ import java.util.*
  * @param filePath 文件路径
  * @return 文件
  */
-fun getFileByPath(filePath: String): File? {
-    return if (filePath.isSpace()) null else File(filePath)
+fun getFileByPath(filePath: String?): File? {
+    return if (filePath.isSpace()) {
+        null
+    } else {
+        File(filePath)
+    }
 }
 
 /**
@@ -23,7 +39,7 @@ fun getFileByPath(filePath: String): File? {
  * @param filePath 文件路径
  * @return `true`: 存在<br></br>`false`: 不存在
  */
-fun isFileExists(filePath: String): Boolean {
+fun isFileExists(filePath: String?): Boolean {
     return isFileExists(getFileByPath(filePath))
 }
 
@@ -34,7 +50,25 @@ fun isFileExists(filePath: String): Boolean {
  * @return `true`: 存在<br></br>`false`: 不存在
  */
 fun isFileExists(file: File?): Boolean {
-    return file != null && file.exists()
+    return file != null && (file.exists() || isFileExistsApi29(file.absolutePath))
+}
+
+private fun isFileExistsApi29(filePath: String): Boolean {
+    if (Build.VERSION.SDK_INT >= 29) {
+        try {
+            val uri = Uri.parse(filePath)
+            val cr: ContentResolver = appContext.contentResolver
+            val afd = cr.openAssetFileDescriptor(uri, "r") ?: return false
+            try {
+                afd.close()
+            } catch (ignore: IOException) {
+            }
+        } catch (e: FileNotFoundException) {
+            return false
+        }
+        return true
+    }
+    return false
 }
 
 /**
@@ -212,6 +246,44 @@ fun createFileByDeleteOldFile(file: File?): Boolean {
 }
 
 /**
+ * Copy the directory or file.
+ *
+ * @param srcPath  The path of source.
+ * @param destPath The path of destination.
+ * @return `true`: success<br></br>`false`: fail
+ */
+fun copy(
+    srcPath: String?,
+    destPath: String?,
+): Boolean {
+    return copy(
+        getFileByPath(srcPath),
+        getFileByPath(destPath),
+    )
+}
+
+/**
+ * Copy the directory or file.
+ *
+ * @param src      The source.
+ * @param dest     The destination.
+ * @return `true`: success<br></br>`false`: fail
+ */
+fun copy(
+    src: File?,
+    dest: File?,
+): Boolean {
+    if (src == null) {
+        return false
+    }
+    return if (src.isDirectory) {
+        copyDir(src, dest)
+    } else {
+        copyFile(src, dest)
+    }
+}
+
+/**
  * 复制或移动目录
  *
  * @param srcDirPath  源目录路径
@@ -372,6 +444,27 @@ fun copyFile(srcFile: File?, destFile: File?): Boolean {
 }
 
 /**
+ * Move the directory or file.
+ *
+ * @param src      The source.
+ * @param dest     The destination.
+ * @return `true`: success<br></br>`false`: fail
+ */
+fun move(
+    src: File?,
+    dest: File?,
+): Boolean {
+    if (src == null) {
+        return false
+    }
+    return if (src.isDirectory) {
+        moveDir(src, dest)
+    } else {
+        moveFile(src, dest)
+    }
+}
+
+/**
  * 移动目录
  *
  * @param srcDirPath  源目录路径
@@ -413,6 +506,32 @@ fun moveFile(srcFilePath: String, destFilePath: String): Boolean {
  */
 fun moveFile(srcFile: File?, destFile: File?): Boolean {
     return copyOrMoveFile(srcFile, destFile, true)
+}
+
+/**
+ * Delete the directory.
+ *
+ * @param filePath The path of file.
+ * @return `true`: success<br></br>`false`: fail
+ */
+fun delete(filePath: String?): Boolean {
+    return delete(getFileByPath(filePath))
+}
+
+/**
+ * Delete the directory.
+ *
+ * @param file The file.
+ * @return `true`: success
+ *         `false`: fail
+ */
+fun delete(file: File?): Boolean {
+    if (file == null) return false
+    return if (file.isDirectory) {
+        deleteDir(file)
+    } else {
+        deleteFile(file)
+    }
 }
 
 /**
@@ -485,7 +604,8 @@ fun deleteFile(file: File?): Boolean {
  * 删除目录下的所有文件
  *
  * @param dirPath 目录路径
- * @return `true`: 删除成功<br></br>`false`: 删除失败
+ * @return `true`: 删除成功
+ *         `false`: 删除失败
  */
 fun deleteFilesInDir(dirPath: String): Boolean {
     return deleteFilesInDir(getFileByPath(dirPath))
@@ -498,28 +618,58 @@ fun deleteFilesInDir(dirPath: String): Boolean {
  * @return `true`: 删除成功<br></br>`false`: 删除失败
  */
 fun deleteFilesInDir(dir: File?): Boolean {
-    if (dir == null) {
+    return deleteFilesInDirWithFilter(dir, FileFilter {
+        return@FileFilter it.isFile
+    })
+}
+
+/**
+ * Delete all files that satisfy the filter in directory.
+ *
+ * @param dirPath The path of directory.
+ * @param filter  The filter.
+ * @return `true`: success
+ *         `false`: fail
+ */
+fun deleteFilesInDirWithFilter(
+    dirPath: String?,
+    filter: FileFilter?
+): Boolean {
+    return deleteFilesInDirWithFilter(getFileByPath(dirPath), filter)
+}
+
+/**
+ * Delete all files that satisfy the filter in directory.
+ *
+ * @param dir    The directory.
+ * @param filter The filter.
+ * @return `true`: success
+ *         `false`: fail
+ */
+fun deleteFilesInDirWithFilter(dir: File?, filter: FileFilter?): Boolean {
+    if (dir == null || filter == null) {
         return false
     }
-    // 目录不存在返回true
+    // dir doesn't exist then return true
     if (!dir.exists()) {
         return true
     }
-    // 不是目录返回false
+    // dir isn't a directory then return false
     if (!dir.isDirectory) {
         return false
     }
-    // 现在文件存在且是文件夹
     val files = dir.listFiles()
     if (files != null && files.isNotEmpty()) {
         for (file in files) {
-            if (file.isFile) {
-                if (!deleteFile(file)) {
-                    return false
-                }
-            } else if (file.isDirectory) {
-                if (!deleteDir(file)) {
-                    return false
+            if (filter.accept(file)) {
+                if (file.isFile) {
+                    if (!file.delete()) {
+                        return false
+                    }
+                } else if (file.isDirectory) {
+                    if (!deleteDir(file)) {
+                        return false
+                    }
                 }
             }
         }
@@ -1115,21 +1265,142 @@ fun getFileCharsetSimple(filePath: String): String {
  * @return 文件编码
  */
 fun getFileCharsetSimple(file: File?): String {
+    if (file == null) {
+        return ""
+    }
+    if (isUtf8(file)) {
+        return "UTF-8"
+    }
     var p = 0
     var `is`: InputStream? = null
     try {
-        `is` = BufferedInputStream(FileInputStream(file!!))
+        `is` = BufferedInputStream(FileInputStream(file))
         p = (`is`.read() shl 8) + `is`.read()
     } catch (e: IOException) {
         e.printStackTrace()
     } finally {
-        closeIO(`is`)
+        `is`.closeSafely()
     }
     return when (p) {
         0xefbb -> "UTF-8"
         0xfffe -> "Unicode"
         0xfeff -> "UTF-16BE"
         else -> "GBK"
+    }
+}
+
+/**
+ * Return whether the charset of file is utf8.
+ *
+ * @param filePath The path of file.
+ * @return `true`: yes<br></br>`false`: no
+ */
+fun isUtf8(filePath: String?): Boolean {
+    return isUtf8(getFileByPath(filePath))
+}
+
+/**
+ * Return whether the charset of file is utf8.
+ *
+ * @param file The file.
+ * @return `true`: yes<br></br>`false`: no
+ */
+fun isUtf8(file: File?): Boolean {
+    if (file == null) return false
+    var `is`: InputStream? = null
+    try {
+        val bytes = ByteArray(24)
+        `is` = BufferedInputStream(FileInputStream(file))
+        val read = `is`.read(bytes)
+        return if (read != -1) {
+            val readArr = ByteArray(read)
+            System.arraycopy(bytes, 0, readArr, 0, read)
+            isUtf8(readArr) == 100
+        } else {
+            false
+        }
+    } catch (e: IOException) {
+        e.printStackTrace()
+    } finally {
+        try {
+            `is`?.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+    return false
+}
+
+/**
+ * UTF-8编码方式
+ * ----------------------------------------------
+ * 0xxxxxxx
+ * 110xxxxx 10xxxxxx
+ * 1110xxxx 10xxxxxx 10xxxxxx
+ * 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+ */
+private fun isUtf8(raw: ByteArray): Int {
+    var utf8 = 0
+    var ascii = 0
+    if (raw.size > 3) {
+        if (raw[0] == 0xEF.toByte() && raw[1] == 0xBB.toByte() && raw[2] == 0xBF.toByte()) {
+            return 100
+        }
+    }
+    val len = raw.size
+    var child = 0
+    var i = 0
+    while (i < len) {
+        // UTF-8 byte shouldn't be FF and FE
+        if ((raw[i] and 0xFF.toByte()) == 0xFF.toByte()
+            || (raw[i] and 0xFE.toByte()) == 0xFE.toByte()
+        ) {
+            return 0
+        }
+        if (child == 0) {
+            // ASCII format is 0x0*******
+            if (raw[i] and 0x7F.toByte() == raw[i] && raw[i] != 0.toByte()) {
+                ascii++
+            } else if ((raw[i] and 0xC0.toByte()) == 0xC0.toByte()) {
+                // 0x11****** maybe is UTF-8
+                for (bit in 0..7) {
+                    child = if (((0x80 shr bit).toByte() and raw[i]) == (0x80 shr bit).toByte()) {
+                        bit
+                    } else {
+                        break
+                    }
+                }
+                utf8++
+            }
+            i++
+        } else {
+            child = if (raw.size - i > child) child else raw.size - i
+            var currentNotUtf8 = false
+            for (children in 0 until child) {
+                // format must is 0x10******
+                if ((raw[i + children] and 0x80.toByte()) != 0x80.toByte()) {
+                    if ((raw[i + children] and 0x7F.toByte()) == raw[i + children] && raw[i] != 0.toByte()) {
+                        // ASCII format is 0x0*******
+                        ascii++
+                    }
+                    currentNotUtf8 = true
+                }
+            }
+            if (currentNotUtf8) {
+                utf8--
+                i++
+            } else {
+                utf8 += child
+                i += child
+            }
+            child = 0
+        }
+    }
+    // UTF-8 contains ASCII
+    return if (ascii == len) {
+        100
+    } else {
+        (100 * ((utf8 + ascii).toFloat() / len.toFloat())).toInt()
     }
 }
 
@@ -1155,14 +1426,27 @@ fun getFileLines(file: File?): Int {
     try {
         `is` = BufferedInputStream(FileInputStream(file!!))
         val buffer = ByteArray(1024)
-        var readChars: Int = 0
-        while (run {
-                readChars = `is`.read(buffer, 0, 1024)
-                readChars
-            } != -1) {
-            for (i in 0 until readChars) {
-                if (buffer[i] == '\n'.code.toByte()) {
-                    ++count
+        var readChars: Int
+        if (LINE_SEPARATOR?.endsWith("\n") == true) {
+            while (run {
+                    readChars = `is`.read(buffer, 0, 1024)
+                    readChars
+                } != -1) {
+                for (i in 0 until readChars) {
+                    if (buffer[i] == '\n'.code.toByte()) {
+                        ++count
+                    }
+                }
+            }
+        } else {
+            while (run {
+                    readChars = `is`.read(buffer, 0, 1024)
+                    readChars
+                } != -1) {
+                for (i in 0 until readChars) {
+                    if (buffer[i] == '\r'.code.toByte()) {
+                        ++count
+                    }
                 }
             }
         }
@@ -1175,12 +1459,39 @@ fun getFileLines(file: File?): Int {
 }
 
 /**
+ * Return the size.
+ *
+ * @param filePath The path of file.
+ * @return the size
+ */
+fun getSize(filePath: String?): String {
+    return getSize(getFileByPath(filePath))
+}
+
+/**
+ * Return the size.
+ *
+ * @param file The directory.
+ * @return the size
+ */
+fun getSize(file: File?): String {
+    if (file == null) {
+        return ""
+    }
+    return if (file.isDirectory) {
+        getDirSize(file)
+    } else {
+        getFileSize(file)
+    }
+}
+
+/**
  * 获取目录大小
  *
  * @param dirPath 目录路径
  * @return 文件大小
  */
-fun getDirSize(dirPath: String): String {
+fun getDirSize(dirPath: String?): String {
     return getDirSize(getFileByPath(dirPath))
 }
 
@@ -1201,7 +1512,7 @@ fun getDirSize(dir: File?): String {
  * @param filePath 文件路径
  * @return 文件大小
  */
-fun getFileSize(filePath: String): String {
+fun getFileSize(filePath: String?): String {
     return getFileSize(getFileByPath(filePath))
 }
 
@@ -1217,12 +1528,39 @@ fun getFileSize(file: File?): String {
 }
 
 /**
+ * Return the length.
+ *
+ * @param filePath The path of file.
+ * @return the length
+ */
+fun getLength(filePath: String?): Long {
+    return getLength(getFileByPath(filePath))
+}
+
+/**
+ * Return the length.
+ *
+ * @param file The file.
+ * @return the length
+ */
+fun getLength(file: File?): Long {
+    if (file == null) {
+        return 0
+    }
+    return if (file.isDirectory) {
+        getDirLength(file)
+    } else {
+        getFileLength(file)
+    }
+}
+
+/**
  * 获取目录长度
  *
  * @param dirPath 目录路径
  * @return 目录长度
  */
-fun getDirLength(dirPath: String): Long {
+fun getDirLength(dirPath: String?): Long {
     return getDirLength(getFileByPath(dirPath))
 }
 
@@ -1256,7 +1594,22 @@ fun getDirLength(dir: File?): Long {
  * @param filePath 文件路径
  * @return 文件长度
  */
-fun getFileLength(filePath: String): Long {
+fun getFileLength(filePath: String?): Long {
+    val isURL = filePath?.matches(Regex("[a-zA-z]+://[^\\s]*"))
+    if (isURL == true) {
+        try {
+            val conn = URL(filePath).openConnection() as HttpsURLConnection
+            conn.setRequestProperty("Accept-Encoding", "identity")
+            conn.connect()
+            return if (conn.responseCode == 200) {
+                conn.contentLength.toLong()
+            } else {
+                -1
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
     return getFileLength(getFileByPath(filePath))
 }
 
@@ -1269,7 +1622,9 @@ fun getFileLength(filePath: String): Long {
 fun getFileLength(file: File?): Long {
     return if (!isFile(file)) {
         -1
-    } else file!!.length()
+    } else {
+        file!!.length()
+    }
 }
 
 /**
@@ -1332,7 +1687,7 @@ fun getFileMD5(file: File?): ByteArray? {
     } catch (e: IOException) {
         e.printStackTrace()
     } finally {
-        closeIO(dis)
+        dis.closeSafely()
     }
     return null
 }
@@ -1361,7 +1716,11 @@ fun getDirName(filePath: String): String? {
         return filePath
     }
     val lastSep = filePath.lastIndexOf(File.separator)
-    return if (lastSep == -1) "" else filePath.substring(0, lastSep + 1)
+    return if (lastSep == -1) {
+        ""
+    } else {
+        filePath.take(lastSep + 1)
+    }
 }
 
 /**
@@ -1388,7 +1747,11 @@ fun getFileName(filePath: String): String? {
         return filePath
     }
     val lastSep = filePath.lastIndexOf(File.separator)
-    return if (lastSep == -1) filePath else filePath.substring(lastSep + 1)
+    return if (lastSep == -1) {
+        filePath
+    } else {
+        filePath.substring(lastSep + 1)
+    }
 }
 
 /**
@@ -1400,7 +1763,9 @@ fun getFileName(filePath: String): String? {
 fun getFileNameNoExtension(file: File?): String? {
     return if (file == null) {
         null
-    } else getFileNameNoExtension(file.path)
+    } else {
+        getFileNameNoExtension(file.path)
+    }
 }
 
 /**
@@ -1409,18 +1774,20 @@ fun getFileNameNoExtension(file: File?): String? {
  * @param filePath 文件路径
  * @return 不带拓展名的文件名
  */
-fun getFileNameNoExtension(filePath: String): String? {
+fun getFileNameNoExtension(filePath: String?): String {
     if (filePath.isSpace()) {
-        return filePath
+        return ""
     }
-    val lastPoi = filePath.lastIndexOf('.')
+    val lastPoi = filePath!!.lastIndexOf('.')
     val lastSep = filePath.lastIndexOf(File.separator)
     if (lastSep == -1) {
         return if (lastPoi == -1) filePath else filePath.substring(0, lastPoi)
     }
     return if (lastPoi == -1 || lastSep > lastPoi) {
         filePath.substring(lastSep + 1)
-    } else filePath.substring(lastSep + 1, lastPoi)
+    } else {
+        filePath.substring(lastSep + 1, lastPoi)
+    }
 }
 
 /**
@@ -1442,7 +1809,7 @@ fun getFileExtension(file: File?): String? {
  * @param filePath 文件路径
  * @return 文件拓展名
  */
-fun getFileExtension(filePath: String): String? {
+fun getFileExtension(filePath: String): String {
     if (filePath.isSpace()) {
         return filePath
     }
@@ -1450,6 +1817,72 @@ fun getFileExtension(filePath: String): String? {
     val lastSep = filePath.lastIndexOf(File.separator)
     return if (lastPoi == -1 || lastSep >= lastPoi) {
         ""
-    } else filePath.substring(lastPoi + 1)
+    } else {
+        filePath.substring(lastPoi + 1)
+    }
 }
 
+/**
+ * Notify system to scan the file.
+ *
+ * @param filePath The path of file.
+ */
+fun notifySystemToScan(filePath: String?) {
+    notifySystemToScan(getFileByPath(filePath))
+}
+
+/**
+ * Notify system to scan the file.
+ *
+ * @param file The file.
+ */
+fun notifySystemToScan(file: File?) {
+    if (file == null || !file.exists()) return
+    val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+    intent.data = Uri.parse("file://" + file.absolutePath)
+    appContext.sendBroadcast(intent)
+}
+
+/**
+ * Return the total size of file system.
+ *
+ * @param anyPathInFs Any path in file system.
+ * @return the total size of file system
+ */
+@SuppressLint("ObsoleteSdkInt")
+fun getFsTotalSize(anyPathInFs: String?): Long {
+    if (TextUtils.isEmpty(anyPathInFs)) return 0
+    val statFs = StatFs(anyPathInFs)
+    val blockSize: Long
+    val totalSize: Long
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        blockSize = statFs.blockSizeLong
+        totalSize = statFs.blockCountLong
+    } else {
+        blockSize = statFs.blockSize.toLong()
+        totalSize = statFs.blockCount.toLong()
+    }
+    return blockSize * totalSize
+}
+
+/**
+ * Return the available size of file system.
+ *
+ * @param anyPathInFs Any path in file system.
+ * @return the available size of file system
+ */
+@SuppressLint("ObsoleteSdkInt")
+fun getFsAvailableSize(anyPathInFs: String?): Long {
+    if (TextUtils.isEmpty(anyPathInFs)) return 0
+    val statFs = StatFs(anyPathInFs)
+    val blockSize: Long
+    val availableSize: Long
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        blockSize = statFs.blockSizeLong
+        availableSize = statFs.availableBlocksLong
+    } else {
+        blockSize = statFs.blockSize.toLong()
+        availableSize = statFs.availableBlocks.toLong()
+    }
+    return blockSize * availableSize
+}

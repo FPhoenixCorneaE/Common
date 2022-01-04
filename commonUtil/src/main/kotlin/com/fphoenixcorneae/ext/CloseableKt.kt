@@ -19,11 +19,7 @@ fun Closeable?.closeSafely() = runCatching {
  */
 fun closeIO(vararg closeables: Closeable?) {
     for (closeable in closeables) {
-        try {
-            closeable?.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+        closeable.closeSafely()
     }
 }
 
