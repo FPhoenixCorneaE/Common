@@ -3,12 +3,11 @@ package com.fphoenixcorneae.ext
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.os.Build
 import android.provider.Settings
 import android.view.Window
 import androidx.annotation.IntRange
-import androidx.fragment.app.FragmentActivity
-import com.fphoenixcorneae.permission.request
-import com.fphoenixcorneae.util.ActivityUtil
+import androidx.annotation.RequiresPermission
 import com.fphoenixcorneae.util.IntentUtil
 
 /**
@@ -70,41 +69,22 @@ val screenBrightness: Int
  *
  * @param brightness 亮度值
  */
-@SuppressLint("NewApi")
+@RequiresPermission(Manifest.permission.WRITE_SETTINGS)
 fun setScreenBrightness(
     @IntRange(from = 0, to = 255)
     brightness: Int,
 ) {
-    if (Settings.System.canWrite(appContext)) {
-        if (isAutoBrightnessEnabled) {
-            setAutoBrightnessEnabled(false)
-        }
-        val resolver = appContext.contentResolver
-        Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS, brightness)
-        resolver.notifyChange(Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS), null)
-    } else {
-        // 申请"android.permission.WRITE_SETTINGS"权限
-        (ActivityUtil.topActivity as FragmentActivity).request(Manifest.permission.WRITE_SETTINGS) {
-            onGranted {
-                setAutoBrightnessEnabled(false)
-            }
-            onDenied {
-                if (!Settings.System.canWrite(appContext)) {
-                    IntentUtil.openApplicationManageWriteSettings()
-                }
-            }
-            onShowRationale {
-                if (!Settings.System.canWrite(appContext)) {
-                    IntentUtil.openApplicationManageWriteSettings()
-                }
-            }
-            onNeverAskAgain {
-                if (!Settings.System.canWrite(appContext)) {
-                    IntentUtil.openApplicationManageWriteSettings()
-                }
-            }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (!Settings.System.canWrite(appContext)) {
+            // 打开允许修改 Setting 权限的界面
+            IntentUtil.openApplicationManageWriteSettings()
+            return
         }
     }
+    setAutoBrightnessEnabled(false)
+    val contentResolver = appContext.contentResolver
+    Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS, brightness)
+    contentResolver.notifyChange(Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS), null)
 }
 
 /**
