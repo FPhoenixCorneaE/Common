@@ -18,10 +18,7 @@ import com.fphoenixcorneae.util.IntentUtil
  */
 val isAutoBrightnessEnabled: Boolean
     get() = runCatching {
-        val mode = Settings.System.getInt(
-            appContext.contentResolver,
-            Settings.System.SCREEN_BRIGHTNESS_MODE
-        )
+        val mode = Settings.System.getInt(appContext.contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE)
         mode == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
     }.onFailure {
         it.printStackTrace()
@@ -60,10 +57,7 @@ fun setAutoBrightnessEnabled(enabled: Boolean): Boolean {
  */
 val screenBrightness: Int
     get() = runCatching {
-        Settings.System.getInt(
-            appContext.contentResolver,
-            Settings.System.SCREEN_BRIGHTNESS
-        )
+        Settings.System.getInt(appContext.contentResolver, Settings.System.SCREEN_BRIGHTNESS)
     }.onFailure {
         it.printStackTrace()
     }.getOrDefault(128)
@@ -82,24 +76,17 @@ fun setScreenBrightness(
     brightness: Int,
 ) {
     if (Settings.System.canWrite(appContext)) {
-        if (!isAutoBrightnessEnabled) {
-            setAutoBrightnessEnabled(true)
+        if (isAutoBrightnessEnabled) {
+            setAutoBrightnessEnabled(false)
         }
         val resolver = appContext.contentResolver
-        Settings.System.putInt(
-            resolver,
-            Settings.System.SCREEN_BRIGHTNESS,
-            brightness
-        )
-        resolver.notifyChange(
-            Settings.System.getUriFor("screen_brightness"),
-            null
-        )
+        Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS, brightness)
+        resolver.notifyChange(Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS), null)
     } else {
         // 申请"android.permission.WRITE_SETTINGS"权限
         (ActivityUtil.topActivity as FragmentActivity).request(Manifest.permission.WRITE_SETTINGS) {
             onGranted {
-                setAutoBrightnessEnabled(true)
+                setAutoBrightnessEnabled(false)
             }
             onDenied {
                 if (!Settings.System.canWrite(appContext)) {

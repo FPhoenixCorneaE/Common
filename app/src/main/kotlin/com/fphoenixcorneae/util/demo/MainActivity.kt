@@ -11,7 +11,6 @@ import com.fphoenixcorneae.ext.view.queryTextListener
 import com.fphoenixcorneae.ext.view.setOnSeekBarChangeListener
 import com.fphoenixcorneae.ext.view.textAction
 import com.fphoenixcorneae.permission.requestPhonePermission
-import com.fphoenixcorneae.util.BrightnessUtil
 import com.fphoenixcorneae.util.IntentUtil
 import com.fphoenixcorneae.util.demo.databinding.ActivityMainBinding
 import kotlinx.coroutines.Job
@@ -84,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         // 设置亮度
         mViewBinding.sbBrightness.setOnSeekBarChangeListener(
             onProgressChanged = { _, progress, _ ->
-                BrightnessUtil.setBrightness(progress)
+                setScreenBrightness(progress)
             }
         )
     }
