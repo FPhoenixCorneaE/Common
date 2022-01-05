@@ -7,9 +7,14 @@ import android.graphics.Canvas
 import android.graphics.PixelFormat
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Parcel
+import android.os.Parcelable
 import com.fphoenixcorneae.annotation.MemoryUnit
 import com.fphoenixcorneae.annotation.TimeUnit
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.*
+import java.lang.Exception
 import java.nio.charset.Charset
 import java.util.*
 import kotlin.experimental.or
@@ -17,8 +22,11 @@ import kotlin.experimental.or
 /**
  * 十六进制数字
  */
-val hexDigits = charArrayOf(
+val HEX_DIGITS_UPPER = charArrayOf(
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+)
+val HEX_DIGITS_LOWER = charArrayOf(
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
 )
 
 /**
@@ -90,22 +98,23 @@ fun ByteArray?.toChars(): CharArray? {
  * Bytes to hex string.
  * e.g. bytes2HexString(new byte[] { 0, (byte) 0xa8 }) returns "00A8"
  */
-fun ByteArray?.toHexString(): String? =
+fun ByteArray?.toHexString(): String =
     this?.run {
         val len = this.size
         if (len <= 0) {
-            return null
+            ""
+        } else {
+            val ret = CharArray(len shl 1)
+            var i = 0
+            var j = 0
+            while (i < len) {
+                ret[j++] = HEX_DIGITS_UPPER[this[i].toInt() shr 4 and 0x0f]
+                ret[j++] = HEX_DIGITS_UPPER[this[i].toInt() and 0x0f]
+                i++
+            }
+            String(ret)
         }
-        val ret = CharArray(len shl 1)
-        var i = 0
-        var j = 0
-        while (i < len) {
-            ret[j++] = hexDigits[this[i].toInt() shr 4 and 0x0f]
-            ret[j++] = hexDigits[this[i].toInt() and 0x0f]
-            i++
-        }
-        return String(ret)
-    }
+    } ?: ""
 
 /**
  * Bytes to input stream.
@@ -492,4 +501,98 @@ fun ByteArray?.toDrawable(): Drawable? =
 
 //======================================Bitmap、Drawable、ByteArray相互转换End=========================================//
 
+/**
+ * Bytes to JSONObject.
+ */
+fun ByteArray?.toJSONObject(): JSONObject? = this?.runCatching {
+    JSONObject(String(this))
+}?.onFailure {
+    it.printStackTrace()
+}?.getOrNull()
+
+/**
+ * JSONObject to bytes.
+ */
+fun JSONObject?.toBytes(): ByteArray? = this?.toString()?.toBytes()
+
+/**
+ * Bytes to JSONArray.
+ */
+fun ByteArray?.toJSONArray(): JSONArray? = this?.runCatching {
+    JSONArray(String(this))
+}?.onFailure {
+    it.printStackTrace()
+}?.getOrNull()
+
+/**
+ * JSONArray to bytes.
+ */
+fun JSONArray?.toBytes(): ByteArray? = this?.toString()?.toBytes()
+
+/**
+ * Bytes to Parcelable
+ */
+fun <T> ByteArray?.toParcelable(
+    creator: Parcelable.Creator<T>
+): T? =
+    this?.run {
+        val parcel = Parcel.obtain()
+        parcel.unmarshall(this, 0, this.size)
+        parcel.setDataPosition(0)
+        val result = creator.createFromParcel(parcel)
+        parcel.recycle()
+        result
+    }
+
+/**
+ * Parcelable to bytes.
+ */
+fun Parcelable?.toBytes(): ByteArray? =
+    this?.run {
+        val parcel = Parcel.obtain()
+        writeToParcel(parcel, 0)
+        val bytes = parcel.marshall()
+        parcel.recycle()
+        bytes
+    }
+
+/**
+ * Bytes to Serializable.
+ */
+fun ByteArray?.toObject(): Any? {
+    if (this == null) {
+        return null
+    }
+    var ois: ObjectInputStream? = null
+    return try {
+        ois = ObjectInputStream(ByteArrayInputStream(this))
+        ois.readObject()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    } finally {
+        ois.closeSafely()
+    }
+}
+
+/**
+ * Serializable to bytes.
+ */
+fun Serializable?.toBytes(): ByteArray? {
+    if (this == null) {
+        return null
+    }
+    var baos: ByteArrayOutputStream
+    var oos: ObjectOutputStream? = null
+    return try {
+        oos = ObjectOutputStream(ByteArrayOutputStream().also { baos = it })
+        oos.writeObject(this)
+        baos.toByteArray()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    } finally {
+        oos.closeSafely()
+    }
+}
 

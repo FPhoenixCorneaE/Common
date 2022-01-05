@@ -1157,7 +1157,7 @@ fun readFile2List(file: File?, st: Int, end: Int, charsetName: String): List<Str
  * @param charset  编码格式
  * @return 字符串
  */
-fun readFile2String(filePath: String, charset: Charset?): String? {
+fun readFile2String(filePath: String, charset: Charset? = null): String? {
     return readFile2String(getFileByPath(filePath), charset)
 }
 
@@ -1168,7 +1168,7 @@ fun readFile2String(filePath: String, charset: Charset?): String? {
  * @param charset 编码格式
  * @return 字符串
  */
-fun readFile2String(file: File?, charset: Charset?): String? {
+fun readFile2String(file: File?, charset: Charset? = null): String? {
     if (file == null) {
         return null
     }
