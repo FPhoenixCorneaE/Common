@@ -1,4 +1,4 @@
 includeBuild("versionPlugin")
-include(":commonUtil")
+include(":common")
 include(":app")
-rootProject.name = "CommonUtil"
+rootProject.name = "Common"
