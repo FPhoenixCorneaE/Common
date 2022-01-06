@@ -31,34 +31,29 @@ dependencies {
 ```kotlin
 dependencies {
     // lifecycle
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
     // coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version")
     // navigation
     implementation("androidx.navigation:navigation-common-ktx:$navigation_version")
     implementation("androidx.navigation:navigation-fragment-ktx:$navigation_version")
     implementation("androidx.navigation:navigation-runtime-ktx:$navigation_version")
     implementation("androidx.navigation:navigation-ui-ktx:$navigation_version")
     // Gson
-    implementation("com.google.code.gson:gson:2.8.5")
+    implementation("com.google.code.gson:gson:2.8.9")
     // eventbus
-    implementation("org.greenrobot:eventbus:3.2.0")
+    implementation("org.greenrobot:eventbus:3.3.1")
     // coil
-    implementation("io.coil-kt:coil:1.2.0")
-    // coil-gif
-    implementation("io.coil-kt:coil-gif:1.2.0")
-    // coil-svg
-    implementation("io.coil-kt:coil-svg:1.2.0")
-    // coil-video
-    implementation("io.coil-kt:coil-video:1.2.0")
+    implementation("io.coil-kt:coil:$coil_version")
+    implementation("io.coil-kt:coil-gif:$coil_version")
+    implementation("io.coil-kt:coil-svg:$coil_version")
+    implementation("io.coil-kt:coil-video:$coil_version")
     // coil-transformations
-    implementation("com.github.Commit451.coil-transformations:transformations:1.0.0")
-    implementation("com.github.Commit451.coil-transformations:transformations-gpu:1.0.0")
-    implementation("com.github.Commit451.coil-transformations:transformations-face-detection:1.0.0")
+    implementation("com.github.Commit451.coil-transformations:transformations:$coil_transformations_version")
+    implementation("com.github.Commit451.coil-transformations:transformations-gpu:$coil_transformations_version")
+    implementation("com.github.Commit451.coil-transformations:transformations-face-detection:$coil_transformations_version")
 }
 ```
 

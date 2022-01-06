@@ -31,7 +31,7 @@ class MemoryCache private constructor(
      * @param defaultValue The default value if the cache doesn't exist.
      * @param <T>          The value type.
      * @return the value if cache exists or defaultValue otherwise
-    </T> */
+     */
     operator fun <T> get(key: String, defaultValue: T? = null): T? {
         val `val`: CacheValue = mMemoryCache.get(key) ?: return defaultValue
         if (`val`.dueTime == -1L || `val`.dueTime >= System.currentTimeMillis()) {

@@ -370,7 +370,7 @@ class DiskCache private constructor(
         }
 
         fun clear(): Boolean {
-            val files = cacheDir.listFiles { dir, name -> name.startsWith(CACHE_PREFIX) }
+            val files = cacheDir.listFiles { _, name -> name.startsWith(CACHE_PREFIX) }
             if (files == null || files.isEmpty()) {
                 return true
             }
@@ -429,7 +429,7 @@ class DiskCache private constructor(
             mThread = Thread {
                 var size = 0
                 var count = 0
-                val cachedFiles = cacheDir.listFiles { dir, name -> name.startsWith(CACHE_PREFIX) }
+                val cachedFiles = cacheDir.listFiles { _, name -> name.startsWith(CACHE_PREFIX) }
                 if (cachedFiles != null) {
                     for (cachedFile in cachedFiles) {
                         size += cachedFile.length().toInt()
