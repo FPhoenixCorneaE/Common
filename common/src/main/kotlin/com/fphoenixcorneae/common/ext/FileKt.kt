@@ -601,6 +601,26 @@ fun deleteFile(file: File?): Boolean {
 }
 
 /**
+ * Delete the all in directory.
+ *
+ * @param dirPath The path of directory.
+ * @return `true`: success<br></br>`false`: fail
+ */
+fun deleteAllInDir(dirPath: String?): Boolean {
+    return deleteAllInDir(getFileByPath(dirPath))
+}
+
+/**
+ * Delete the all in directory.
+ *
+ * @param dir The directory.
+ * @return `true`: success<br></br>`false`: fail
+ */
+fun deleteAllInDir(dir: File?): Boolean {
+    return deleteFilesInDirWithFilter(dir) { true }
+}
+
+/**
  * 删除目录下的所有文件
  *
  * @param dirPath 目录路径
