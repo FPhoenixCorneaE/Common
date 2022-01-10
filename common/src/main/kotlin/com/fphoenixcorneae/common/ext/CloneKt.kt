@@ -9,11 +9,9 @@ import com.fphoenixcorneae.common.ext.gson.toObject
  * @param <T>  The value type.
  * @return The object of cloned.
  */
-fun <T> T?.deepClone(classOfT: Class<T>): T? {
-    return try {
+fun <T> T?.deepClone(classOfT: Class<T>): T? =
+    runCatching {
         toJson().toObject(classOfT)
-    } catch (e: Exception) {
-        e.logd()
-        null
-    }
-}
+    }.onFailure {
+        it.logd()
+    }.getOrNull()
