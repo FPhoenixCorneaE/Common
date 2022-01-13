@@ -263,10 +263,4 @@ fun Activity.toggleFullscreen() {
     }
 }
 
-/**
- * 是否是平板
- */
-val isTablet: Boolean
-    get() =
-        Resources.getSystem().configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
 
