@@ -11,48 +11,25 @@ import java.io.Serializable
 inline fun <reified T : Activity> Activity.startKtxActivity(
     flags: Int? = null,
     extra: Bundle? = null,
-    value: Pair<String, Any>? = null
+    vararg values: Pair<String, Any>
 ) =
-    startActivity(getIntent<T>(flags, extra, arrayListOf(value)))
+    startActivity(getIntent<T>(flags, extra, *values))
 
 inline fun <reified T : Activity> Fragment.startKtxActivity(
     flags: Int? = null,
     extra: Bundle? = null,
-    value: Pair<String, Any>? = null
+    vararg values: Pair<String, Any>
 ) =
     activity?.let {
-        startActivity(activity?.getIntent<T>(flags, extra, arrayListOf(value)))
+        startActivity(activity?.getIntent<T>(flags, extra, *values))
     }
 
 inline fun <reified T : Activity> Context.startKtxActivity(
     flags: Int? = null,
     extra: Bundle? = null,
-    value: Pair<String, Any>? = null
+    vararg values: Pair<String, Any>
 ) =
-    startActivity(getIntent<T>(flags, extra, arrayListOf(value)))
-
-inline fun <reified T : Activity> Activity.startKtxActivity(
-    flags: Int? = null,
-    extra: Bundle? = null,
-    values: List<Pair<String, Any>?>? = null
-) =
-    startActivity(getIntent<T>(flags, extra, values))
-
-inline fun <reified T : Activity> Fragment.startKtxActivity(
-    flags: Int? = null,
-    extra: Bundle? = null,
-    values: List<Pair<String, Any>?>? = null
-) =
-    activity?.let {
-        startActivity(activity?.getIntent<T>(flags, extra, values))
-    }
-
-inline fun <reified T : Activity> Context.startKtxActivity(
-    flags: Int? = null,
-    extra: Bundle? = null,
-    values: List<Pair<String, Any>?>? = null
-) =
-    startActivity(getIntent<T>(flags, extra, values))
+    startActivity(getIntent<T>(flags, extra, *values))
 
 inline fun <reified T : Activity> Activity.startKtxActivityForResult(
     requestCode: Int,
@@ -73,44 +50,41 @@ inline fun <reified T : Activity> Fragment.startKtxActivityForResult(
 inline fun <reified T : Context> Context.getIntent(
     flags: Int?,
     extra: Bundle?,
-    pairs: List<Pair<String, Any>?>? = null
+    vararg pairs: Pair<String, Any>
 ): Intent =
     Intent(this, T::class.java).apply {
         flags?.let { setFlags(flags) }
         extra?.let { putExtras(extra) }
-        pairs?.let {
-            for (pair in pairs)
-                pair?.let {
-                    val name = pair.first
-                    when (val value = pair.second) {
-                        is Int -> putExtra(name, value)
-                        is Byte -> putExtra(name, value)
-                        is Char -> putExtra(name, value)
-                        is Short -> putExtra(name, value)
-                        is Boolean -> putExtra(name, value)
-                        is Long -> putExtra(name, value)
-                        is Float -> putExtra(name, value)
-                        is Double -> putExtra(name, value)
-                        is String -> putExtra(name, value)
-                        is CharSequence -> putExtra(name, value)
-                        is Parcelable -> putExtra(name, value)
-                        is Array<*> -> putExtra(name, value)
-                        is ArrayList<*> -> putExtra(name, value)
-                        is Serializable -> putExtra(name, value)
-                        is BooleanArray -> putExtra(name, value)
-                        is ByteArray -> putExtra(name, value)
-                        is ShortArray -> putExtra(name, value)
-                        is CharArray -> putExtra(name, value)
-                        is IntArray -> putExtra(name, value)
-                        is LongArray -> putExtra(name, value)
-                        is FloatArray -> putExtra(name, value)
-                        is DoubleArray -> putExtra(name, value)
-                        is Bundle -> putExtra(name, value)
-                        is Intent -> putExtra(name, value)
-                        else -> {
-                        }
-                    }
+        pairs.forEach { pair ->
+            val name = pair.first
+            when (val value = pair.second) {
+                is Int -> putExtra(name, value)
+                is Byte -> putExtra(name, value)
+                is Char -> putExtra(name, value)
+                is Short -> putExtra(name, value)
+                is Boolean -> putExtra(name, value)
+                is Long -> putExtra(name, value)
+                is Float -> putExtra(name, value)
+                is Double -> putExtra(name, value)
+                is String -> putExtra(name, value)
+                is CharSequence -> putExtra(name, value)
+                is Parcelable -> putExtra(name, value)
+                is Array<*> -> putExtra(name, value)
+                is ArrayList<*> -> putExtra(name, value)
+                is Serializable -> putExtra(name, value)
+                is BooleanArray -> putExtra(name, value)
+                is ByteArray -> putExtra(name, value)
+                is ShortArray -> putExtra(name, value)
+                is CharArray -> putExtra(name, value)
+                is IntArray -> putExtra(name, value)
+                is LongArray -> putExtra(name, value)
+                is FloatArray -> putExtra(name, value)
+                is DoubleArray -> putExtra(name, value)
+                is Bundle -> putExtra(name, value)
+                is Intent -> putExtra(name, value)
+                else -> {
                 }
+            }
         }
     }
 

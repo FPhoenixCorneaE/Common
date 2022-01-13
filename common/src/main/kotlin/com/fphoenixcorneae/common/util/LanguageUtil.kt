@@ -7,10 +7,10 @@ import android.content.res.Resources
 import android.os.Build
 import android.text.TextUtils
 import com.fphoenixcorneae.common.ext.appContext
+import com.fphoenixcorneae.common.ext.getSP
 import com.fphoenixcorneae.common.ext.loggerE
+import com.fphoenixcorneae.common.ext.putSP
 import com.fphoenixcorneae.common.util.AppUtil.Companion.packageName
-import com.fphoenixcorneae.common.util.SharedPreferencesUtil.Companion.getString
-import com.fphoenixcorneae.common.util.SharedPreferencesUtil.Companion.put
 import java.util.*
 
 /**
@@ -134,17 +134,11 @@ class LanguageUtil private constructor() {
             isNeedStartActivity: Boolean
         ) {
             if (isFollowSystem) {
-                put(
-                    KEY_LOCALE,
-                    VALUE_FOLLOW_SYSTEM
-                )
+                putSP(KEY_LOCALE to VALUE_FOLLOW_SYSTEM)
             } else {
                 val localLanguage = locale.language
                 val localCountry = locale.country
-                put(
-                    KEY_LOCALE,
-                    "$localLanguage$$localCountry"
-                )
+                putSP(KEY_LOCALE to "$localLanguage$$localCountry")
             }
             updateLanguage(locale)
             if (isNeedStartActivity) {
@@ -166,7 +160,7 @@ class LanguageUtil private constructor() {
          * @return `true`: yes<br></br>`false`: no
          */
         val isAppliedSystemLanguage: Boolean
-            get() = VALUE_FOLLOW_SYSTEM == getString(KEY_LOCALE)
+            get() = VALUE_FOLLOW_SYSTEM == getSP(KEY_LOCALE, "")
 
         /**
          * Return whether applied the language by [LanguageUtil].
@@ -174,7 +168,7 @@ class LanguageUtil private constructor() {
          * @return `true`: yes<br></br>`false`: no
          */
         val isAppliedLanguage: Boolean
-            get() = !TextUtils.isEmpty(getString(KEY_LOCALE))
+            get() = !TextUtils.isEmpty(getSP(KEY_LOCALE, ""))
 
         /**
          * Return the locale.
@@ -185,7 +179,7 @@ class LanguageUtil private constructor() {
             get() = Resources.getSystem().configuration.locale
 
         fun applyLanguage() {
-            val spLocale = getString(KEY_LOCALE)
+            val spLocale = getSP(KEY_LOCALE, "")
             if (TextUtils.isEmpty(spLocale)) {
                 return
             }

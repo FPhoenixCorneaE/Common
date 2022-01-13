@@ -131,7 +131,7 @@ afterEvaluate {
             create<MavenPublication>(Deps.BuildType.Release) {
                 from(components[Deps.BuildType.Release])
                 groupId = "com.github.FPhoenixCorneaE"
-                artifactId = project.name.toUpperCase()
+                artifactId = project.name.toLowerCase()
                 version = project.version.toString()
             }
         }
