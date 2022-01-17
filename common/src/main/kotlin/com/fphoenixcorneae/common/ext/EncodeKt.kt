@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.text.Html
 import android.util.Base64
-import java.io.UnsupportedEncodingException
+import java.io.*
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.Charset
@@ -67,6 +67,35 @@ fun ByteArray?.base64Encode2String(): String {
         ""
     } else {
         Base64.encodeToString(this, Base64.NO_WRAP)
+    }
+}
+
+/**
+ * Return Base64-encode string.
+ */
+fun File?.base64Encode2String(): String {
+    return if (this == null || !this.exists()) {
+        ""
+    } else {
+        var `is`: InputStream? = null
+        val data: ByteArray?
+        var result = ""
+        try {
+            `is` = FileInputStream(this)
+            // 创建一个字符流大小的数组。
+            data = ByteArray(`is`.available())
+            // 写入数组
+            `is`.read(data)
+            // 用默认的编码格式进行编码
+            result = Base64.encodeToString(data, Base64.NO_WRAP)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } finally {
+            closeIOQuietly(`is`)
+        }
+        result
     }
 }
 
