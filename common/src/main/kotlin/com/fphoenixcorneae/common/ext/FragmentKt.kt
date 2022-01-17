@@ -10,11 +10,7 @@ import androidx.annotation.AnimatorRes
 import androidx.annotation.IdRes
 import androidx.fragment.app.*
 
-inline fun <reified T : Fragment> Fragment.newInstanceFragment(): T {
-    return requireContext().newInstanceFragment()
-}
-
-inline fun <reified T : Fragment> Fragment.newInstanceFragment(args: Bundle?): T {
+inline fun <reified T : Fragment> Fragment.newInstanceFragment(args: Bundle? = null): T {
     return requireContext().newInstanceFragment(args)
 }
 
