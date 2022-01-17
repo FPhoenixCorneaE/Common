@@ -6,11 +6,7 @@ import android.content.Intent
 import android.content.res.Resources
 import android.os.Build
 import android.text.TextUtils
-import com.fphoenixcorneae.common.ext.appContext
-import com.fphoenixcorneae.common.ext.getSP
-import com.fphoenixcorneae.common.ext.loggerE
-import com.fphoenixcorneae.common.ext.putSP
-import com.fphoenixcorneae.common.util.AppUtil.Companion.packageName
+import com.fphoenixcorneae.common.ext.*
 import java.util.*
 
 /**
@@ -242,10 +238,10 @@ class LanguageUtil private constructor() {
         }
 
         private val launcherActivity: String
-            private get() {
+            get() {
                 val intent = Intent(Intent.ACTION_MAIN, null)
                 intent.addCategory(Intent.CATEGORY_LAUNCHER)
-                intent.setPackage(packageName)
+                intent.setPackage(appPackageName)
                 val pm = appContext.packageManager
                 val info = pm.queryIntentActivities(intent, 0)
                 val next = info.iterator().next()

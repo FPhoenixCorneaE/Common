@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.core.content.FileProvider
 import com.fphoenixcorneae.common.ext.appContext
+import com.fphoenixcorneae.common.ext.appPackageName
 import java.io.File
 
 /**
@@ -25,12 +26,11 @@ object FileProviderUtil {
     fun getUriForFile24(file: File): Uri {
         return FileProvider.getUriForFile(
             appContext,
-            "${AppUtil.packageName}.FileProvider",
+            "$appPackageName.FileProvider",
             file
         )
     }
 
-    @JvmStatic
     fun setIntentDataAndType(
         intent: Intent,
         type: String,

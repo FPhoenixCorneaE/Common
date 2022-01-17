@@ -1,10 +1,10 @@
 package com.fphoenixcorneae.common
 
 import android.app.Application
-import android.content.pm.ApplicationInfo
 import androidx.core.content.FileProvider
-import com.fphoenixcorneae.common.ext.loggerD
-import com.fphoenixcorneae.common.util.AppUtil
+import com.fphoenixcorneae.common.ext.isDebuggable
+import com.fphoenixcorneae.common.ext.logd
+import com.fphoenixcorneae.common.ext.relaunchApp
 import com.fphoenixcorneae.common.util.ContextUtil
 import com.fphoenixcorneae.common.util.CrashUtil
 import com.fphoenixcorneae.common.util.toast.ToastUtil
@@ -40,9 +40,9 @@ class CommonProvider : FileProvider() {
     private fun initCrashUtil() {
         CrashUtil.init(object : CrashUtil.OnCrashListener {
             override fun onCrash(crashInfo: String, e: Throwable?) {
-                loggerD(crashInfo)
+                crashInfo.logd()
                 // 重启应用
-                AppUtil.relaunchApp()
+                relaunchApp()
             }
         })
     }
@@ -64,8 +64,7 @@ class CommonProvider : FileProvider() {
         Logger.addLogAdapter(object : AndroidLogAdapter(formatStrategy) {
             override fun isLoggable(priority: Int, tag: String?): Boolean {
                 // Module 默认会提供 Release 版给其他 Module 或工程使用，BuildConfig.DEBUG 会始终为 false
-                return context!!.applicationInfo != null
-                    && (context!!.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+                return isDebuggable
             }
         })
     }

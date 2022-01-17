@@ -6,6 +6,8 @@ import android.os.Build
 import android.os.Environment
 import androidx.annotation.RequiresPermission
 import com.fphoenixcorneae.common.ext.appContext
+import com.fphoenixcorneae.common.ext.appVersionCode
+import com.fphoenixcorneae.common.ext.appVersionName
 import com.fphoenixcorneae.common.ext.loggerD
 import java.io.*
 import java.text.Format
@@ -202,8 +204,8 @@ class CrashUtil private constructor() {
         }
 
         init {
-            versionName = AppUtil.versionName
-            versionCode = AppUtil.versionCode
+            versionName = appVersionName
+            versionCode = appVersionCode
             DEFAULT_UNCAUGHT_EXCEPTION_HANDLER =
                 Thread.getDefaultUncaughtExceptionHandler()
             UNCAUGHT_EXCEPTION_HANDLER =

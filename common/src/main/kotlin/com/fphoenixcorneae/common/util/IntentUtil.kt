@@ -29,8 +29,7 @@ import androidx.core.content.FileProvider
 import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.fphoenixcorneae.common.ext.appContext
-import com.fphoenixcorneae.common.ext.isNull
+import com.fphoenixcorneae.common.ext.*
 import com.fphoenixcorneae.common.permission.request
 import com.fphoenixcorneae.common.permission.requestCameraPermission
 import com.fphoenixcorneae.common.permission.requestPhonePermission
@@ -66,12 +65,12 @@ object IntentUtil {
                 optionsBundle
             )
         } else {
-            scanForActivity(context)?.startActivityForResult(
+            context.getActivity()?.startActivityForResult(
                 intent, requestCode,
                 optionsBundle
             )
         }
-        scanForActivity(context)?.overridePendingTransition(enterAnim, exitAnim)
+        context.getActivity()?.overridePendingTransition(enterAnim, exitAnim)
     }
 
     /**
@@ -132,7 +131,7 @@ object IntentUtil {
         if (requestCode < 0) {
             context?.startActivity(intent)
         } else {
-            scanForActivity(context)?.startActivityForResult(intent, requestCode)
+            context.getActivity()?.startActivityForResult(intent, requestCode)
         }
     }
 
@@ -175,12 +174,12 @@ object IntentUtil {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             data = Uri.fromFile(file)
         } else {
-            val authority = "${AppUtil.packageName}.FileProvider"
+            val authority = "${appPackageName}.FileProvider"
             data = FileProvider.getUriForFile(context, authority, file)
             intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         }
         context.grantUriPermission(
-            AppUtil.packageName,
+            appPackageName,
             data,
             Intent.FLAG_GRANT_READ_URI_PERMISSION
         )
@@ -202,7 +201,7 @@ object IntentUtil {
         packageName: String,
         isNewTask: Boolean = false
     ): Intent? {
-        val launcherActivity: String = ActivityUtil.getLauncherActivity(packageName)
+        val launcherActivity: String = getLauncherActivity(packageName)
         if (launcherActivity.isNotEmpty()) {
             val intent = Intent(Intent.ACTION_MAIN)
             intent.addCategory(Intent.CATEGORY_LAUNCHER)
@@ -365,7 +364,7 @@ object IntentUtil {
     @SuppressLint("InlinedApi")
     fun openSettingsCanDrawOverlays() {
         val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-        intent.data = Uri.parse("package:${AppUtil.packageName}")
+        intent.data = Uri.parse("package:${appPackageName}")
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         appContext.startActivity(intent)
     }
@@ -377,7 +376,7 @@ object IntentUtil {
     fun openApplicationManageWriteSettings() {
         val intent = Intent(
             Settings.ACTION_MANAGE_WRITE_SETTINGS,
-            Uri.parse("package:${AppUtil.packageName}")
+            Uri.parse("package:${appPackageName}")
         )
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         appContext.startActivity(intent)
@@ -390,7 +389,7 @@ object IntentUtil {
         val intent = Intent()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-            intent.data = Uri.fromParts("package", AppUtil.packageName, null)
+            intent.data = Uri.fromParts("package", appPackageName, null)
         } else {
             val appPkgName =
                 when (Build.VERSION.SDK_INT) {
@@ -402,7 +401,7 @@ object IntentUtil {
                 "com.android.settings",
                 "com.android.settings.InstalledAppDetails"
             )
-            intent.putExtra(appPkgName, AppUtil.packageName)
+            intent.putExtra(appPkgName, appPackageName)
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         appContext.startActivity(intent)
@@ -443,24 +442,6 @@ object IntentUtil {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
         activity.startActivityForResult(intent, requestCode)
-    }
-
-    /**
-     * Get activity from context object
-     *
-     * @param context something
-     * @return object of Activity or null if it is not Activity
-     */
-    fun scanForActivity(context: Context?): Activity? {
-        if (context.isNull()) {
-            return null
-        }
-        if (context is Activity) {
-            return context
-        } else if (context is ContextWrapper) {
-            return scanForActivity(context.baseContext)
-        }
-        return null
     }
 }
 

@@ -14,6 +14,7 @@ import android.view.WindowManager
 import com.fphoenixcorneae.common.ext.fixSoftInputLeaks
 import com.fphoenixcorneae.common.ext.loggerD
 import com.fphoenixcorneae.common.ext.loggerI
+import com.fphoenixcorneae.common.ext.setTopActivity
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -120,7 +121,7 @@ class ActivityLifecycleCallbacksImpl : ActivityLifecycleCallbacks {
         logActivityLifecycle("onCreated(): ", activity)
         LanguageUtil.applyLanguage()
         setAnimatorsEnabled()
-        ActivityUtil.setTopActivity(activity)
+        setTopActivity(activity)
     }
 
     /**
@@ -129,7 +130,7 @@ class ActivityLifecycleCallbacksImpl : ActivityLifecycleCallbacks {
     override fun onActivityStarted(activity: Activity) {
         logActivityLifecycle("onStarted(): ", activity)
         if (!mIsBackground) {
-            ActivityUtil.setTopActivity(activity)
+            setTopActivity(activity)
         }
         if (mConfigCount < 0) {
             ++mConfigCount
@@ -143,7 +144,7 @@ class ActivityLifecycleCallbacksImpl : ActivityLifecycleCallbacks {
      */
     override fun onActivityResumed(activity: Activity) {
         logActivityLifecycle("onResumed(): ", activity)
-        ActivityUtil.setTopActivity(activity)
+        setTopActivity(activity)
         if (mIsBackground) {
             mIsBackground = false
             postStatus(activity, true)

@@ -1,12 +1,112 @@
 package com.fphoenixcorneae.common.ext
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
+import com.fphoenixcorneae.common.util.ContextUtil
 import java.io.Serializable
+
+val activityList: MutableList<Activity>
+    get() = ContextUtil.getActivityList()
+
+val launcherActivity: String
+    get() = getLauncherActivity(appPackageName)
+
+val topActivity: Activity?
+    get() {
+        if (activityList.isNotEmpty()) {
+            for (i in activityList.indices.reversed()) {
+                val activity = activityList[i]
+                if (activity.isFinishing || activity.isDestroyed) {
+                    continue
+                }
+                return activity
+            }
+        }
+        val topActivityByReflect = topActivityByReflect
+        topActivityByReflect?.let { setTopActivity(it) }
+        return topActivityByReflect
+    }
+
+fun setTopActivity(activity: Activity) {
+    if (activityList.contains(activity)) {
+        if (activityList.last() != activity) {
+            activityList.remove(activity)
+            activityList.add(activity)
+        }
+    } else {
+        activityList.add(activity)
+    }
+}
+
+@SuppressLint("QueryPermissionsNeeded")
+fun getLauncherActivity(pkg: String): String {
+    val intent = Intent(Intent.ACTION_MAIN, null)
+    intent.addCategory(Intent.CATEGORY_LAUNCHER)
+    intent.setPackage(pkg)
+    val info = appContext.packageManager.queryIntentActivities(intent, 0)
+    val size = info.size
+    if (size == 0) {
+        return ""
+    }
+    for (i in 0 until size) {
+        val ri = info[i]
+        if (ri.activityInfo.processName == pkg) {
+            return ri.activityInfo.name
+        }
+    }
+    return info[0].activityInfo.name
+}
+
+private val topActivityByReflect: Activity?
+    get() {
+        try {
+            @SuppressLint("PrivateApi") val activityThreadClass =
+                Class.forName("android.app.ActivityThread")
+            val currentActivityThreadMethod = activityThreadClass.getMethod("currentActivityThread").invoke(null)
+            val mActivityListField = activityThreadClass.getDeclaredField("mActivityList")
+            mActivityListField.isAccessible = true
+            val activities = mActivityListField[currentActivityThreadMethod] as Map<*, *>
+            for (activityRecord in activities.values) {
+                val activityRecordClass: Class<*> = activityRecord!!::class.java
+                val pausedField = activityRecordClass.getDeclaredField("paused")
+                pausedField.isAccessible = true
+                if (!pausedField.getBoolean(activityRecord)) {
+                    val activityField = activityRecordClass.getDeclaredField("activity")
+                    activityField.isAccessible = true
+                    return activityField[activityRecord] as Activity
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+fun recreateTopActivity() {
+    topActivity?.recreate()
+}
+
+/**
+ * Get activity from context object
+ * @return object of Activity or null if it is not Activity
+ */
+fun Context?.getActivity(): Activity? {
+    if (this == null) {
+        return null
+    }
+    if (this is Activity) {
+        return this
+    } else if (this is ContextWrapper) {
+        return baseContext.getActivity()
+    }
+    return null
+}
 
 inline fun <reified T : Activity> Activity.startKtxActivity(
     flags: Int? = null,

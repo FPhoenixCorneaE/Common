@@ -10,6 +10,7 @@ import androidx.annotation.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.fphoenixcorneae.common.ext.appContext
+import com.fphoenixcorneae.common.ext.appPackageName
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
@@ -54,56 +55,56 @@ class ResourceUtil private constructor() {
         fun getLayoutId(name: String): Int {
             return appContext.resources.getIdentifier(
                 name, "layout",
-                AppUtil.packageName
+                appPackageName
             )
         }
 
         fun getStringId(name: String): Int {
             return appContext.resources.getIdentifier(
                 name, "string",
-                AppUtil.packageName
+                appPackageName
             )
         }
 
         fun getDrawableId(name: String): Int {
             return appContext.resources.getIdentifier(
                 name, "drawable",
-                AppUtil.packageName
+                appPackageName
             )
         }
 
         fun getMipmapId(name: String): Int {
             return appContext.resources.getIdentifier(
                 name, "mipmap",
-                AppUtil.packageName
+                appPackageName
             )
         }
 
         fun getStyleId(name: String): Int {
             return appContext.resources.getIdentifier(
                 name, "style",
-                AppUtil.packageName
+                appPackageName
             )
         }
 
         fun getId(name: String): Int {
             return appContext.resources.getIdentifier(
                 name, "id",
-                AppUtil.packageName
+                appPackageName
             )
         }
 
         fun getColorId(name: String): Int {
             return appContext.resources.getIdentifier(
                 name, "color",
-                AppUtil.packageName
+                appPackageName
             )
         }
 
         fun getArrayId(name: String): Int {
             return appContext.resources.getIdentifier(
                 name, "array",
-                AppUtil.packageName
+                appPackageName
             )
         }
 
