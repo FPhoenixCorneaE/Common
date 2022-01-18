@@ -2,23 +2,8 @@ package com.fphoenixcorneae.common.ext
 
 import android.graphics.Color
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.FloatRange
-import androidx.core.content.ContextCompat
 import kotlin.math.roundToInt
-
-/**
- * Returns a color associated with a particular resource ID.
- *
- * @param id The desired resource identifier.
- * @return a color associated with a particular resource ID
- */
-@ColorInt
-fun getColor(
-    @ColorRes
-    id: Int,
-): Int =
-    ContextCompat.getColor(appContext, id)
 
 /**
  * [ColorInt]矫正颜色的透明度

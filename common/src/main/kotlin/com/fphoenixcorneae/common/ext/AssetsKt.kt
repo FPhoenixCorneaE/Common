@@ -1,6 +1,7 @@
 package com.fphoenixcorneae.common.ext
 
 import java.io.BufferedReader
+import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.Charset
 
@@ -9,16 +10,17 @@ import java.nio.charset.Charset
  * @param fileName 文件名称
  * @return Json    String
  */
-fun readFileFromAssets(fileName: String): String {
+fun readAssetsToString(
+    fileName: String,
+    charset: Charset = Charset.defaultCharset()
+): String {
     val stringBuilder = StringBuilder()
     // 获得 assets 资源管理器
     // 使用 IO 流读取 json 文件内容
     var bufferedReader: BufferedReader? = null
     try {
-        val assetManager = appContext.assets
-        bufferedReader = BufferedReader(
-            InputStreamReader(assetManager.open(fileName), Charset.defaultCharset())
-        )
+        val `is` = appContext.assets.open(fileName)
+        bufferedReader = BufferedReader(InputStreamReader(`is`, charset))
         var line: String?
         while (bufferedReader.readLine().also { line = it } != null) {
             stringBuilder.append(line)
