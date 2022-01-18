@@ -259,7 +259,7 @@ val isAppInForeground: Boolean
  * @return `true`: yes<br></br>`false`: no
  */
 fun isAppInForeground(packageName: String): Boolean {
-    return packageName.isNotBlank() && packageName == getForegroundProcessName()
+    return packageName.isNotBlank() && packageName == foregroundProcessName
 }
 
 /**
@@ -485,71 +485,3 @@ private fun hashTemplate(
     }
 }
 
-@SuppressLint("ObsoleteSdkInt", "QueryPermissionsNeeded")
-private fun getForegroundProcessName(): String? {
-    val context = appContext
-    val pInfo = context.activityManager?.runningAppProcesses
-    if (pInfo != null && pInfo.size > 0) {
-        for (aInfo in pInfo) {
-            if (aInfo.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                return aInfo.processName
-            }
-        }
-    }
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-        val pm: PackageManager = context.packageManager
-        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
-        val list = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-        list.toString().logi()
-        if (list.size <= 0) {
-            "getForegroundProcessName: noun of access to usage information.".logi()
-            return ""
-        }
-        try { // Access to usage information.
-            val info = pm.getApplicationInfo(context.packageName, 0)
-            val aom = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-            if (aom.checkOpNoThrow(
-                    AppOpsManager.OPSTR_GET_USAGE_STATS,
-                    info.uid,
-                    info.packageName
-                ) != AppOpsManager.MODE_ALLOWED
-            ) {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(intent)
-            }
-            if (aom.checkOpNoThrow(
-                    AppOpsManager.OPSTR_GET_USAGE_STATS,
-                    info.uid,
-                    info.packageName
-                ) != AppOpsManager.MODE_ALLOWED
-            ) {
-                "getForegroundProcessName: refuse to device usage stats.".logi()
-                return ""
-            }
-            val usageStatsManager =
-                context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-            val endTime = System.currentTimeMillis()
-            val beginTime = endTime - 86400000 * 7
-            val usageStatsList = usageStatsManager
-                .queryUsageStats(
-                    UsageStatsManager.INTERVAL_BEST,
-                    beginTime, endTime
-                )
-            if (usageStatsList == null || usageStatsList.isEmpty()) {
-                return null
-            }
-            var recentStats: UsageStats? = null
-            for (usageStats in usageStatsList) {
-                if (recentStats == null
-                    || usageStats.lastTimeUsed > recentStats.lastTimeUsed
-                ) {
-                    recentStats = usageStats
-                }
-            }
-            return recentStats?.packageName
-        } catch (e: NameNotFoundException) {
-            e.printStackTrace()
-        }
-    }
-    return ""
-}
