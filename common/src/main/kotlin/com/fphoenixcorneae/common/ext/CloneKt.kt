@@ -13,5 +13,5 @@ fun <T> T?.deepClone(classOfT: Class<T>): T? =
     runCatching {
         toJson().toObject(classOfT)
     }.onFailure {
-        it.logd()
+        it.printStackTrace()
     }.getOrNull()
