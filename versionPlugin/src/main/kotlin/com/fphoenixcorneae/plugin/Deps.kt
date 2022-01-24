@@ -7,8 +7,8 @@ object Deps {
         const val buildToolsVersion = "31.0.0"
         const val minSdkVersion = 21
         const val targetSdkVersion = 31
-        const val versionCode = 200
-        const val versionName = "2.0.0"
+        const val versionCode = 201
+        const val versionName = "2.0.1"
     }
 
     /** BuildType */

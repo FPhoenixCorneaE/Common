@@ -20,6 +20,7 @@ import androidx.annotation.IntRange
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.fphoenixcorneae.common.ext.appContext
+import com.fphoenixcorneae.common.ext.getDrawable
 import java.io.*
 
 /**
@@ -2150,7 +2151,7 @@ class ImageUtil private constructor() {
             @DrawableRes drawableResId: Int,
             tintColor: Int
         ) {
-            ResourceUtil.getDrawable(drawableResId)?.let {
+            getDrawable(drawableResId)?.let {
                 val wrappedDrawable = getCanTintDrawable(it)
                 // 进行着色
                 DrawableCompat.setTintList(wrappedDrawable, ColorStateList.valueOf(tintColor))
