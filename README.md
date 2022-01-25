@@ -22,7 +22,7 @@ allprojects {
 
 ```kotlin
 dependencies {
-    implementation("com.github.FPhoenixCorneaE:Common:$latest")
+    implementation("com.github.FPhoenixCorneaE:common:$latest")
 }
 ```
 
