@@ -2,7 +2,7 @@
 
 通用类库：Kotlin 扩展、Kotlin-Dsl（animation、layout）、权限申请、缓存（内存、磁盘、内存+磁盘）。
 
-[![](https://jitpack.io/v/FPhoenixCorneaE/CommonUtil.svg)](https://jitpack.io/#FPhoenixCorneaE/CommonUtil)
+[![](https://jitpack.io/v/FPhoenixCorneaE/Common.svg)](https://jitpack.io/#FPhoenixCorneaE/Common)
 
 ### How to include it in your project:
 
@@ -22,7 +22,7 @@ allprojects {
 
 ```kotlin
 dependencies {
-    implementation("com.github.FPhoenixCorneaE:CommonUtil:$latest")
+    implementation("com.github.FPhoenixCorneaE:Common:$latest")
 }
 ```
 
@@ -57,56 +57,4 @@ dependencies {
 }
 ```
 
-### How to use：
-
-- ##### AesExt：
-
-  Aes 算法加密、解密
-
-- ##### HashExt
-
-  MD5 算法、SHA 算法，都是不可逆算法
-
-- ##### GsonExt
-
-  Gson 解析
-
-  `Any?.toJson(includeNulls: Boolean = true): String`
-
-  `String?.toObject(type: Class<T>): T?`
-
-- ##### SharedPreferencesExt
-
-  轻量级的存储
-
-- ##### EditTextExt
-
-  EditText 扩展方法、属性
-
-- ##### ImageViewExt
-
-  ImageView 扩展方法、属性、加载图片、获取位图
-
-- ##### RecycleViewExt
-
-  RecycleView 扩展方法、属性
-
-- ##### ScrollViewExt
-
-  ScrollView 扩展方法、属性
-
-- ##### SearchViewExt
-
-  SearchView 扩展方法、属性
-
-- ##### SeekBarExt
-
-  SeekBar 扩展方法、属性
-
-- ##### TextViewExt
-
-  TextView 扩展方法、属性
-
-- ##### ViewExt
-
-  View 扩展方法、属性
+### How to use：[Kotlin扩展属性、函数](https://github.com/FPhoenixCorneaE/Common/blob/main/READMEKT.md)
