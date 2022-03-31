@@ -52,7 +52,7 @@ class GradientDrawable private constructor(
                     cornerRadius = this.radius
                 } else {
                     for (index in this.radii.indices) {
-                        if (this.radii[index] === 0.0f) {
+                        if (this.radii[index] == 0.0f) {
                             this.radii[index] = radius
                         }
                     }
@@ -63,7 +63,7 @@ class GradientDrawable private constructor(
 
         stroke?.let {
             with(it) {
-                if (this.dashWidth !== 0.0f) {
+                if (this.dashWidth != 0.0f) {
                     setStroke(this.width, this.colorStateList, this.dashWidth, this.dashGap)
                 } else {
                     setStroke(this.width, this.colorStateList)
@@ -79,7 +79,7 @@ class GradientDrawable private constructor(
             }
         }
 
-        if (width !== -1 && height !== -1) {
+        if (width != -1 && height != -1) {
             setSize(width, height)
         }
     }
@@ -141,7 +141,7 @@ class GradientDrawable private constructor(
                 val key = hashCode()
                 val cached = sCache[key]?.get()
                 if (cached == null) {
-                    println("jiangbin CodeGradientDrawable is null $this")
+                    println("GradientDrawable is null $this")
                     val drawable = GradientDrawable(
                         theme,
                         shape,
@@ -156,7 +156,7 @@ class GradientDrawable private constructor(
                     sCache[key] = WeakReference(drawable)
                     return drawable
                 } else {
-                    println("jiangbin CodeGradientDrawable not null $this")
+                    println("GradientDrawable not null $this")
 
                     return cached
                 }

@@ -1,5 +1,6 @@
 package com.fphoenixcorneae.common.drawable
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.os.Build
 
@@ -59,6 +60,7 @@ class StateListDrawable private constructor() : android.graphics.drawable.StateL
             this.autoMirrored = autoMirrored
         }
 
+        @SuppressLint("ObsoleteSdkInt")
         fun build(): StateListDrawable {
             val stateListDrawable = StateListDrawable()
             for (item in drawableItems) {

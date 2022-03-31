@@ -61,7 +61,7 @@ class ColorStateList private constructor(
     }
 
     override fun toString(): String {
-        return "CodeColorStateList(states=${states.contentToString()}, colors=${colors.contentToString()})"
+        return "ColorStateList(states=${states.contentToString()}, colors=${colors.contentToString()})"
     }
 
     class Builder {
