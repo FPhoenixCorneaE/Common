@@ -22,6 +22,14 @@ fun String.logw(tag: String? = null) {
     Logger.t(tag).w(this)
 }
 
+fun String.logv(tag: String? = null) {
+    Logger.t(tag).v(this)
+}
+
+fun String.logWtf(tag: String? = null) {
+    Logger.t(tag).wtf(this)
+}
+
 fun String?.logJson(tag: String? = null) {
     Logger.t(tag).json(this)
 }
