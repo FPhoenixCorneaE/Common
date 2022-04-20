@@ -1,6 +1,6 @@
 package com.fphoenixcorneae.common.util
 
-import com.fphoenixcorneae.common.ext.loggerI
+import com.fphoenixcorneae.common.ext.logi
 
 /**
  * 银行卡管理工具类
@@ -670,7 +670,7 @@ object BankCheckUtil {
             return false
         }
         val isBankCard = cardId[cardId.length - 1] == bit
-        loggerI("银行卡：$isBankCard")
+        "银行卡：$isBankCard".logi()
         return isBankCard
     }
 

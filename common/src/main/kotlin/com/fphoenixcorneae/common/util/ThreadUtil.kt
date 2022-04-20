@@ -4,8 +4,8 @@ import android.os.Handler
 import android.os.Looper
 import androidx.annotation.CallSuper
 import androidx.annotation.IntRange
-import com.fphoenixcorneae.common.ext.loggerE
-import com.fphoenixcorneae.common.ext.loggerI
+import com.fphoenixcorneae.common.ext.loge
+import com.fphoenixcorneae.common.ext.logi
 import java.util.*
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicInteger
@@ -1148,7 +1148,7 @@ object ThreadUtil {
                 }
             }
         } else {
-            loggerI("The executorService is not ThreadUtil's pool.")
+            "The executorService is not ThreadUtil's pool.".logi()
         }
     }
 
@@ -1194,7 +1194,7 @@ object ThreadUtil {
         var taskInfo: TaskInfo
         synchronized(TASK_TASKINFO_MAP) {
             if (TASK_TASKINFO_MAP[task] != null) {
-                loggerI("Task can only be executed once.")
+                "Task can only be executed once.".logi()
                 return
             }
             taskInfo = TaskInfo(pool)
@@ -1306,7 +1306,7 @@ object ThreadUtil {
             try {
                 super.execute(command)
             } catch (ignore: RejectedExecutionException) {
-                loggerI("This will not happen!")
+                "This will not happen!".logi()
                 mWorkQueue.offer(command)
             } catch (t: Throwable) {
                 mSubmittedCount.decrementAndGet()
@@ -1389,24 +1389,22 @@ object ThreadUtil {
 
     private class ThreadFactoryImpl @JvmOverloads constructor(
         prefix: String,
-        priority: Int,
-        isDaemon: Boolean = false
+        private val priority: Int,
+        private val isDaemon: Boolean = false
     ) : AtomicLong(), ThreadFactory {
-        private val namePrefix: String
-        private val priority: Int
-        private val isDaemon: Boolean
+        private val namePrefix: String = prefix + "-pool-" + POOL_NUMBER.getAndIncrement() + "-thread-"
         override fun newThread(r: Runnable): Thread {
             val t: Thread = object : Thread(r, namePrefix + andIncrement) {
                 override fun run() {
                     try {
                         super.run()
                     } catch (t: Throwable) {
-                        loggerE("Request threw uncaught throwable:$t")
+                        "Request threw uncaught throwable:$t".loge()
                     }
                 }
             }
             t.isDaemon = isDaemon
-            t.uncaughtExceptionHandler = Thread.UncaughtExceptionHandler { t, e -> println(e) }
+            t.uncaughtExceptionHandler = Thread.UncaughtExceptionHandler { _, e -> println(e) }
             t.priority = priority
             return t
         }
@@ -1416,19 +1414,12 @@ object ThreadUtil {
             private const val serialVersionUID = -9209200509960368598L
         }
 
-        init {
-            namePrefix =
-                prefix + "-pool-" + POOL_NUMBER.getAndIncrement() + "-thread-"
-            this.priority = priority
-            this.isDaemon = isDaemon
-        }
-
         override fun toByte(): Byte {
             return get().toByte()
         }
 
         override fun toChar(): Char {
-            return get().toChar()
+            return get().toInt().toChar()
         }
 
         override fun toShort(): Short {
@@ -1438,11 +1429,11 @@ object ThreadUtil {
 
     abstract class SimpleTask<T> : Task<T>() {
         override fun onCancel() {
-            loggerI("onCancel: " + Thread.currentThread())
+            "onCancel: ${Thread.currentThread()}".logi()
         }
 
         override fun onFail(t: Throwable?) {
-            loggerI("onFail: " + Thread.currentThread())
+            "onFail: ${Thread.currentThread()}".logi()
         }
     }
 

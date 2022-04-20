@@ -187,7 +187,7 @@ class LanguageUtil private constructor() {
             }
             val languageCountry = spLocale.split("\\$").toTypedArray()
             if (languageCountry.size != 2) {
-                loggerE("The Language string of $spLocale is not in the correct format.")
+                "The Language string of $spLocale is not in the correct format.".loge()
                 return
             }
             val settingLocale = Locale(languageCountry[0], languageCountry[1])

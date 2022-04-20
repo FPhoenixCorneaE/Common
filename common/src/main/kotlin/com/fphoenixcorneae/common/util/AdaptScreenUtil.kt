@@ -3,7 +3,7 @@ package com.fphoenixcorneae.common.util
 import android.content.res.Resources
 import android.util.DisplayMetrics
 import com.fphoenixcorneae.common.ext.appContext
-import com.fphoenixcorneae.common.ext.loggerE
+import com.fphoenixcorneae.common.ext.loge
 import java.lang.reflect.Field
 import java.util.*
 
@@ -143,7 +143,7 @@ class AdaptScreenUtil private constructor() {
                     val dm = metricsField[resources] as DisplayMetrics
                     dm.xdpi = newXdpi
                 } catch (e: Exception) {
-                    loggerE("applyMetricsFields: $e")
+                    "applyMetricsFields: $e".loge()
                 }
             }
         }
@@ -162,7 +162,7 @@ class AdaptScreenUtil private constructor() {
                     }
                 }
             } catch (e: Exception) {
-                loggerE("getMetricsFromField: $e")
+                "getMetricsFromField: $e".loge()
                 null
             }
         }

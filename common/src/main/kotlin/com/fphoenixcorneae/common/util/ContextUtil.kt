@@ -11,10 +11,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
-import com.fphoenixcorneae.common.ext.fixSoftInputLeaks
-import com.fphoenixcorneae.common.ext.loggerD
-import com.fphoenixcorneae.common.ext.loggerI
-import com.fphoenixcorneae.common.ext.setTopActivity
+import com.fphoenixcorneae.common.ext.*
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -200,7 +197,7 @@ class ActivityLifecycleCallbacksImpl : ActivityLifecycleCallbacks {
      * 打印activity生命周期
      */
     private fun logActivityLifecycle(message: String, activity: Activity) {
-        loggerD(message + activity.componentName.className, "ActivityLifecycle")
+        (message + activity.componentName.className).logd("ActivityLifecycle")
     }
 
     fun addOnAppStatusChangedListener(listener: OnAppStatusChangedListener?) {
@@ -288,6 +285,7 @@ class ActivityLifecycleCallbacksImpl : ActivityLifecycleCallbacks {
     /**
      * Set animators enabled.
      */
+    @SuppressLint("SoonBlockedPrivateApi")
     private fun setAnimatorsEnabled() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && ValueAnimator.areAnimatorsEnabled()) {
             return
@@ -298,7 +296,7 @@ class ActivityLifecycleCallbacksImpl : ActivityLifecycleCallbacks {
             val sDurationScale = sDurationScaleField[null] as Float
             if (sDurationScale == 0f) {
                 sDurationScaleField[null] = 1f
-                loggerI("setAnimatorsEnabled: Animators are enabled now!")
+                "setAnimatorsEnabled: Animators are enabled now!".logi()
             }
         } catch (e: NoSuchFieldException) {
             e.printStackTrace()

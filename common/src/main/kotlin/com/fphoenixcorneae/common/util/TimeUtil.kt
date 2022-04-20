@@ -1,7 +1,7 @@
 package com.fphoenixcorneae.common.util
 
 import com.fphoenixcorneae.common.annotation.TimeUnit
-import com.fphoenixcorneae.common.ext.loggerE
+import com.fphoenixcorneae.common.ext.loge
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -42,7 +42,7 @@ class TimeUtil {
             return try {
                 getFriendlyTimeSpanByNow(time, SimpleDateFormat(DEFAULT_FORMAT, Locale.getDefault()))
             } catch (e: Exception) {
-                loggerE(e.toString())
+                e.toString().loge()
                 time
             }
 

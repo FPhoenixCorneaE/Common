@@ -6,7 +6,7 @@ import android.os.Build
 import android.text.TextUtils
 import com.fphoenixcorneae.common.ext.appContext
 import com.fphoenixcorneae.common.ext.connectivityManager
-import com.fphoenixcorneae.common.ext.loggerE
+import com.fphoenixcorneae.common.ext.loge
 import java.io.IOException
 import java.net.Inet4Address
 import java.net.NetworkInterface
@@ -147,7 +147,7 @@ class NetworkUtil private constructor() {
                     }
                 }
             } catch (e: SocketException) {
-                loggerE(e.toString())
+                e.toString().loge()
             }
 
             return ""
@@ -188,7 +188,7 @@ class NetworkUtil private constructor() {
                     return buf.toString()
                 }
             } catch (e: SocketException) {
-                loggerE(e.toString())
+                e.toString().loge()
             }
 
             return ""
@@ -245,7 +245,7 @@ class NetworkUtil private constructor() {
                     return re
                 }
             } catch (e: IOException) {
-                loggerE(e.toString())
+                e.toString().loge()
             }
 
             return re

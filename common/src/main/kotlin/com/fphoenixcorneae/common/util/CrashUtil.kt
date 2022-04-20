@@ -5,10 +5,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Environment
 import androidx.annotation.RequiresPermission
-import com.fphoenixcorneae.common.ext.appContext
-import com.fphoenixcorneae.common.ext.appVersionCode
-import com.fphoenixcorneae.common.ext.appVersionName
-import com.fphoenixcorneae.common.ext.loggerD
+import com.fphoenixcorneae.common.ext.*
 import java.io.*
 import java.text.Format
 import java.text.SimpleDateFormat
@@ -161,7 +158,7 @@ class CrashUtil private constructor() {
             } catch (e: ExecutionException) {
                 e.printStackTrace()
             }
-            loggerD("write crash info to $filePath failed!", "CrashUtil")
+            "write crash info to $filePath failed!".logd("CrashUtil")
         }
 
         private fun createOrExistsFile(filePath: String): Boolean {
@@ -230,7 +227,7 @@ class CrashUtil private constructor() {
                     if (createOrExistsFile(fullPath)) {
                         input2File(crashInfo, fullPath)
                     } else {
-                        loggerD("create $fullPath failed!", "CrashUtil")
+                        "create $fullPath failed!".logd("CrashUtil")
                     }
                     if (sOnCrashListener != null) {
                         sOnCrashListener!!.onCrash(crashInfo, e)

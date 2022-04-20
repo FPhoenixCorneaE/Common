@@ -71,11 +71,9 @@ class LocationUtil private constructor() {
                 mListener!!.onStatusChanged(provider, status, extras)
             }
             when (status) {
-                LocationProvider.AVAILABLE -> loggerD("onStatusChanged-->当前GPS状态为可见状态")
-                LocationProvider.OUT_OF_SERVICE -> loggerD("onStatusChanged-->当前GPS状态为服务区外状态")
-                LocationProvider.TEMPORARILY_UNAVAILABLE -> loggerD(
-                    "onStatusChanged-->当前GPS状态为暂停服务状态"
-                )
+                LocationProvider.AVAILABLE -> "onStatusChanged-->当前GPS状态为可见状态".logd()
+                LocationProvider.OUT_OF_SERVICE -> "onStatusChanged-->当前GPS状态为服务区外状态".logd()
+                LocationProvider.TEMPORARILY_UNAVAILABLE -> "onStatusChanged-->当前GPS状态为暂停服务状态".logd()
             }
         }
 
@@ -104,7 +102,7 @@ class LocationUtil private constructor() {
         val isGpsEnabled: Boolean
             get() {
                 val lm = appContext.locationManager
-                return lm?.isProviderEnabled(LocationManager.GPS_PROVIDER)?:false
+                return lm?.isProviderEnabled(LocationManager.GPS_PROVIDER) ?: false
             }
 
         /**
@@ -115,7 +113,7 @@ class LocationUtil private constructor() {
         val isLocationEnabled: Boolean
             get() {
                 val lm = appContext.locationManager
-                return lm?.isProviderEnabled(LocationManager.NETWORK_PROVIDER)==true || isGpsEnabled
+                return lm?.isProviderEnabled(LocationManager.NETWORK_PROVIDER) == true || isGpsEnabled
             }
 
         /**
@@ -155,7 +153,7 @@ class LocationUtil private constructor() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ]
         )
-        
+
         fun register(
             minTime: Long,
             minDistance: Long,

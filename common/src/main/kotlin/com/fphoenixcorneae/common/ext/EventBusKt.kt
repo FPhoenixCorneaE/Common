@@ -16,7 +16,7 @@ import org.greenrobot.eventbus.EventBus
  */
 fun EventBus.safeRegister(activity: FragmentActivity) {
     if (activity.isFinishing || activity.isDestroyed) {
-        loggerE("Don't register event bus on finish state or destroyed state of the activity: ${activity.javaClass.canonicalName}")
+        "Don't register event bus on finish state or destroyed state of the activity: ${activity.javaClass.canonicalName}".loge()
         return
     }
 
@@ -25,14 +25,14 @@ fun EventBus.safeRegister(activity: FragmentActivity) {
             if (event == Lifecycle.Event.ON_CREATE) {
                 if (!isRegistered(activity)) {
                     register(activity)
-                    loggerD("EventBus register success: ${source.javaClass.canonicalName}")
+                    "EventBus register success: ${source.javaClass.canonicalName}".logd()
                 }
             }
 
             if (event == Lifecycle.Event.ON_DESTROY) {
                 if (isRegistered(activity)) {
                     unregister(activity)
-                    loggerD("EventBus unregister success: ${source.javaClass.canonicalName}")
+                    "EventBus unregister success: ${source.javaClass.canonicalName}".logd()
                 }
             }
         }
@@ -47,7 +47,7 @@ fun EventBus.safeRegister(activity: FragmentActivity) {
  */
 fun EventBus.safeRegister(fragment: Fragment) {
     if (fragment.isRemoving || fragment.isDetached) {
-        loggerE("Don't register event bus on detach state or removing state of the activity: ${fragment.javaClass.canonicalName}")
+        "Don't register event bus on detach state or removing state of the activity: ${fragment.javaClass.canonicalName}".loge()
         return
     }
 
@@ -56,14 +56,14 @@ fun EventBus.safeRegister(fragment: Fragment) {
             if (event == Lifecycle.Event.ON_CREATE) {
                 if (!isRegistered(fragment)) {
                     register(fragment)
-                    loggerD("EventBus register success: ${source.javaClass.canonicalName}")
+                    "EventBus register success: ${source.javaClass.canonicalName}".logd()
                 }
             }
 
             if (event == Lifecycle.Event.ON_DESTROY) {
                 if (isRegistered(fragment)) {
                     unregister(fragment)
-                    loggerD("EventBus unregister success: ${source.javaClass.canonicalName}")
+                    "EventBus unregister success: ${source.javaClass.canonicalName}".logd()
                 }
             }
         }
@@ -82,14 +82,14 @@ fun EventBus.safeRegister(viewModel: LifecycleOwner) {
             if (event == Lifecycle.Event.ON_CREATE) {
                 if (!isRegistered(viewModel)) {
                     register(viewModel)
-                    loggerD("EventBus register success: ${source.javaClass.canonicalName}")
+                    "EventBus register success: ${source.javaClass.canonicalName}".logd()
                 }
             }
 
             if (event == Lifecycle.Event.ON_DESTROY) {
                 if (isRegistered(viewModel)) {
                     unregister(viewModel)
-                    loggerD("EventBus unregister success: ${source.javaClass.canonicalName}")
+                    "EventBus unregister success: ${source.javaClass.canonicalName}".logd()
                 }
             }
         }

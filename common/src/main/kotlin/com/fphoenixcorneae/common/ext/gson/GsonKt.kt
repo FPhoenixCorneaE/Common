@@ -1,6 +1,6 @@
 package com.fphoenixcorneae.common.ext.gson
 
-import com.fphoenixcorneae.common.ext.loggerE
+import com.fphoenixcorneae.common.ext.loge
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
@@ -55,7 +55,7 @@ fun <T> String?.toObject(type: Class<T>): T? {
     return try {
         GSON.fromJson(this, type)
     } catch (e: JsonSyntaxException) {
-        loggerE(e.toString())
+        e.toString().loge()
         null
     }
 }
@@ -70,7 +70,7 @@ fun <T> String?.toObject(type: Type): T? {
     return try {
         GSON.fromJson(this, type)
     } catch (e: JsonSyntaxException) {
-        loggerE(e.toString())
+        e.toString().loge()
         null
     }
 }
@@ -85,7 +85,7 @@ fun <T> Reader.toObject(type: Class<T>): T? {
     return try {
         GSON.fromJson(this, type)
     } catch (e: JsonSyntaxException) {
-        loggerE(e.toString())
+        e.toString().loge()
         null
     }
 }
@@ -100,7 +100,7 @@ fun <T> Reader.toObject(type: Type): T? {
     return try {
         GSON.fromJson(this, type)
     } catch (e: JsonSyntaxException) {
-        loggerE(e.toString())
+        e.toString().loge()
         null
     }
 }
