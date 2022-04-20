@@ -1,6 +1,6 @@
 ### Kotlin扩展属性、函数
 
-* SystemServiceKt.kt
+* [SystemServiceKt.kt](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/main/kotlin/com/fphoenixcorneae/common/ext/SystemServiceKt.kt)
 
   诸如AM、WM等**SystemServiceManager**实例扩展属性。
 
