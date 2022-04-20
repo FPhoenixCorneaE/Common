@@ -13,6 +13,7 @@ import android.net.wifi.WifiManager
 import android.os.BatteryManager
 import android.os.PowerManager
 import android.os.Vibrator
+import android.os.VibratorManager
 import android.os.storage.StorageManager
 import android.telephony.CarrierConfigManager
 import android.telephony.SubscriptionManager
@@ -38,6 +39,7 @@ val Context.locationManager get() = getSystemService<LocationManager>()
 val Context.searchManager get() = getSystemService<SearchManager>()
 val Context.storageManager get() = getSystemService<StorageManager>()
 val Context.vibrator get() = getSystemService<Vibrator>()
+val Context.vibratorManager get() = getSystemService<VibratorManager>()
 val Context.connectivityManager get() = getSystemService<ConnectivityManager>()
 val Context.wifiManager get() = getSystemService<WifiManager>()
 val Context.audioManager get() = getSystemService<AudioManager>()
