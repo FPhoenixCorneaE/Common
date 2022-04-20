@@ -46,17 +46,23 @@
 
   eg：**getStartOfDay()、getEndOfDay()、daysBeforeOrAfter(...)、monthsBeforeOrAfter(...)** etc。
 
+  测试用例：[DateTimeUnitTest](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/test/java/com/fphoenixcorneae/common/DateTimeUnitTest.kt)
+
 * [ColorKt.kt](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/main/kotlin/com/fphoenixcorneae/common/ext/ColorKt.kt)
 
   获取颜色、矫正透明度、十六进制字符串与颜色值互转、加深颜色、变浅颜色、判断是否是深色的颜色、获取随机颜色值。
 
   eg：**getColor(...)、adjustColorAlpha(...)、colorInt2HexString()、hexString2ColorInt()、darker()、lighter()、isDarkColor()、getRandomColor()**。
 
+  测试用例：[ColorUnitTest](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/androidTest/java/com/fphoenixcorneae/common/ColorUnitTest.kt)
+
 * [DisplayKt.kt](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/main/kotlin/com/fphoenixcorneae/common/ext/DisplayKt.kt)
 
   Int/Float/Double 类型的 px 与 dp 互转、px 与 sp 互转。
 
   eg：**10.dp、10f.dp、10.0.dp、26.toDp()、26f.toDp()、26.0.toDp()、10.sp、10f.sp、10.0.sp、26.toSp()、26f.toSp()、26.0.toSp()**。
+
+  测试用例：[DisplayUnitTest](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/androidTest/java/com/fphoenixcorneae/common/DisplayUnitTest.kt)
 
 * [ScreenKt.kt](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/main/kotlin/com/fphoenixcorneae/common/ext/ScreenKt.kt)
 
@@ -67,6 +73,8 @@
   **isLandscape、isPortrait、isScreenLock、setLandscape()、setPortrait()、isFullscreen、setFullscreen()、setNonFullscreen()、**
 
   **toggleFullscreen()、isTablet。**
+
+  测试用例：[ScreenUnitTest](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/androidTest/java/com/fphoenixcorneae/common/ScreenUnitTest.kt)
 
 * [GsonKt.kt](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/main/kotlin/com/fphoenixcorneae/common/ext/gson/GsonKt.kt)
 
@@ -80,11 +88,15 @@
 
   eg：**getIntValue(...)、getLongValue(...)、getDoubleValue(...)、getBooleanValue(...)、getStringValue(...)、getJSONObjectValue(...)、getJSONArrayValue(...)、toMap()、toJSONObject()。**
 
+  测试用例：[JSONObjectUnitTest](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/androidTest/java/com/fphoenixcorneae/common/JSONObjectUnitTest.kt)
+
 * [Base64Kt.kt](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/main/kotlin/com/fphoenixcorneae/common/ext/algorithm/Base64Kt.kt)
 
   Base64编码转换。
 
   eg：**encodeBase64(...)、decodeBase64(...)。**
+
+  测试用例：[Base64UnitTest](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/test/java/com/fphoenixcorneae/common/Base64UnitTest.kt)
 
 * [HashKt.kt](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/main/kotlin/com/fphoenixcorneae/common/ext/algorithm/HashKt.kt)
 
@@ -95,6 +107,8 @@
 * [PhoneKt.kt](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/main/kotlin/com/fphoenixcorneae/common/ext/PhoneKt.kt)
 
   手机信息扩展属性与方法。
+
+  测试用例：[PhoneUnitTest](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/androidTest/java/com/fphoenixcorneae/common/PhoneUnitTest.kt)
 
 * [CloseableKt.kt](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/main/kotlin/com/fphoenixcorneae/common/ext/CloseableKt.kt)
 
@@ -127,6 +141,8 @@
   年月日时分秒的毫秒值属性扩展。
 
   eg：**Int.MILLISECONDS、Int.SECONDS、Int.MINUTES、Int.HOURS、Int.DAYS、Int.MONTHS、Int.YEARS**。
+
+  测试用例：[TimeUnitTest](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/test/java/com/fphoenixcorneae/common/TimeUnitTest.kt)
 
 * [KeyboardKt.kt](https://github.com/FPhoenixCorneaE/Common/blob/main/common/src/main/kotlin/com/fphoenixcorneae/common/ext/KeyboardKt.kt)
 
