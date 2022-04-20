@@ -5,15 +5,14 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.concurrent.getOrSet
 
 /**
  * HH:mm:ss
  */
 val HHmmssFormat by lazy {
-    object : ThreadLocal<DateFormat>() {
-        override fun initialValue(): DateFormat {
-            return SimpleDateFormat(DatePattern.HHmmss, Locale.getDefault())
-        }
+    ThreadLocal<DateFormat>().getOrSet {
+        SimpleDateFormat(DatePattern.HHmmss, Locale.getDefault())
     }
 }
 
@@ -21,10 +20,8 @@ val HHmmssFormat by lazy {
  * HH:mm
  */
 val HHmmFormat by lazy {
-    object : ThreadLocal<DateFormat>() {
-        override fun initialValue(): DateFormat {
-            return SimpleDateFormat(DatePattern.HHmm, Locale.getDefault())
-        }
+    ThreadLocal<DateFormat>().getOrSet {
+        SimpleDateFormat(DatePattern.HHmm, Locale.getDefault())
     }
 }
 
@@ -32,10 +29,8 @@ val HHmmFormat by lazy {
  * mm:ss
  */
 val mmssFormat by lazy {
-    object : ThreadLocal<DateFormat>() {
-        override fun initialValue(): DateFormat {
-            return SimpleDateFormat(DatePattern.mmss, Locale.getDefault())
-        }
+    ThreadLocal<DateFormat>().getOrSet {
+        SimpleDateFormat(DatePattern.mmss, Locale.getDefault())
     }
 }
 
@@ -43,10 +38,8 @@ val mmssFormat by lazy {
  * yyyy-MM-dd
  */
 val yyyyMMddFormat by lazy {
-    object : ThreadLocal<DateFormat>() {
-        override fun initialValue(): DateFormat {
-            return SimpleDateFormat(DatePattern.yyyyMMdd, Locale.getDefault())
-        }
+    ThreadLocal<DateFormat>().getOrSet {
+        SimpleDateFormat(DatePattern.yyyyMMdd, Locale.getDefault())
     }
 }
 
@@ -54,10 +47,8 @@ val yyyyMMddFormat by lazy {
  * yyyyMMdd
  */
 val yyyyMMddNoSepFormat by lazy {
-    object : ThreadLocal<DateFormat>() {
-        override fun initialValue(): DateFormat {
-            return SimpleDateFormat(DatePattern.yyyyMMddNoSep, Locale.getDefault())
-        }
+    ThreadLocal<DateFormat>().getOrSet {
+        SimpleDateFormat(DatePattern.yyyyMMddNoSep, Locale.getDefault())
     }
 }
 
@@ -65,10 +56,8 @@ val yyyyMMddNoSepFormat by lazy {
  * yyyy-MM-dd HH:mm
  */
 val yyyyMMddHHmmFormat by lazy {
-    object : ThreadLocal<DateFormat>() {
-        override fun initialValue(): DateFormat {
-            return SimpleDateFormat(DatePattern.yyyyMMddHHmm, Locale.getDefault())
-        }
+    ThreadLocal<DateFormat>().getOrSet {
+        SimpleDateFormat(DatePattern.yyyyMMddHHmm, Locale.getDefault())
     }
 }
 
@@ -76,10 +65,8 @@ val yyyyMMddHHmmFormat by lazy {
  * yyyyMMdd HH:mm
  */
 val yyyyMMddHHmmNoSepFormat by lazy {
-    object : ThreadLocal<DateFormat>() {
-        override fun initialValue(): DateFormat {
-            return SimpleDateFormat(DatePattern.yyyyMMddHHmmNoSep, Locale.getDefault())
-        }
+    ThreadLocal<DateFormat>().getOrSet {
+        SimpleDateFormat(DatePattern.yyyyMMddHHmmNoSep, Locale.getDefault())
     }
 }
 
@@ -87,10 +74,8 @@ val yyyyMMddHHmmNoSepFormat by lazy {
  * yyyy-MM-dd HH:mm:ss
  */
 val yyyyMMddHHmmssFormat by lazy {
-    object : ThreadLocal<DateFormat>() {
-        override fun initialValue(): DateFormat {
-            return SimpleDateFormat(DatePattern.yyyyMMddHHmmss, Locale.getDefault())
-        }
+    ThreadLocal<DateFormat>().getOrSet {
+        SimpleDateFormat(DatePattern.yyyyMMddHHmmss, Locale.getDefault())
     }
 }
 
@@ -98,10 +83,8 @@ val yyyyMMddHHmmssFormat by lazy {
  * yyyyMMdd HH:mm:ss
  */
 val yyyyMMddHHmmssNoSepFormat by lazy {
-    object : ThreadLocal<DateFormat>() {
-        override fun initialValue(): DateFormat {
-            return SimpleDateFormat(DatePattern.yyyyMMddHHmmssNoSep, Locale.getDefault())
-        }
+    ThreadLocal<DateFormat>().getOrSet {
+        SimpleDateFormat(DatePattern.yyyyMMddHHmmssNoSep, Locale.getDefault())
     }
 }
 
@@ -109,10 +92,8 @@ val yyyyMMddHHmmssNoSepFormat by lazy {
  * yyyy-MM-dd HH:mm:ss:SSS
  */
 val yyyyMMddHHmmssSSSFormat by lazy {
-    object : ThreadLocal<DateFormat>() {
-        override fun initialValue(): DateFormat {
-            return SimpleDateFormat(DatePattern.yyyyMMddHHmmssSSS, Locale.getDefault())
-        }
+    ThreadLocal<DateFormat>().getOrSet {
+        SimpleDateFormat(DatePattern.yyyyMMddHHmmssSSS, Locale.getDefault())
     }
 }
 
