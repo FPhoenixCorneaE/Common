@@ -4,6 +4,7 @@ import android.Manifest
 import android.R
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -133,10 +134,24 @@ var sleepDuration: Int
 
 /**
  * 获取状态栏高度
+ */
+val statusBarHeight: Int
+    get() =
+        Resources.getSystem().run {
+            val resId = getIdentifier("status_bar_height", "dimen", "android")
+            runCatching {
+                getDimensionPixelSize(resId)
+            }.onFailure {
+                it.printStackTrace()
+            }.getOrDefault(0)
+        }
+
+/**
+ * 获取状态栏高度
  * Attention: cannot be used in onCreate(),onStart(),onResume(), unless it is called in the
  * post(Runnable).
  */
-val Activity.statusBarHeight: Int
+val Activity.statusBarHeight2: Int
     get() =
         run {
             val rect = Rect()
@@ -151,7 +166,7 @@ val Activity.invokeStatusBarHeight: Int
     @SuppressLint("PrivateApi")
     get() =
         run {
-            if (statusBarHeight == 0) {
+            if (statusBarHeight2 == 0) {
                 runCatching {
                     val localClass = Class.forName("com.android.internal.R\$dimen")
                     val localObject = localClass.newInstance()
@@ -161,9 +176,20 @@ val Activity.invokeStatusBarHeight: Int
                     it.printStackTrace()
                 }.getOrDefault(0)
             } else {
-                statusBarHeight
+                statusBarHeight2
             }
         }
+
+/**
+ * 获取工具栏高度
+ */
+val Context.toolbarHeight: Int
+    get() {
+        val styledAttributes = theme.obtainStyledAttributes(intArrayOf(android.R.attr.actionBarSize))
+        val toolbarHeight = styledAttributes.getDimension(0, 0f).toInt()
+        styledAttributes.recycle()
+        return toolbarHeight
+    }
 
 /**
  * 获取标题栏高度
@@ -174,7 +200,7 @@ val Activity.titleBarHeight: Int
     get() =
         run {
             val contentViewTop = window.findViewById<View>(Window.ID_ANDROID_CONTENT).top
-            val titleBarHeight = contentViewTop - statusBarHeight
+            val titleBarHeight = contentViewTop - statusBarHeight2
             if (titleBarHeight < 0) {
                 0
             } else {
@@ -185,9 +211,9 @@ val Activity.titleBarHeight: Int
 /**
  * 获取导航栏高度
  */
-val Activity.navigationBarHeight: Int
+val navigationBarHeight: Int
     get() =
-        resources.run {
+        Resources.getSystem().run {
             val resId = getIdentifier("navigation_bar_height", "dimen", "android")
             runCatching {
                 getDimensionPixelSize(resId)
@@ -206,7 +232,7 @@ fun Activity.getDecorViewInvisibleHeight(): Int {
     val outRect = Rect()
     decorView.getWindowVisibleDisplayFrame(outRect)
     val delta = abs(decorView.bottom - outRect.bottom)
-    return if (delta <= navigationBarHeight + statusBarHeight) {
+    return if (delta <= navigationBarHeight + statusBarHeight2) {
         sDecorViewDelta = delta
         0
     } else {
@@ -222,7 +248,7 @@ fun Activity.getContentViewInvisibleHeight(): Int {
     val outRect = Rect()
     contentView.getWindowVisibleDisplayFrame(outRect)
     val delta = abs(contentView.bottom - outRect.bottom)
-    return if (delta <= navigationBarHeight + statusBarHeight) {
+    return if (delta <= navigationBarHeight + statusBarHeight2) {
         0
     } else {
         delta

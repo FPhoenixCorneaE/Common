@@ -13,7 +13,10 @@ import com.fphoenixcorneae.common.util.IntentUtil
 import com.fphoenixcorneae.common.demo.databinding.ActivityMainBinding
 import com.fphoenixcorneae.common.ext.view.queryTextListener
 import com.fphoenixcorneae.common.ext.view.setOnSeekBarChangeListener
+import com.fphoenixcorneae.common.ext.view.setUnderLine
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -33,6 +36,7 @@ class MainActivity : AppCompatActivity() {
             toastAliPayStyle("测试测试测试！！！")
             appViewModel.setGlobalString("测试 Global.")
         }
+        mViewBinding.btnTest.setUnderLine()
 
         val job: Job = lifecycleScope.launch { }
         job.action({
@@ -58,11 +62,11 @@ class MainActivity : AppCompatActivity() {
 
         val origin2Md5 = "a123456"
         ("md5: ${origin2Md5.md5()}\n\n" +
-            "sha1: ${origin2Md5.sha1()}\n\n" +
-            "sha224: ${origin2Md5.sha224()}\n\n" +
-            "sha256: ${origin2Md5.sha256()}\n\n" +
-            "sha384: ${origin2Md5.sha384()}\n\n" +
-            "sha512: ${origin2Md5.sha512()}").also {
+                "sha1: ${origin2Md5.sha1()}\n\n" +
+                "sha224: ${origin2Md5.sha224()}\n\n" +
+                "sha256: ${origin2Md5.sha256()}\n\n" +
+                "sha384: ${origin2Md5.sha384()}\n\n" +
+                "sha512: ${origin2Md5.sha512()}").also {
             mViewBinding.tvMd5.text = it
         }
 
@@ -86,6 +90,15 @@ class MainActivity : AppCompatActivity() {
                 setScreenBrightness(progress)
             }
         )
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            delay(2000)
+            // 生成位图并保存
+            writeFileFromIS(
+                filesDir.absolutePath + "/${System.currentTimeMillis()}.jpg",
+                createBitmap().toBytes().toInputStream()
+            )
+        }
     }
 
     private fun initObserver() {

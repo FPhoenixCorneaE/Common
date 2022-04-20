@@ -4,20 +4,24 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
 import android.app.Activity
+import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewAnimationUtils
+import android.view.*
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.PopupWindow
 import androidx.annotation.ColorRes
 import androidx.annotation.Px
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.applyCanvas
 import androidx.core.view.ViewCompat
+import com.fphoenixcorneae.common.ext.dp
 import kotlin.math.hypot
 
 fun View.visible() = run { visibility = View.VISIBLE }
@@ -39,11 +43,96 @@ var View.isGone: Boolean
     set(value) = if (value) gone() else visible()
 
 /**
+ * 设置某个View的margins
+ * @param isDp   需要设置的数值是否为DP
+ * @param left   左边距
+ * @param top    上边距
+ * @param right  右边距
+ * @param bottom 下边距
+ */
+fun View.setMargins(
+    isDp: Boolean,
+    left: Float,
+    top: Float,
+    right: Float,
+    bottom: Float
+): ViewGroup.LayoutParams {
+    // 获取view的margin设置参数
+    val marginParams: ViewGroup.MarginLayoutParams =
+        when (val params = layoutParams) {
+            is ViewGroup.MarginLayoutParams -> params
+            // 不存在时创建一个新的参数
+            else -> ViewGroup.MarginLayoutParams(params)
+        }
+    // 根据DP与PX转换计算值
+    val leftPx: Int
+    val rightPx: Int
+    val topPx: Int
+    val bottomPx: Int
+    when {
+        isDp -> {
+            leftPx = left.dp
+            topPx = top.dp
+            rightPx = right.dp
+            bottomPx = bottom.dp
+        }
+        else -> {
+            leftPx = left.toInt()
+            rightPx = right.toInt()
+            topPx = top.toInt()
+            bottomPx = bottom.toInt()
+        }
+    }
+    // 设置 margins
+    marginParams.setMargins(leftPx, topPx, rightPx, bottomPx)
+    layoutParams = marginParams
+    return marginParams
+}
+
+/**
  * 设置内边距
  * @param size 大小,单位：px
  */
 fun View.setPadding(@Px size: Int) {
     setPadding(size, size, size, size)
+}
+
+/**
+ * 设置某个View的padding
+ * @param isDp   需要设置的数值是否为DP
+ * @param left   左边距
+ * @param top    上边距
+ * @param right  右边距
+ * @param bottom 下边距
+ */
+fun View.setPadding(
+    isDp: Boolean,
+    left: Float,
+    top: Float,
+    right: Float,
+    bottom: Float
+) {
+    // 根据DP与PX转换计算值
+    val leftPx: Int
+    val rightPx: Int
+    val topPx: Int
+    val bottomPx: Int
+    when {
+        isDp -> {
+            leftPx = left.dp
+            topPx = top.dp
+            rightPx = right.dp
+            bottomPx = bottom.dp
+        }
+        else -> {
+            leftPx = left.toInt()
+            rightPx = right.toInt()
+            topPx = top.toInt()
+            bottomPx = bottom.toInt()
+        }
+    }
+    // 设置padding
+    setPadding(leftPx, topPx, rightPx, bottomPx)
 }
 
 inline fun View.postDelayed(delayInMillis: Long, crossinline action: () -> Unit): Runnable {
@@ -204,7 +293,7 @@ fun View.getActivity(): Activity {
         }
         context = context.baseContext
     }
-    throw IllegalStateException("View $this is not attached to an Activity")
+    throw IllegalStateException("View $this is not attached to an Activity.")
 }
 
 /**
@@ -223,9 +312,7 @@ fun View.setFocus(b: Boolean) {
 /**
  * 触摸区域是否在View里边
  */
-fun View.isTouchIntoArea(
-    motionEvent: MotionEvent
-): Boolean =
+fun View.touchInside(motionEvent: MotionEvent): Boolean =
     run {
         val outLocation = intArrayOf(0, 0)
         getLocationOnScreen(outLocation)
@@ -233,6 +320,108 @@ fun View.isTouchIntoArea(
         val top = outLocation[1]
         val right = left + width
         val bottom = top + height
-        motionEvent.rawX > left && motionEvent.rawX < right && motionEvent.rawY > top && motionEvent.rawY < bottom
+        val motionX = motionEvent.rawX
+        val motionY = motionEvent.rawY
+        motionX >= left && motionX <= right && motionY >= top && motionY <= bottom
     }
 
+/**
+ * 把自身从父View中移除
+ */
+fun View.removeSelfFromParent() {
+    val parent = parent
+    if (parent is ViewGroup) {
+        parent.removeView(this)
+    }
+}
+
+/**
+ * 要求父View layout
+ */
+fun View.requestLayoutParent(isAll: Boolean) {
+    var parent = parent
+    while (parent is View) {
+        if (!parent.isLayoutRequested()) {
+            parent.requestLayout()
+            if (!isAll) {
+                break
+            }
+        }
+        parent = parent.getParent()
+    }
+}
+
+/**
+ * 测量view
+ */
+fun View.measure() {
+    var p = layoutParams
+    if (p == null) {
+        p = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+    }
+    val childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0, p.width)
+    val lpHeight = p.height
+    val childHeightSpec: Int = if (lpHeight > 0) {
+        View.MeasureSpec.makeMeasureSpec(lpHeight, View.MeasureSpec.EXACTLY)
+    } else {
+        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+    }
+    measure(childWidthSpec, childHeightSpec)
+}
+
+/**
+ * 获取View测量后的宽度
+ */
+val View.measureWidth: Int
+    get() {
+        measure()
+        return measuredWidth
+    }
+
+/**
+ * 获取View测量后的高度
+ */
+val View.measureHeight: Int
+    get() {
+        measure()
+        return measuredHeight
+    }
+
+var popupWindow: PopupWindow? = null
+
+/**
+ * 以View为锚点显示PopupWindow
+ * @param context
+ * @param resId
+ * @param paramsType
+ */
+fun View.showPopupWindow(
+    context: Context,
+    resId: Int,
+    paramsType: Int
+): View {
+    val popupView: View = LayoutInflater.from(context).inflate(resId, null)
+    popupWindow = when (paramsType) {
+        1 -> PopupWindow(popupView, MATCH_PARENT, MATCH_PARENT, true)
+        2 -> PopupWindow(popupView, MATCH_PARENT, WRAP_CONTENT, true)
+        3 -> PopupWindow(popupView, WRAP_CONTENT, MATCH_PARENT, true)
+        4 -> PopupWindow(popupView, WRAP_CONTENT, WRAP_CONTENT, true)
+        else -> PopupWindow(popupView, MATCH_PARENT, MATCH_PARENT, true)
+    }
+    popupWindow!!.isFocusable = true
+    popupWindow!!.isOutsideTouchable = true
+    popupWindow!!.isTouchable = true
+    popupWindow!!.setBackgroundDrawable(BitmapDrawable())
+    popupWindow!!.showAsDropDown(this)
+    return popupView
+}
+
+/**
+ * 关闭PopupWindow
+ */
+fun dismissPopup() {
+    if (popupWindow?.isShowing == true) {
+        popupWindow?.dismiss()
+        popupWindow = null
+    }
+}

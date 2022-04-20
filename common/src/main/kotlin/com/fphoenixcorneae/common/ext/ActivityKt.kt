@@ -5,9 +5,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.View
 import androidx.fragment.app.Fragment
+import com.fphoenixcorneae.common.ext.view.createBitmap
 import com.fphoenixcorneae.common.util.ContextUtil
 import java.io.Serializable
 
@@ -187,4 +190,12 @@ inline fun <reified T : Context> Context.getIntent(
             }
         }
     }
+
+/**
+ * Activity生成位图
+ */
+fun Activity.createBitmap(): Bitmap {
+    val contentView = window.decorView.findViewById<View>(android.R.id.content)
+    return contentView.createBitmap()
+}
 

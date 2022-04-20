@@ -1,5 +1,6 @@
 package com.fphoenixcorneae.common.ext.view
 
+import android.graphics.Paint
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.TextView
@@ -18,6 +19,14 @@ fun TextView.autoScaleTextSize(maxWidth: Int) {
         width = paint.measureText(textString, 0, textString.length)
     }
     invalidate()
+}
+
+/**
+ * 给TextView设置下划线
+ */
+fun TextView.setUnderLine() {
+    paint.flags = Paint.UNDERLINE_TEXT_FLAG
+    paint.isAntiAlias = true
 }
 
 /**
