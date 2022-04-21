@@ -9,7 +9,7 @@ import java.util.*
  * @date：2020-06-15 15:05
  */
 class DynamicTimeFormat @JvmOverloads constructor(
-    val mFormat: String = "%s",
+    private val mFormat: String = "%s",
     yearFormat: String? = "yyyy年",
     dateFormat: String? = "M月d日",
     timeFormat: String? = "HH:mm"
@@ -47,9 +47,7 @@ class DynamicTimeFormat @JvmOverloads constructor(
             val todayMonth = todayCalendar[Calendar.MONTH]
             val otherMonth = otherCalendar[Calendar.MONTH]
             if (todayMonth == otherMonth) { //表示是同一个月
-                val temp =
-                    todayCalendar[Calendar.DATE] - otherCalendar[Calendar.DATE]
-                when (temp) {
+                when (todayCalendar[Calendar.DATE] - otherCalendar[Calendar.DATE]) {
                     0 -> toAppendTo.append(timeFormat)
                     1 -> {
                         toAppendTo.append("昨天 ")

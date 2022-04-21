@@ -261,14 +261,14 @@ private fun copyFile(
  * 复制文件流
  */
 private fun copyStream(input: InputStream, output: OutputStream): Int {
-    val BUFFER_SIZE = 1024 * 2
-    val buffer = ByteArray(BUFFER_SIZE)
-    val `in` = BufferedInputStream(input, BUFFER_SIZE)
-    val out = BufferedOutputStream(output, BUFFER_SIZE)
+    val bufferSize = 1024 * 2
+    val buffer = ByteArray(bufferSize)
+    val `in` = BufferedInputStream(input, bufferSize)
+    val out = BufferedOutputStream(output, bufferSize)
     var count = 0
-    var n = 0
+    var n: Int
     try {
-        while (`in`.read(buffer, 0, BUFFER_SIZE).also { n = it } != -1) {
+        while (`in`.read(buffer, 0, bufferSize).also { n = it } != -1) {
             out.write(buffer, 0, n)
             count += n
         }
@@ -299,7 +299,7 @@ private fun getDataColumn(
 ): String? {
     if ("com.google.android.apps.photos.content" == uri.authority) {
         val lastPathSegment = uri.lastPathSegment
-        if (lastPathSegment.isNullOrEmpty().not()) {
+        if (!lastPathSegment.isNullOrEmpty()) {
             return File(lastPathSegment).path
         }
     } else if ("com.tencent.mtt.fileprovider" == uri.authority) {

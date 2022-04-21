@@ -88,7 +88,7 @@ private fun doHttpAction(
             connection.setRequestProperty("Content-Type", "application/json")
         } else {
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
-            connection.setRequestProperty("Content-Length", data.length.toString() + "")
+            connection.setRequestProperty("Content-Length", "${data.length}")
         }
         connection.connect()
         os = DataOutputStream(connection.outputStream)
