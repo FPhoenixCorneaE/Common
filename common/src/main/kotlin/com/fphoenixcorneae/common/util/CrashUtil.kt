@@ -112,11 +112,11 @@ class CrashUtil private constructor() {
             defaultDir =
                 when {
                     Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()
-                            && appContext.externalCacheDir != null -> {
-                        appContext.externalCacheDir.toString() + FILE_SEP + "crash" + FILE_SEP
+                            && applicationContext.externalCacheDir != null -> {
+                        applicationContext.externalCacheDir.toString() + FILE_SEP + "crash" + FILE_SEP
                     }
                     else -> {
-                        appContext.cacheDir.toString() + FILE_SEP + "crash" + FILE_SEP
+                        applicationContext.cacheDir.toString() + FILE_SEP + "crash" + FILE_SEP
                     }
                 }
             sOnCrashListener = onCrashListener

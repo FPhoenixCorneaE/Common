@@ -57,7 +57,7 @@ private fun isFileExistsApi29(filePath: String): Boolean {
     if (Build.VERSION.SDK_INT >= 29) {
         try {
             val uri = Uri.parse(filePath)
-            val cr: ContentResolver = appContext.contentResolver
+            val cr: ContentResolver = applicationContext.contentResolver
             val afd = cr.openAssetFileDescriptor(uri, "r") ?: return false
             try {
                 afd.close()
@@ -1860,7 +1860,7 @@ fun notifySystemToScan(file: File?) {
     if (file == null || !file.exists()) return
     val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
     intent.data = Uri.parse("file://" + file.absolutePath)
-    appContext.sendBroadcast(intent)
+    applicationContext.sendBroadcast(intent)
 }
 
 /**

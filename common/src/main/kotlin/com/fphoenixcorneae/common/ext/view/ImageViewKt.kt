@@ -13,7 +13,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import coil.Coil
 import coil.request.ImageRequest
 import com.fphoenixcorneae.common.ext.action
-import com.fphoenixcorneae.common.ext.appContext
+import com.fphoenixcorneae.common.ext.applicationContext
 import com.fphoenixcorneae.common.ext.toDrawable
 import com.fphoenixcorneae.common.util.ImageUtil
 import kotlinx.coroutines.Dispatchers
@@ -120,7 +120,7 @@ fun ImageView.load(
 fun getDrawableFromUri(uri: Uri): Drawable? {
     try {
         val parcelFileDescriptor: ParcelFileDescriptor? =
-            appContext.contentResolver.openFileDescriptor(uri, "r")
+            applicationContext.contentResolver.openFileDescriptor(uri, "r")
         val fileDescriptor: FileDescriptor? = parcelFileDescriptor?.fileDescriptor
         val image: Bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
         parcelFileDescriptor?.close()

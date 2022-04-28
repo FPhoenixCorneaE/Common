@@ -12,7 +12,7 @@ import java.util.*
  */
 val allRunningServices: Set<String>?
     get() {
-        val info = appContext.activityManager?.getRunningServices(Integer.MAX_VALUE)
+        val info = applicationContext.activityManager?.getRunningServices(Integer.MAX_VALUE)
         val names = HashSet<String>()
         if (info == null || info.size == 0) {
             return null
@@ -33,7 +33,7 @@ val allRunningServices: Set<String>?
  * @param cls 服务类
  */
 fun startService(cls: Class<*>) = run {
-    appContext.startService(Intent(appContext, cls))
+    applicationContext.startService(Intent(applicationContext, cls))
 }
 
 /**
@@ -52,7 +52,7 @@ fun startService(className: String) = runCatching {
  * @return true：停止成功  false：停止失败
  */
 fun stopService(cls: Class<*>): Boolean = run {
-    appContext.stopService(Intent(appContext, cls))
+    applicationContext.stopService(Intent(applicationContext, cls))
 }
 
 /**
@@ -79,7 +79,7 @@ fun stopService(className: String): Boolean = runCatching {
  * [Context.BIND_WAIVE_PRIORITY]
  */
 fun bindService(cls: Class<*>, conn: ServiceConnection, flags: Int) = run {
-    appContext.bindService(Intent(appContext, cls), conn, flags)
+    applicationContext.bindService(Intent(applicationContext, cls), conn, flags)
 }
 
 /**
@@ -99,7 +99,7 @@ fun bindService(className: String, conn: ServiceConnection, flags: Int) = runCat
  * @param conn 服务连接对象
  */
 fun unBindService(conn: ServiceConnection) = run {
-    appContext.unbindService(conn)
+    applicationContext.unbindService(conn)
 }
 
 /**
@@ -109,7 +109,7 @@ fun unBindService(conn: ServiceConnection) = run {
  */
 @Suppress("DEPRECATION")
 fun isServiceRunning(cls: Class<*>): Boolean = run {
-    appContext.activityManager?.getRunningServices(Integer.MAX_VALUE)
+    applicationContext.activityManager?.getRunningServices(Integer.MAX_VALUE)
         ?.any { it -> it.service.className == cls.name }
         ?: false
 }

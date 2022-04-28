@@ -542,7 +542,7 @@ class DiskCache private constructor(
             if (cacheName.isSpace()) {
                 cacheName = "diskCache"
             }
-            val file = File(appContext.cacheDir, cacheName)
+            val file = File(applicationContext.cacheDir, cacheName)
             return getInstance(file, maxSize, maxCount)
         }
 

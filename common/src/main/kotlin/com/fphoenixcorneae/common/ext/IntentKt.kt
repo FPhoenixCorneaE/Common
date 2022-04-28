@@ -24,7 +24,7 @@ import java.util.*
 @SuppressLint("QueryPermissionsNeeded")
 fun Intent?.isAvailable(): Boolean =
     this?.run {
-        appContext.packageManager
+        applicationContext.packageManager
             ?.queryIntentActivities(this, PackageManager.MATCH_DEFAULT_ONLY)
             ?.isNotEmpty()
     } ?: false
@@ -48,7 +48,7 @@ fun getInstallAppIntent(file: File): Intent? {
         Uri.fromFile(file)
     } else {
         val authority = "$appPackageName.FileProvider"
-        FileProvider.getUriForFile(appContext, authority, file)
+        FileProvider.getUriForFile(applicationContext, authority, file)
     }
     return getInstallAppIntent(uri)
 }

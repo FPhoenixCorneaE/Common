@@ -19,7 +19,7 @@ import androidx.annotation.*
 import androidx.annotation.IntRange
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import com.fphoenixcorneae.common.ext.appContext
+import com.fphoenixcorneae.common.ext.applicationContext
 import com.fphoenixcorneae.common.ext.getDrawable
 import java.io.*
 
@@ -119,7 +119,7 @@ class ImageUtil private constructor() {
                 null
             } else {
                 BitmapDrawable(
-                    appContext.resources,
+                    applicationContext.resources,
                     bitmap
                 )
             }
@@ -347,7 +347,7 @@ class ImageUtil private constructor() {
          * @return bitmap
          */
         fun getBitmap(@DrawableRes resId: Int): Bitmap {
-            val drawable = ContextCompat.getDrawable(appContext, resId)
+            val drawable = ContextCompat.getDrawable(applicationContext, resId)
             val canvas = Canvas()
             val bitmap = Bitmap.createBitmap(
                 drawable!!.intrinsicWidth,
@@ -374,7 +374,7 @@ class ImageUtil private constructor() {
             maxHeight: Int
         ): Bitmap {
             val options = BitmapFactory.Options()
-            val resources: Resources = appContext.resources
+            val resources: Resources = applicationContext.resources
             options.inJustDecodeBounds = true
             BitmapFactory.decodeResource(resources, resId, options)
             options.inSampleSize =
@@ -1273,7 +1273,7 @@ class ImageUtil private constructor() {
             var rs: RenderScript? = null
             val ret = if (recycle) src else src.copy(src.config, true)
             try {
-                rs = RenderScript.create(appContext)
+                rs = RenderScript.create(applicationContext)
                 rs.messageHandler = RSMessageHandler()
                 val input =
                     Allocation.createFromBitmap(

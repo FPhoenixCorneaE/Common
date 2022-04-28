@@ -52,7 +52,7 @@ fun getLauncherActivity(pkg: String): String {
     val intent = Intent(Intent.ACTION_MAIN, null)
     intent.addCategory(Intent.CATEGORY_LAUNCHER)
     intent.setPackage(pkg)
-    val info = appContext.packageManager.queryIntentActivities(intent, 0)
+    val info = applicationContext.packageManager.queryIntentActivities(intent, 0)
     val size = info.size
     if (size == 0) {
         return ""

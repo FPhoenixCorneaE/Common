@@ -17,7 +17,7 @@ import com.fphoenixcorneae.common.util.IntentUtil
  */
 val isAutoBrightnessEnabled: Boolean
     get() = runCatching {
-        val mode = Settings.System.getInt(appContext.contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE)
+        val mode = Settings.System.getInt(applicationContext.contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE)
         mode == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
     }.onFailure {
         it.printStackTrace()
@@ -34,9 +34,9 @@ val isAutoBrightnessEnabled: Boolean
  */
 @SuppressLint("NewApi")
 fun setAutoBrightnessEnabled(enabled: Boolean): Boolean {
-    return if (Settings.System.canWrite(appContext)) {
+    return if (Settings.System.canWrite(applicationContext)) {
         Settings.System.putInt(
-            appContext.contentResolver,
+            applicationContext.contentResolver,
             Settings.System.SCREEN_BRIGHTNESS_MODE,
             if (enabled) {
                 Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
@@ -56,7 +56,7 @@ fun setAutoBrightnessEnabled(enabled: Boolean): Boolean {
  */
 val screenBrightness: Int
     get() = runCatching {
-        Settings.System.getInt(appContext.contentResolver, Settings.System.SCREEN_BRIGHTNESS)
+        Settings.System.getInt(applicationContext.contentResolver, Settings.System.SCREEN_BRIGHTNESS)
     }.onFailure {
         it.printStackTrace()
     }.getOrDefault(128)
@@ -75,14 +75,14 @@ fun setScreenBrightness(
     brightness: Int,
 ) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        if (!Settings.System.canWrite(appContext)) {
+        if (!Settings.System.canWrite(applicationContext)) {
             // 打开允许修改 Setting 权限的界面
             IntentUtil.openApplicationManageWriteSettings()
             return
         }
     }
     setAutoBrightnessEnabled(false)
-    val contentResolver = appContext.contentResolver
+    val contentResolver = applicationContext.contentResolver
     Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS, brightness)
     contentResolver.notifyChange(Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS), null)
 }

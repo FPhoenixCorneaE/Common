@@ -101,7 +101,7 @@ class LocationUtil private constructor() {
          */
         val isGpsEnabled: Boolean
             get() {
-                val lm = appContext.locationManager
+                val lm = applicationContext.locationManager
                 return lm?.isProviderEnabled(LocationManager.GPS_PROVIDER) ?: false
             }
 
@@ -112,7 +112,7 @@ class LocationUtil private constructor() {
          */
         val isLocationEnabled: Boolean
             get() {
-                val lm = appContext.locationManager
+                val lm = applicationContext.locationManager
                 return lm?.isProviderEnabled(LocationManager.NETWORK_PROVIDER) == true || isGpsEnabled
             }
 
@@ -122,7 +122,7 @@ class LocationUtil private constructor() {
         fun openGpsSettings() {
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            appContext.startActivity(intent)
+            applicationContext.startActivity(intent)
         }
 
         /**
@@ -160,7 +160,7 @@ class LocationUtil private constructor() {
             listener: OnLocationChangeListener?
         ): Boolean {
             if (listener == null) return false
-            mLocationManager = appContext.locationManager
+            mLocationManager = applicationContext.locationManager
             mListener = listener
             if (!isLocationEnabled) {
                 toast("无法定位，请打开定位服务！")
@@ -236,7 +236,7 @@ class LocationUtil private constructor() {
             latitude: Double,
             longitude: Double
         ): Address? {
-            val geocoder = Geocoder(appContext, Locale.getDefault())
+            val geocoder = Geocoder(applicationContext, Locale.getDefault())
             try {
                 val addresses =
                     geocoder.getFromLocation(latitude, longitude, 1)

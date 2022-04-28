@@ -32,7 +32,7 @@ fun File?.toUri(): Uri? =
     this?.let {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             val authority = "${appPackageName}.FileProvider"
-            FileProvider.getUriForFile(appContext, authority, this)
+            FileProvider.getUriForFile(applicationContext, authority, this)
         } else {
             Uri.fromFile(this)
         }
@@ -66,11 +66,11 @@ fun Uri?.getRealPath(): String? =
 @TargetApi(Build.VERSION_CODES.N)
 private fun Uri?.getRealPathFromUriAboveApi24(): String? =
     this?.let {
-        val rootDataDir = appContext.filesDir.path
+        val rootDataDir = applicationContext.filesDir.path
         val fileName = it.getFileName()
         if (fileName.isNullOrEmpty().not()) {
             val copyFile = File(rootDataDir + File.separator + fileName)
-            copyFile(appContext, it, copyFile)
+            copyFile(applicationContext, it, copyFile)
             copyFile.absolutePath
         } else {
             null
@@ -83,7 +83,7 @@ private fun Uri?.getRealPathFromUriAboveApi24(): String? =
 @TargetApi(Build.VERSION_CODES.KITKAT)
 private fun Uri?.getRealPathFromUriApi19To23(): String? =
     this?.let {
-        if (DocumentsContract.isDocumentUri(appContext, it)) {
+        if (DocumentsContract.isDocumentUri(applicationContext, it)) {
             if (it.isExternalStorageDocument()) {
                 val docId = DocumentsContract.getDocumentId(it)
                 val split = docId.split(":").toTypedArray()
@@ -93,7 +93,7 @@ private fun Uri?.getRealPathFromUriApi19To23(): String? =
                 } else {
                     // Below logic is how External Storage provider build URI for documents
                     // http://stackoverflow.com/questions/28605278/android-5-sd-card-label
-                    val mStorageManager = appContext.storageManager
+                    val mStorageManager = applicationContext.storageManager
                     try {
                         val storageVolumeClazz = Class.forName("android.os.storage.StorageVolume")
                         val getVolumeList = mStorageManager?.javaClass?.getMethod("getVolumeList")
@@ -143,7 +143,7 @@ private fun Uri?.getRealPathFromUriApi19To23(): String? =
                     Uri.parse("content://downloads/public_downloads"),
                     java.lang.Long.valueOf(id)
                 )
-                getDataColumn(appContext, contentUri, null, null)
+                getDataColumn(applicationContext, contentUri, null, null)
             } else if (it.isMediaDocument()) {
                 val docId = DocumentsContract.getDocumentId(it)
                 val split = docId.split(":").toTypedArray()
@@ -163,12 +163,12 @@ private fun Uri?.getRealPathFromUriApi19To23(): String? =
                 }
                 val selection = "_id=?"
                 val selectionArgs = arrayOf(split[1])
-                getDataColumn(appContext, contentUri, selection, selectionArgs)
+                getDataColumn(applicationContext, contentUri, selection, selectionArgs)
             } else {
                 null
             }
         } else if (ContentResolver.SCHEME_CONTENT.equals(it.scheme, ignoreCase = true)) {
-            getDataColumn(appContext, it, null, null)
+            getDataColumn(applicationContext, it, null, null)
         } else if (ContentResolver.SCHEME_FILE.equals(it.scheme, ignoreCase = true)) {
             it.path
         } else {
@@ -183,7 +183,7 @@ private fun Uri?.getRealPathFromUriApi11To18(): String? =
     this?.let {
         var filePath: String? = null
         val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val loader = CursorLoader(appContext, it, projection, null, null, null)
+        val loader = CursorLoader(applicationContext, it, projection, null, null, null)
         val cursor = loader.loadInBackground()
         if (cursor != null) {
             cursor.moveToFirst()
@@ -203,7 +203,7 @@ private fun Uri?.getRealPathFromUriBelowApi11(): String? =
     this?.let {
         var filePath: String? = null
         val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = appContext.contentResolver.query(it, projection, null, null, null)
+        val cursor = applicationContext.contentResolver.query(it, projection, null, null, null)
         if (cursor != null) {
             cursor.moveToFirst()
             val columnIndex = cursor.getColumnIndex(projection[0])

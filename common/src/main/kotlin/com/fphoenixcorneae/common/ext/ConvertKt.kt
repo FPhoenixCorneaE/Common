@@ -443,7 +443,7 @@ fun Bitmap?.toBytes(
  */
 fun Bitmap?.toDrawable(): Drawable? =
     this?.run {
-        BitmapDrawable(appContext.resources, this)
+        BitmapDrawable(applicationContext.resources, this)
     }
 
 /**

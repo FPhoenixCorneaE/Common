@@ -25,7 +25,7 @@ private const val WLAN_MASK = "[dhcp.wlan0.mask]"
  */
 val isNetworkConnected: Boolean
     get() {
-        val connectivityManager = appContext.connectivityManager
+        val connectivityManager = applicationContext.connectivityManager
         return when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
                 // Android 6.0 以上可用方法
@@ -45,7 +45,7 @@ val isNetworkConnected: Boolean
  */
 val isWifiConnected: Boolean
     get() {
-        val connectivityManager = appContext.connectivityManager
+        val connectivityManager = applicationContext.connectivityManager
         return when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
                 val networkCapabilities = connectivityManager?.getNetworkCapabilities(connectivityManager.activeNetwork)
@@ -64,7 +64,7 @@ val isWifiConnected: Boolean
  */
 val isMobileConnected: Boolean
     get() {
-        val connectivityManager = appContext.connectivityManager
+        val connectivityManager = applicationContext.connectivityManager
         return when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
                 val networkCapabilities = connectivityManager?.getNetworkCapabilities(connectivityManager.activeNetwork)
@@ -82,7 +82,7 @@ val isMobileConnected: Boolean
  */
 val connectedType: Int
     get() {
-        val connectivityManager = appContext.connectivityManager
+        val connectivityManager = applicationContext.connectivityManager
         val networkInfo = connectivityManager?.activeNetworkInfo
         return if (networkInfo != null && networkInfo.isConnected) {
             networkInfo.type

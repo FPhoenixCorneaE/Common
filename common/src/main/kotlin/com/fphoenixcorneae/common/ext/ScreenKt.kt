@@ -89,7 +89,7 @@ fun Activity.setPortrait() {
  * 获取屏幕旋转角度
  */
 fun getScreenRotation(): Int {
-    return when (appContext.windowManager?.defaultDisplay?.rotation) {
+    return when (applicationContext.windowManager?.defaultDisplay?.rotation) {
         Surface.ROTATION_0 -> 0
         Surface.ROTATION_90 -> 90
         Surface.ROTATION_180 -> 180
@@ -105,7 +105,7 @@ fun getScreenRotation(): Int {
  */
 val isScreenLock: Boolean
     get() =
-        appContext.keyguardManager?.isKeyguardLocked == true
+        applicationContext.keyguardManager?.isKeyguardLocked == true
 
 /**
  * 获取进入休眠时长
@@ -118,7 +118,7 @@ var sleepDuration: Int
     get() =
         runCatching {
             Settings.System.getInt(
-                appContext.contentResolver,
+                applicationContext.contentResolver,
                 Settings.System.SCREEN_OFF_TIMEOUT
             )
         }.onFailure {
@@ -126,7 +126,7 @@ var sleepDuration: Int
         }.getOrDefault(-123)
     set(duration) {
         Settings.System.putInt(
-            appContext.contentResolver,
+            applicationContext.contentResolver,
             Settings.System.SCREEN_OFF_TIMEOUT,
             duration
         )

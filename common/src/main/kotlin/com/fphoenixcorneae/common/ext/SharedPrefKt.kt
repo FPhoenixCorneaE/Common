@@ -27,7 +27,7 @@ import android.content.SharedPreferences
  * Get SharedPreferences
  */
 private val mSharedPreferences: SharedPreferences by lazy {
-    appContext.getSharedPreferences("sp_default", Context.MODE_PRIVATE)
+    applicationContext.getSharedPreferences("sp_default", Context.MODE_PRIVATE)
 }
 
 /**
@@ -35,7 +35,7 @@ private val mSharedPreferences: SharedPreferences by lazy {
  */
 fun getSharedPreferences(name: String?): SharedPreferences =
     name?.run {
-        appContext.getSharedPreferences(name, Context.MODE_PRIVATE)
+        applicationContext.getSharedPreferences(name, Context.MODE_PRIVATE)
     } ?: mSharedPreferences
 
 /**

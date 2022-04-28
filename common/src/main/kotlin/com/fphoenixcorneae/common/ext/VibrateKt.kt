@@ -21,9 +21,9 @@ import androidx.annotation.RequiresPermission
 @RequiresPermission(Manifest.permission.VIBRATE)
 fun vibrate(milliseconds: Long) {
     val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        appContext.vibratorManager?.defaultVibrator
+        applicationContext.vibratorManager?.defaultVibrator
     } else {
-        appContext.vibrator
+        applicationContext.vibrator
     }
     // 判断手机硬件是否有振动器
     if (vibrator?.hasVibrator() == true) {
@@ -51,9 +51,9 @@ fun vibrate(milliseconds: Long) {
 @RequiresPermission(Manifest.permission.VIBRATE)
 fun vibrate(pattern: LongArray?, repeat: Int) {
     val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        appContext.vibratorManager?.defaultVibrator
+        applicationContext.vibratorManager?.defaultVibrator
     } else {
-        appContext.vibrator
+        applicationContext.vibrator
     }
     // 判断手机硬件是否有振动器
     if (vibrator?.hasVibrator() == true) {
@@ -73,9 +73,9 @@ fun vibrate(pattern: LongArray?, repeat: Int) {
 @RequiresPermission(Manifest.permission.VIBRATE)
 fun cancel() {
     val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        appContext.vibratorManager?.defaultVibrator
+        applicationContext.vibratorManager?.defaultVibrator
     } else {
-        appContext.vibrator
+        applicationContext.vibrator
     }
     // 判断手机硬件是否有振动器
     if (vibrator?.hasVibrator() == true) {

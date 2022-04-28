@@ -10,7 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.SystemClock
 import android.provider.Settings
-import com.fphoenixcorneae.common.ext.appContext
+import com.fphoenixcorneae.common.ext.applicationContext
 import com.fphoenixcorneae.common.ext.audioManager
 import java.io.IOException
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -31,7 +31,7 @@ object AudioUtil {
     /**
      * 上下文
      */
-    private val mContext = appContext
+    private val mContext = applicationContext
 
     /**
      * 音频服务 Manager

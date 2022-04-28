@@ -5,10 +5,6 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.ActivityManager.RunningAppProcessInfo
-import android.app.AppOpsManager
-import android.app.usage.UsageStats
-import android.app.usage.UsageStatsManager
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
@@ -16,7 +12,6 @@ import android.content.pm.PackageManager.NameNotFoundException
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Process
-import android.provider.Settings
 import com.fphoenixcorneae.common.util.ContextUtil
 import java.io.ByteArrayInputStream
 import java.security.MessageDigest
@@ -33,7 +28,7 @@ private val DEBUG_DN = X500Principal("CN=Android Debug, O=Android, C=US")
  */
 val appPackageName: String
     get() =
-        appContext.packageName
+        applicationContext.packageName
 
 /**
  * Get version name
@@ -41,7 +36,7 @@ val appPackageName: String
 val appVersionName: String
     get() =
         runCatching {
-            appContext.packageManager.getPackageInfo(appPackageName, 0).versionName
+            applicationContext.packageManager.getPackageInfo(appPackageName, 0).versionName
         }.onFailure {
             it.printStackTrace()
         }.getOrDefault("")
@@ -52,7 +47,7 @@ val appVersionName: String
 val appVersionCode: Long
     get() =
         runCatching {
-            appContext.packageManager.getPackageInfo(appPackageName, 0).run {
+            applicationContext.packageManager.getPackageInfo(appPackageName, 0).run {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     longVersionCode
                 } else {
@@ -69,7 +64,7 @@ val appVersionCode: Long
 val appIcon: Drawable?
     get() =
         runCatching {
-            appContext.packageManager.run {
+            applicationContext.packageManager.run {
                 getApplicationInfo(appPackageName, 0).loadIcon(this)
             }
         }.onFailure {
@@ -82,7 +77,7 @@ val appIcon: Drawable?
 val appName: String
     get() =
         runCatching {
-            appContext.packageManager.run {
+            applicationContext.packageManager.run {
                 getApplicationInfo(appPackageName, 0).loadLabel(this).toString()
             }
         }.onFailure {
@@ -95,7 +90,7 @@ val appName: String
 val appPermissions: Array<String>?
     get() =
         runCatching {
-            appContext.packageManager
+            applicationContext.packageManager
                 .getPackageInfo(appPackageName, PackageManager.GET_PERMISSIONS)
                 .requestedPermissions
         }.onFailure {
@@ -109,7 +104,7 @@ val appSignature: String
     @SuppressLint("PackageManagerGetSignatures")
     get() =
         runCatching {
-            appContext.packageManager
+            applicationContext.packageManager
                 .getPackageInfo(appPackageName, PackageManager.GET_SIGNATURES)
                 .signatures[0]
                 .toString()
@@ -146,7 +141,7 @@ val appSignatureMD5: String
 val appUid: Int
     get() =
         runCatching {
-            appContext.packageManager.getApplicationInfo(appPackageName, 0).uid
+            applicationContext.packageManager.getApplicationInfo(appPackageName, 0).uid
         }.onFailure {
             it.printStackTrace()
         }.getOrDefault(-1)
@@ -157,7 +152,7 @@ val appUid: Int
 val appPath: String
     get() =
         runCatching {
-            appContext.packageManager.getPackageInfo(appPackageName, 0).applicationInfo.sourceDir
+            applicationContext.packageManager.getPackageInfo(appPackageName, 0).applicationInfo.sourceDir
         }.onFailure {
             it.printStackTrace()
         }.getOrDefault("")
@@ -170,7 +165,7 @@ val isDebugDN: Boolean
     get() {
         var debuggable = false
         try {
-            val packageInfo = appContext.packageManager.getPackageInfo(
+            val packageInfo = applicationContext.packageManager.getPackageInfo(
                 appPackageName,
                 PackageManager.GET_SIGNATURES
             )
@@ -195,8 +190,8 @@ val isDebugDN: Boolean
  */
 val isDebuggable: Boolean
     get() =
-        appContext.applicationInfo != null
-                && (appContext.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+        applicationContext.applicationInfo != null
+                && (applicationContext.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
 
 /**
  * Return whether it is a system application.
@@ -209,7 +204,7 @@ fun isSystemApp(pkgName: String? = appPackageName): Boolean {
         false
     } else {
         try {
-            val ai = appContext.packageManager.getApplicationInfo(pkgName, 0)
+            val ai = applicationContext.packageManager.getApplicationInfo(pkgName, 0)
             ai.flags and ApplicationInfo.FLAG_SYSTEM != 0
         } catch (e: NameNotFoundException) {
             e.printStackTrace()
@@ -224,7 +219,7 @@ fun isSystemApp(pkgName: String? = appPackageName): Boolean {
 val isAppInBackground: Boolean
     @TargetApi(Build.VERSION_CODES.Q)
     get() =
-        appContext.activityManager
+        applicationContext.activityManager
             ?.getRunningTasks(1)
             ?.getOrNull(0)
             ?.topActivity
@@ -235,7 +230,7 @@ val isAppInBackground: Boolean
  */
 val isAppInForeground: Boolean
     get() {
-        val info = appContext.activityManager?.runningAppProcesses
+        val info = applicationContext.activityManager?.runningAppProcesses
         if (info == null || info.size == 0) {
             return false
         }
@@ -270,7 +265,7 @@ fun isAppInForeground(packageName: String): Boolean {
  */
 @SuppressLint("NewApi")
 fun isAppRunning(pkgName: String): Boolean {
-    val context = appContext
+    val context = applicationContext
     val packageManager: PackageManager = context.packageManager
     val uid = try {
         val ai = packageManager.getApplicationInfo(pkgName, 0)
@@ -279,7 +274,7 @@ fun isAppRunning(pkgName: String): Boolean {
         e.printStackTrace()
         return false
     }
-    val am = appContext.activityManager
+    val am = applicationContext.activityManager
     val taskInfo = am?.getRunningTasks(Int.MAX_VALUE)
     if (taskInfo != null && taskInfo.size > 0) {
         for (aInfo in taskInfo) {
@@ -313,7 +308,7 @@ fun launchApp(pkgName: String = appPackageName, requestCode: Int) {
         "Launcher activity isn't exist.".loge()
         return
     }
-    appContext.startActivity(launchAppIntent)
+    applicationContext.startActivity(launchAppIntent)
 }
 
 /**
@@ -353,7 +348,7 @@ fun relaunchApp(isKillProcess: Boolean = true) {
         Intent.FLAG_ACTIVITY_NEW_TASK
                 or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
     )
-    appContext.startActivity(intent)
+    applicationContext.startActivity(intent)
     if (isKillProcess) {
         Process.killProcess(Process.myPid())
         exitProcess(0)
@@ -389,7 +384,7 @@ val maxMemory: Long
  */
 fun getDeviceUsableMemory(): Int {
     val memoryInfo = ActivityManager.MemoryInfo()
-    appContext.activityManager?.getMemoryInfo(memoryInfo)
+    applicationContext.activityManager?.getMemoryInfo(memoryInfo)
     // 返回当前系统的可用内存
     return (memoryInfo.availMem / (1024 * 1024)).toInt()
 }

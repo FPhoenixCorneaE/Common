@@ -29,7 +29,7 @@ import java.util.*
 val foregroundProcessName: String?
     @SuppressLint("ObsoleteSdkInt", "QueryPermissionsNeeded")
     get() {
-        val context = appContext
+        val context = applicationContext
         val pInfo = context.activityManager?.runningAppProcesses
         if (pInfo != null && pInfo.size > 0) {
             for (aInfo in pInfo) {
@@ -106,7 +106,7 @@ val foregroundProcessName: String?
 @get:RequiresPermission(Manifest.permission.KILL_BACKGROUND_PROCESSES)
 val allBackgroundProcesses: Set<String>
     get() {
-        val info = appContext.activityManager?.runningAppProcesses
+        val info = applicationContext.activityManager?.runningAppProcesses
         val set: MutableSet<String> = HashSet()
         if (info != null) {
             for (aInfo in info) {
@@ -125,7 +125,7 @@ val allBackgroundProcesses: Set<String>
  */
 @RequiresPermission(Manifest.permission.KILL_BACKGROUND_PROCESSES)
 fun killAllBackgroundProcesses(): Set<String> {
-    val am = appContext.activityManager
+    val am = applicationContext.activityManager
     var info = am?.runningAppProcesses
     val set: MutableSet<String> = HashSet()
     if (info == null) {
@@ -159,7 +159,7 @@ fun killAllBackgroundProcesses(): Set<String> {
  */
 @RequiresPermission(Manifest.permission.KILL_BACKGROUND_PROCESSES)
 fun killBackgroundProcesses(packageName: String): Boolean {
-    val am = appContext.activityManager
+    val am = applicationContext.activityManager
     var info = am?.runningAppProcesses
     if (info == null || info.size == 0) {
         return true
@@ -222,7 +222,7 @@ private val currentProcessNameByFile: String
 
 private val currentProcessNameByAms: String
     get() {
-        val info = appContext.activityManager?.runningAppProcesses
+        val info = applicationContext.activityManager?.runningAppProcesses
         if (info == null || info.size == 0) {
             return ""
         }
@@ -241,7 +241,7 @@ private val currentProcessNameByReflect: String
     get() {
         var processName = ""
         try {
-            val app = appContext
+            val app = applicationContext
             val loadedApkField = app.javaClass.getField("mLoadedApk")
             loadedApkField.isAccessible = true
             val loadedApk = loadedApkField[app]

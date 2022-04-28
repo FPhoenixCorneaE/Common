@@ -14,7 +14,7 @@ fun readRawToString(
     @RawRes id: Int,
     charset: Charset = Charset.defaultCharset()
 ): String {
-    val `is` = appContext.resources.openRawResource(id)
+    val `is` = applicationContext.resources.openRawResource(id)
     val writer = StringWriter()
     val buffer = CharArray(1024)
     `is`.use {

@@ -12,7 +12,7 @@ import androidx.annotation.IntDef
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.fphoenixcorneae.common.ext.appContext
+import com.fphoenixcorneae.common.ext.applicationContext
 
 /**
  * 通知工具类
@@ -30,7 +30,7 @@ object NotificationUtil {
      * @return `true`: yes<br></br>`false`: no
      */
     fun areNotificationsEnabled(): Boolean {
-        return NotificationManagerCompat.from(appContext)
+        return NotificationManagerCompat.from(applicationContext)
             .areNotificationsEnabled()
     }
 
@@ -93,13 +93,13 @@ object NotificationUtil {
     ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val nm =
-                appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             nm.createNotificationChannel(channelConfig.notificationChannel!!)
         }
         val nmc =
-            NotificationManagerCompat.from(appContext)
+            NotificationManagerCompat.from(applicationContext)
         val builder =
-            NotificationCompat.Builder(appContext)
+            NotificationCompat.Builder(applicationContext)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder.setChannelId(channelConfig.notificationChannel!!.id)
         }
@@ -114,7 +114,7 @@ object NotificationUtil {
      * @param id  The identifier for the notification will be cancelled.
      */
     fun cancel(tag: String?, id: Int) {
-        NotificationManagerCompat.from(appContext).cancel(tag, id)
+        NotificationManagerCompat.from(applicationContext).cancel(tag, id)
     }
 
     /**
@@ -123,14 +123,14 @@ object NotificationUtil {
      * @param id The identifier for the notification will be cancelled.
      */
     fun cancel(id: Int) {
-        NotificationManagerCompat.from(appContext).cancel(id)
+        NotificationManagerCompat.from(applicationContext).cancel(id)
     }
 
     /**
      * Cancel all of the notifications.
      */
     fun cancelAll() {
-        NotificationManagerCompat.from(appContext).cancelAll()
+        NotificationManagerCompat.from(applicationContext).cancelAll()
     }
 
     /**
@@ -164,7 +164,7 @@ object NotificationUtil {
         try {
             @SuppressLint("WrongConstant")
             val service =
-                appContext.getSystemService("statusbar")
+                applicationContext.getSystemService("statusbar")
             @SuppressLint("PrivateApi")
             val statusBarManager =
                 Class.forName("android.app.StatusBarManager")
@@ -352,8 +352,8 @@ object NotificationUtil {
 
         companion object {
             val DEFAULT_CHANNEL_CONFIG = ChannelConfig(
-                appContext.packageName,
-                appContext.packageName,
+                applicationContext.packageName,
+                applicationContext.packageName,
                 IMPORTANCE_DEFAULT
             )
         }

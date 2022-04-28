@@ -18,7 +18,7 @@ import android.os.Build
 fun getStreamVolume(
     streamType: Int = AudioManager.STREAM_MUSIC
 ): Int =
-    appContext.audioManager?.getStreamVolume(streamType) ?: 0
+    applicationContext.audioManager?.getStreamVolume(streamType) ?: 0
 
 /**
  * 设置音量
@@ -35,7 +35,7 @@ fun setStreamVolume(
     streamType: Int = AudioManager.STREAM_MUSIC,
     flags: Int = 0
 ) =
-    appContext.audioManager?.setStreamVolume(streamType, volumeValue, flags)
+    applicationContext.audioManager?.setStreamVolume(streamType, volumeValue, flags)
 
 /**
  * 获取最大音量
@@ -52,7 +52,7 @@ fun setStreamVolume(
 fun getStreamMaxVolume(
     streamType: Int = AudioManager.STREAM_MUSIC
 ): Int =
-    appContext.audioManager?.getStreamMaxVolume(streamType) ?: 0
+    applicationContext.audioManager?.getStreamMaxVolume(streamType) ?: 0
 
 /**
  * 获取最小音量
@@ -70,7 +70,7 @@ fun getStreamMinVolume(
     streamType: Int = AudioManager.STREAM_MUSIC
 ): Int =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        appContext.audioManager?.getStreamMinVolume(streamType) ?: 0
+        applicationContext.audioManager?.getStreamMinVolume(streamType) ?: 0
     } else {
         0
     }

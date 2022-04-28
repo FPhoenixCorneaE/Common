@@ -11,18 +11,18 @@ import android.net.Uri
 fun CharSequence?.copy2Clipboard(
     label: CharSequence? = "text"
 ) =
-    appContext.clipboardManager
+    applicationContext.clipboardManager
         ?.setPrimaryClip(ClipData.newPlainText(label, this))
 
 /**
  * 获取剪贴板的文本, it is called in the post(Runnable).
  */
 fun getClipboardText(): CharSequence? =
-    appContext.clipboardManager
+    applicationContext.clipboardManager
         ?.primaryClip
         ?.run {
             if (itemCount > 0) {
-                getItemAt(0).coerceToText(appContext)
+                getItemAt(0).coerceToText(applicationContext)
             } else {
                 null
             }
@@ -34,14 +34,14 @@ fun getClipboardText(): CharSequence? =
 fun Uri?.copy2Clipboard(
     label: CharSequence? = "uri"
 ) =
-    appContext.clipboardManager
-        ?.setPrimaryClip(ClipData.newUri(appContext.contentResolver, label, this))
+    applicationContext.clipboardManager
+        ?.setPrimaryClip(ClipData.newUri(applicationContext.contentResolver, label, this))
 
 /**
  * 获取剪贴板的Uri, it is called in the post(Runnable).
  */
 fun getClipboardUri(): Uri? =
-    appContext.clipboardManager
+    applicationContext.clipboardManager
         ?.primaryClip
         ?.run {
             if (itemCount > 0) {
@@ -57,14 +57,14 @@ fun getClipboardUri(): Uri? =
 fun Intent.copy2Clipboard(
     label: CharSequence? = "intent"
 ) =
-    appContext.clipboardManager
+    applicationContext.clipboardManager
         ?.setPrimaryClip(ClipData.newIntent(label, this))
 
 /**
  * 获取剪贴板的意图, it is called in the post(Runnable).
  */
 fun getClipboardIntent(): Intent? =
-    appContext.clipboardManager
+    applicationContext.clipboardManager
         ?.primaryClip
         ?.run {
             if (itemCount > 0) {
@@ -78,24 +78,24 @@ fun getClipboardIntent(): Intent? =
  * Return the label for clipboard.
  */
 fun getClipboardLabel(): CharSequence? =
-    appContext.clipboardManager?.primaryClipDescription?.label
+    applicationContext.clipboardManager?.primaryClipDescription?.label
 
 /**
  * Clear the clipboard.
  */
 fun clear() =
-    appContext.clipboardManager?.setPrimaryClip(ClipData.newPlainText(null, ""))
+    applicationContext.clipboardManager?.setPrimaryClip(ClipData.newPlainText(null, ""))
 
 /**
  * Add the clipboard changed listener.
  */
 fun addChangedListener(listener: OnPrimaryClipChangedListener?) {
-    appContext.clipboardManager?.addPrimaryClipChangedListener(listener)
+    applicationContext.clipboardManager?.addPrimaryClipChangedListener(listener)
 }
 
 /**
  * Remove the clipboard changed listener.
  */
 fun removeChangedListener(listener: OnPrimaryClipChangedListener?) {
-    appContext.clipboardManager?.removePrimaryClipChangedListener(listener)
+    applicationContext.clipboardManager?.removePrimaryClipChangedListener(listener)
 }

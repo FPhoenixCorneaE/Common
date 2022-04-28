@@ -7,7 +7,6 @@ import android.app.Activity
 import android.app.SearchManager
 import android.content.ComponentName
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -170,7 +169,7 @@ object IntentUtil {
         val intent = Intent(Intent.ACTION_VIEW)
         val data: Uri
         val type = "application/vnd.android.package-archive"
-        val context = appContext
+        val context = applicationContext
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             data = Uri.fromFile(file)
         } else {
@@ -355,7 +354,7 @@ object IntentUtil {
     fun openSettings(action: String? = Settings.ACTION_SETTINGS) {
         val intent = Intent(action)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        appContext.startActivity(intent)
+        applicationContext.startActivity(intent)
     }
 
     /**
@@ -366,7 +365,7 @@ object IntentUtil {
         val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
         intent.data = Uri.parse("package:${appPackageName}")
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        appContext.startActivity(intent)
+        applicationContext.startActivity(intent)
     }
 
     /**
@@ -379,7 +378,7 @@ object IntentUtil {
             Uri.parse("package:${appPackageName}")
         )
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        appContext.startActivity(intent)
+        applicationContext.startActivity(intent)
     }
 
     /**
@@ -404,7 +403,7 @@ object IntentUtil {
             intent.putExtra(appPkgName, appPackageName)
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        appContext.startActivity(intent)
+        applicationContext.startActivity(intent)
     }
 
     /**

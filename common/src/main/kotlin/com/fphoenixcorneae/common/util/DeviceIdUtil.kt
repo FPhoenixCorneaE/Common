@@ -7,7 +7,7 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.provider.Settings
 import android.telephony.TelephonyManager
-import com.fphoenixcorneae.common.ext.appContext
+import com.fphoenixcorneae.common.ext.applicationContext
 
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -38,7 +38,7 @@ class DeviceIdUtil private constructor() {
         private val imei: String
             @SuppressLint("HardwareIds", "MissingPermission")
             get() {
-                val telephonyMgr = appContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                val telephonyMgr = applicationContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
                 val szImei = telephonyMgr.deviceId
                 return szImei
             }
@@ -80,7 +80,7 @@ class DeviceIdUtil private constructor() {
         private val androidID: String
             @SuppressLint("HardwareIds")
             get() = Settings.Secure.getString(
-                appContext.contentResolver,
+                applicationContext.contentResolver,
                 Settings.Secure.ANDROID_ID
             )
 
@@ -96,7 +96,7 @@ class DeviceIdUtil private constructor() {
             @SuppressLint("HardwareIds", "MissingPermission")
             get() {
                 val wm =
-                    appContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE) as WifiManager
+                    applicationContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE) as WifiManager
                 var mSzWLANMAC = ""
                 if (wm != null) {
                     mSzWLANMAC = wm.connectionInfo.macAddress

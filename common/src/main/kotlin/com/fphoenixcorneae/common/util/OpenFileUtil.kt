@@ -3,7 +3,7 @@ package com.fphoenixcorneae.common.util
 import android.content.Intent
 import android.net.Uri
 import com.fphoenixcorneae.common.annotation.FileType
-import com.fphoenixcorneae.common.ext.appContext
+import com.fphoenixcorneae.common.ext.applicationContext
 import java.io.File
 import java.util.*
 
@@ -61,7 +61,7 @@ object OpenFileUtil {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addCategory(Intent.CATEGORY_DEFAULT)
         intent.setDataAndType(Uri.parse(file.parent), type)
-        appContext.startActivity(intent)
+        applicationContext.startActivity(intent)
     }
 
     /**
@@ -75,7 +75,7 @@ object OpenFileUtil {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addCategory(Intent.CATEGORY_DEFAULT)
         FileProviderUtil.setIntentDataAndType(intent, type, file, true)
-        appContext.startActivity(intent)
+        applicationContext.startActivity(intent)
     }
 
     /**
@@ -89,7 +89,7 @@ object OpenFileUtil {
         intent.putExtra("oneshot", 0)
         intent.putExtra("configchange", 0)
         FileProviderUtil.setIntentDataAndType(intent, type, file, false)
-        appContext.startActivity(intent)
+        applicationContext.startActivity(intent)
     }
 
     /**
@@ -103,6 +103,6 @@ object OpenFileUtil {
         intent.putExtra("oneshot", 0)
         intent.putExtra("configchange", 0)
         FileProviderUtil.setIntentDataAndType(intent, type, file, false)
-        appContext.startActivity(intent)
+        applicationContext.startActivity(intent)
     }
 }

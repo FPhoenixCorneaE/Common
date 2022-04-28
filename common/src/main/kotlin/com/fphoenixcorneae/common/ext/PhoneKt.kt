@@ -26,7 +26,7 @@ import java.util.*
  *         `false`: no
  */
 val isPhone: Boolean
-    get() = appContext.telephonyManager?.phoneType != TelephonyManager.PHONE_TYPE_NONE
+    get() = applicationContext.telephonyManager?.phoneType != TelephonyManager.PHONE_TYPE_NONE
 
 /**
  * Return the unique device id.
@@ -41,7 +41,7 @@ val deviceId: String
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             return ""
         }
-        val tm = appContext.telephonyManager
+        val tm = applicationContext.telephonyManager
         val deviceId = tm?.deviceId
         if (!TextUtils.isEmpty(deviceId)) {
             return deviceId!!
@@ -111,7 +111,7 @@ fun getImeiOrMeid(isImei: Boolean): String? {
     if (Build.VERSION.SDK_INT >= 29) {
         return ""
     }
-    val tm = appContext.telephonyManager
+    val tm = applicationContext.telephonyManager
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         return if (isImei) {
             getMinOne(tm?.getImei(0), tm?.getImei(1))
@@ -210,7 +210,7 @@ private fun getSystemPropertyByReflect(key: String): String {
 @get:SuppressLint("HardwareIds")
 val iMSI: String
     get() = runCatching {
-        appContext.telephonyManager?.subscriberId ?: ""
+        applicationContext.telephonyManager?.subscriberId ?: ""
     }.onFailure {
         it.printStackTrace()
     }.getOrDefault("")
@@ -223,7 +223,7 @@ val iMSI: String
  *  * [TelephonyManager.PHONE_TYPE_SIP] : 3
  */
 val phoneType: Int
-    get() = appContext.telephonyManager?.phoneType ?: 0
+    get() = applicationContext.telephonyManager?.phoneType ?: 0
 
 /**
  * Return whether sim card state is ready.
@@ -231,7 +231,7 @@ val phoneType: Int
  *         `false`: no
  */
 val isSimCardReady: Boolean
-    get() = appContext.telephonyManager?.simState == TelephonyManager.SIM_STATE_READY
+    get() = applicationContext.telephonyManager?.simState == TelephonyManager.SIM_STATE_READY
 
 /**
  * Return the sim operator name.
@@ -239,7 +239,7 @@ val isSimCardReady: Boolean
  * @return the sim operator name
  */
 val simOperatorName: String
-    get() = appContext.telephonyManager?.simOperatorName ?: ""
+    get() = applicationContext.telephonyManager?.simOperatorName ?: ""
 
 /**
  * Return the sim operator using mnc.
@@ -248,7 +248,7 @@ val simOperatorName: String
  */
 val simOperatorByMnc: String
     get() {
-        val operator = appContext.telephonyManager?.simOperator ?: return ""
+        val operator = applicationContext.telephonyManager?.simOperator ?: return ""
         return when (operator) {
             "46000", "46002", "46007", "46020" -> "中国移动"
             "46001", "46006", "46009" -> "中国联通"
@@ -267,7 +267,7 @@ val simOperatorByMnc: String
 fun dial(phoneNumber: String): Boolean {
     val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNumber"))
     if (isIntentAvailable(intent)) {
-        appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        applicationContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         return true
     }
     return false
@@ -286,7 +286,7 @@ fun dial(phoneNumber: String): Boolean {
 fun call(phoneNumber: String): Boolean {
     val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:$phoneNumber"))
     if (isIntentAvailable(intent)) {
-        appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        applicationContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         return true
     }
     return false
@@ -305,7 +305,7 @@ fun sendSms(phoneNumber: String, content: String?): Boolean {
     val intent = Intent(Intent.ACTION_SENDTO, uri)
     if (isIntentAvailable(intent)) {
         intent.putExtra("sms_body", content)
-        appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        applicationContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         return true
     }
     return false
@@ -323,7 +323,7 @@ fun sendSms(phoneNumber: String, content: String?): Boolean {
 @RequiresPermission(permission.SEND_SMS)
 fun sendSmsSilent(phoneNumber: String?, content: String) {
     if (content.isEmpty()) return
-    val sentIntent = PendingIntent.getBroadcast(appContext, 0, Intent(), 0)
+    val sentIntent = PendingIntent.getBroadcast(applicationContext, 0, Intent(), 0)
     val smsManager = SmsManager.getDefault()
     if (content.length >= 70) {
         val ms: List<String> = smsManager.divideMessage(content)
@@ -347,7 +347,7 @@ fun getAllContactInfo(): List<HashMap<String, String>> {
     SystemClock.sleep(3000)
     val list = ArrayList<HashMap<String, String>>()
     // 1.获取内容解析者
-    val resolver: ContentResolver = appContext.contentResolver
+    val resolver: ContentResolver = applicationContext.contentResolver
     // 2.获取内容提供者的地址:com.android.contacts
     // raw_contacts表的地址 :raw_contacts
     // view_data表的地址 : data
@@ -447,7 +447,7 @@ protected void onActivityResult ( int requestCode, int resultCode, Intent data){
 fun getAllSMS() {
     // 1.获取短信
     // 1.1获取内容解析者
-    val resolver: ContentResolver = appContext.contentResolver
+    val resolver: ContentResolver = applicationContext.contentResolver
     // 1.2获取内容提供者地址   sms,sms表的地址:null  不写
     // 1.3获取查询路径
     val uri = Uri.parse("content://sms")
@@ -544,7 +544,7 @@ fun getAllSMS() {
 @RequiresPermission(permission.READ_PHONE_STATE)
 @SuppressLint("HardwareIds")
 fun getPhoneStatus(): String = runCatching {
-    val tm = appContext.telephonyManager
+    val tm = applicationContext.telephonyManager
     var str = ""
     str += "DeviceId(IMEI) = " + tm?.deviceId + "\n"
     str += "DeviceSoftwareVersion = " + tm?.deviceSoftwareVersion + "\n"
@@ -568,7 +568,7 @@ fun getPhoneStatus(): String = runCatching {
 
 @SuppressLint("QueryPermissionsNeeded")
 private fun isIntentAvailable(intent: Intent): Boolean {
-    return appContext.packageManager
+    return applicationContext.packageManager
         .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
         .size > 0
 }

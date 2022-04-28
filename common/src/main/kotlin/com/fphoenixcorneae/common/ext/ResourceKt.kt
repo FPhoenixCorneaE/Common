@@ -14,7 +14,7 @@ import java.io.InputStream
 
 
 val appResources: Resources
-    get() = appContext.resources
+    get() = applicationContext.resources
 
 fun getLayoutIdByName(name: String): Int {
     return appResources.getIdentifier(name, "layout", appPackageName)
@@ -82,7 +82,7 @@ fun getXml(@XmlRes resId: Int): XmlResourceParser {
  * Get drawable, ui/drawable/file
  */
 fun getDrawable(@DrawableRes resId: Int): Drawable? {
-    return ContextCompat.getDrawable(appContext, resId)
+    return ContextCompat.getDrawable(applicationContext, resId)
 }
 
 /**
@@ -110,7 +110,7 @@ fun getIntArray(@ArrayRes resId: Int): IntArray {
  * Get color, ui/values/__picker_colors.xml
  */
 fun getColor(@ColorRes resId: Int): Int {
-    return ContextCompat.getColor(appContext, resId)
+    return ContextCompat.getColor(applicationContext, resId)
 }
 
 /**
@@ -121,7 +121,7 @@ fun getFont(@FontRes resId: Int): Typeface? {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             appResources.getFont(resId)
         } else {
-            ResourcesCompat.getFont(appContext, resId)
+            ResourcesCompat.getFont(applicationContext, resId)
         }
     }.onFailure {
         it.printStackTrace()
@@ -132,7 +132,7 @@ fun getFont(@FontRes resId: Int): Typeface? {
  * Get color state list, ui/values/__picker_colors.xml
  */
 fun getColorStateList(@ColorRes resId: Int): ColorStateList? {
-    return ContextCompat.getColorStateList(appContext, resId)
+    return ContextCompat.getColorStateList(applicationContext, resId)
 }
 
 /**

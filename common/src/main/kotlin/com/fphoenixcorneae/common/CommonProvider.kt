@@ -22,6 +22,7 @@ import com.orhanobut.logger.PrettyFormatStrategy
 class CommonProvider : FileProvider() {
 
     override fun onCreate(): Boolean {
+        "CommonProvider 初始化".logd()
         // 初始化 ContextUtil
         ContextUtil.init(context!!)
         // 初始化 ToastUtil

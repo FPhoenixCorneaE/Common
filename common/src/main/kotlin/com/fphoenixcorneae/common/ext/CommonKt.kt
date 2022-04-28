@@ -4,7 +4,7 @@ import android.app.Application
 import android.text.TextUtils
 import com.fphoenixcorneae.common.util.ContextUtil
 
-val appContext: Application by lazy { ContextUtil.context }
+val applicationContext: Application by lazy { ContextUtil.context }
 
 /**
  * 判断是否为空 并传入相关操作

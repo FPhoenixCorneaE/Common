@@ -13,7 +13,7 @@ import java.io.File
  * @return `true`: success<br></br>`false`: fail
  */
 fun cleanInternalCache(): Boolean =
-    deleteAllInDir(appContext.cacheDir)
+    deleteAllInDir(applicationContext.cacheDir)
 
 /**
  * Clean the internal files.
@@ -23,7 +23,7 @@ fun cleanInternalCache(): Boolean =
  * @return `true`: success<br></br>`false`: fail
  */
 fun cleanInternalFiles(): Boolean =
-    deleteAllInDir(appContext.filesDir)
+    deleteAllInDir(applicationContext.filesDir)
 
 /**
  * Clean the internal databases.
@@ -33,7 +33,7 @@ fun cleanInternalFiles(): Boolean =
  * @return `true`: success<br></br>`false`: fail
  */
 fun cleanInternalDbs(): Boolean =
-    deleteAllInDir(File(appContext.filesDir.parent, "databases"))
+    deleteAllInDir(File(applicationContext.filesDir.parent, "databases"))
 
 /**
  * Clean the internal database by name.
@@ -44,7 +44,7 @@ fun cleanInternalDbs(): Boolean =
  * @return `true`: success<br></br>`false`: fail
  */
 fun cleanInternalDbByName(dbName: String?): Boolean =
-    appContext.deleteDatabase(dbName)
+    applicationContext.deleteDatabase(dbName)
 
 /**
  * Clean the internal shared preferences.
@@ -54,7 +54,7 @@ fun cleanInternalDbByName(dbName: String?): Boolean =
  * @return `true`: success<br></br>`false`: fail
  */
 fun cleanInternalSp(): Boolean =
-    deleteAllInDir(File(appContext.filesDir.parent, "shared_prefs"))
+    deleteAllInDir(File(applicationContext.filesDir.parent, "shared_prefs"))
 
 /**
  * Clean the external cache.
@@ -65,7 +65,7 @@ fun cleanInternalSp(): Boolean =
  */
 fun cleanExternalCache(): Boolean =
     Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()
-            && deleteAllInDir(appContext.externalCacheDir)
+            && deleteAllInDir(applicationContext.externalCacheDir)
 
 /**
  * Clean the custom directory.
@@ -78,4 +78,4 @@ fun cleanCustomDir(dirPath: String?): Boolean =
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 fun cleanAppUserData() =
-    appContext.activityManager?.clearApplicationUserData()
+    applicationContext.activityManager?.clearApplicationUserData()

@@ -28,7 +28,7 @@ val Activity.isSoftInputVisible: Boolean
  * 显示软键盘
  */
 fun showSoftInput() =
-    appContext.inputMethodManager?.run {
+    applicationContext.inputMethodManager?.run {
         toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
 
@@ -38,7 +38,7 @@ fun showSoftInput() =
  * or have the [InputMethodManager.SHOW_IMPLICIT] bit set.
  */
 fun View.showSoftInput(flags: Int = 0) =
-    appContext.inputMethodManager?.run {
+    applicationContext.inputMethodManager?.run {
         setFocus(true)
         showSoftInput(this@showSoftInput, flags, object : ResultReceiver(Handler(Looper.getMainLooper())) {
             override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
@@ -76,7 +76,7 @@ fun Activity.hideSoftInput() {
  * Hide the soft input.
  */
 fun View.hideSoftInput() {
-    appContext.inputMethodManager?.hideSoftInputFromWindow(windowToken, 0)
+    applicationContext.inputMethodManager?.hideSoftInputFromWindow(windowToken, 0)
 }
 
 /**
@@ -84,7 +84,7 @@ fun View.hideSoftInput() {
  */
 fun View.hideSoftInputDelayed(delayMillis: Long = 10) {
     postDelayed(
-        { appContext.inputMethodManager?.hideSoftInputFromWindow(applicationWindowToken, 0) },
+        { applicationContext.inputMethodManager?.hideSoftInputFromWindow(applicationWindowToken, 0) },
         delayMillis
     )
 }
@@ -94,7 +94,7 @@ fun View.hideSoftInputDelayed(delayMillis: Long = 10) {
  * 如当前为收起变为弹出,若当前为弹出变为收起
  */
 fun toggleSoftInput() {
-    appContext.inputMethodManager?.toggleSoftInput(0, 0)
+    applicationContext.inputMethodManager?.toggleSoftInput(0, 0)
 }
 
 /**
@@ -165,7 +165,7 @@ fun Activity.fixAndroidBug5497() {
  * Fix the leaks of soft input.
  */
 fun Activity.fixSoftInputLeaks() {
-    val imm = appContext.inputMethodManager ?: return
+    val imm = applicationContext.inputMethodManager ?: return
     val leakViews = arrayOf("mLastSrvView", "mCurRootView", "mServedView", "mNextServedView")
     for (leakView in leakViews) {
         try {

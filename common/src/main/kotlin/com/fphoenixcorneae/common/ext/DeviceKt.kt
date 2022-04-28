@@ -44,7 +44,7 @@ val isDeviceRooted: Boolean
 @get:RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 val isAdbEnabled: Boolean
     get() =
-        Settings.Secure.getInt(appContext.contentResolver, Settings.Global.ADB_ENABLED, 0) > 0
+        Settings.Secure.getInt(applicationContext.contentResolver, Settings.Global.ADB_ENABLED, 0) > 0
 
 /**
  * Return the version name of device's system.
@@ -66,7 +66,7 @@ val sdkVersionCode: Int
 @get:SuppressLint("HardwareIds")
 val androidID: String
     get() {
-        val id = Settings.Secure.getString(appContext.contentResolver, Settings.Secure.ANDROID_ID)
+        val id = Settings.Secure.getString(applicationContext.contentResolver, Settings.Secure.ANDROID_ID)
         return if ("9774d56d682e549c" == id) "" else id ?: ""
     }
 
@@ -104,10 +104,10 @@ val macAddress: String
 @set:RequiresPermission(Manifest.permission.CHANGE_WIFI_STATE)
 var wifiEnabled: Boolean
     get() =
-        appContext.wifiManager?.isWifiEnabled ?: false
+        applicationContext.wifiManager?.isWifiEnabled ?: false
     set(enabled) {
-        if (enabled != appContext.wifiManager?.isWifiEnabled) {
-            appContext.wifiManager?.isWifiEnabled = enabled
+        if (enabled != applicationContext.wifiManager?.isWifiEnabled) {
+            applicationContext.wifiManager?.isWifiEnabled = enabled
         }
     }
 
@@ -163,7 +163,7 @@ private fun isAddressNotInExcepts(address: String, vararg excepts: String?): Boo
 private val macAddressByWifiInfo: String
     @SuppressLint("HardwareIds", "MissingPermission")
     get() =
-        appContext.wifiManager?.connectionInfo?.macAddress ?: "02:00:00:00:00:00"
+        applicationContext.wifiManager?.connectionInfo?.macAddress ?: "02:00:00:00:00:00"
 
 private val macAddressByNetworkInterface: String
     get() {
@@ -325,7 +325,7 @@ val isEmulator: Boolean
             return true
         }
         var operatorName = ""
-        val tm = appContext.telephonyManager
+        val tm = applicationContext.telephonyManager
         if (tm != null) {
             val name: String? = tm.networkOperatorName
             if (name != null) {
@@ -340,7 +340,7 @@ val isEmulator: Boolean
         val intent = Intent()
         intent.data = Uri.parse(url)
         intent.action = Intent.ACTION_DIAL
-        return intent.resolveActivity(appContext.packageManager) == null
+        return intent.resolveActivity(applicationContext.packageManager) == null
     }
 
 /**
@@ -349,7 +349,7 @@ val isEmulator: Boolean
 @get:RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 val isDevelopmentSettingsEnabled: Boolean
     get() =
-        Settings.Global.getInt(appContext.contentResolver, Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) > 0
+        Settings.Global.getInt(applicationContext.contentResolver, Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) > 0
 
 private const val KEY_UDID = "KEY_UDID"
 

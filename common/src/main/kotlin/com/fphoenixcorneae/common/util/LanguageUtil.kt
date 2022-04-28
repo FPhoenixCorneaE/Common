@@ -142,11 +142,11 @@ class LanguageUtil private constructor() {
                 val realActivityClassName =
                     if (TextUtils.isEmpty(activityClassName)) launcherActivity else activityClassName
                 intent.component = ComponentName(
-                    appContext,
+                    applicationContext,
                     realActivityClassName
                 )
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                appContext.startActivity(intent)
+                applicationContext.startActivity(intent)
             }
         }
 
@@ -196,7 +196,7 @@ class LanguageUtil private constructor() {
         }
 
         private fun updateLanguage(locale: Locale) {
-            val context = appContext
+            val context = applicationContext
             val resources = context.resources
             val config = resources.configuration
             val contextLocale = config.locale
@@ -242,7 +242,7 @@ class LanguageUtil private constructor() {
                 val intent = Intent(Intent.ACTION_MAIN, null)
                 intent.addCategory(Intent.CATEGORY_LAUNCHER)
                 intent.setPackage(appPackageName)
-                val pm = appContext.packageManager
+                val pm = applicationContext.packageManager
                 val info = pm.queryIntentActivities(intent, 0)
                 val next = info.iterator().next()
                 return if (next != null) {
