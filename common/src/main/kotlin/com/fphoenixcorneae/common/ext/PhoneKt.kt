@@ -105,7 +105,7 @@ val iMEI: String?
 val mEID: String?
     get() = getImeiOrMeid(false)
 
-@SuppressLint("HardwareIds")
+@SuppressLint("HardwareIds", "ObsoleteSdkInt")
 @RequiresPermission(permission.READ_PHONE_STATE)
 fun getImeiOrMeid(isImei: Boolean): String? {
     if (Build.VERSION.SDK_INT >= 29) {

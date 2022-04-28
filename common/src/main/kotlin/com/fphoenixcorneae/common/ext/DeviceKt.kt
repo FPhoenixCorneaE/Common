@@ -61,7 +61,11 @@ val sdkVersionCode: Int
         Build.VERSION.SDK_INT
 
 /**
- * Return the android id of device.
+ * The Android ID
+ * 通常被认为不可信，因为它有时为null。开发文档中说明了：这个ID会改变如果进行了出厂设置。并且，如果某个
+ * Android手机被Root过的话，这个ID也可以被任意改变。无需任何许可。
+ *
+ * @return AndroidID
  */
 @get:SuppressLint("HardwareIds")
 val androidID: String
