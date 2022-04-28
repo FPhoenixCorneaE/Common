@@ -23,7 +23,6 @@ class CrashUtil private constructor() {
         private var dir: String? = null
         private var versionName: String? = null
         private var versionCode: Long = 0
-        private val FILE_SEP = System.getProperty("file.separator")
 
         @SuppressLint("SimpleDateFormat")
         private val FORMAT: Format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -102,21 +101,21 @@ class CrashUtil private constructor() {
         @RequiresPermission(permission.WRITE_EXTERNAL_STORAGE)
         fun init(crashDirPath: String, onCrashListener: OnCrashListener?) {
             dir = when {
-                isSpace(crashDirPath) -> {
+                crashDirPath.isSpace() -> {
                     null
                 }
                 else -> {
-                    if (crashDirPath.endsWith(FILE_SEP!!)) crashDirPath else crashDirPath + FILE_SEP
+                    if (crashDirPath.endsWith(FILE_SEPARATOR!!)) crashDirPath else crashDirPath + FILE_SEPARATOR
                 }
             }
             defaultDir =
                 when {
                     Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()
                             && applicationContext.externalCacheDir != null -> {
-                        applicationContext.externalCacheDir.toString() + FILE_SEP + "crash" + FILE_SEP
+                        applicationContext.externalCacheDir.toString() + FILE_SEPARATOR + "crash" + FILE_SEPARATOR
                     }
                     else -> {
-                        applicationContext.cacheDir.toString() + FILE_SEP + "crash" + FILE_SEP
+                        applicationContext.cacheDir.toString() + FILE_SEPARATOR + "crash" + FILE_SEPARATOR
                     }
                 }
             sOnCrashListener = onCrashListener
@@ -146,7 +145,7 @@ class CrashUtil private constructor() {
                             e.printStackTrace()
                             return@Callable false
                         } finally {
-                            CloseUtil.closeIOQuietly(bw)
+                            bw.closeQuietly()
                         }
                     })
             try {
@@ -185,20 +184,7 @@ class CrashUtil private constructor() {
             return file != null && if (file.exists()) file.isDirectory else file.mkdirs()
         }
 
-        private fun isSpace(s: String?): Boolean {
-            if (s == null) {
-                return true
-            }
-            var i = 0
-            val len = s.length
-            while (i < len) {
-                if (!Character.isWhitespace(s[i])) {
-                    return false
-                }
-                ++i
-            }
-            return true
-        }
+
 
         init {
             versionName = appVersionName

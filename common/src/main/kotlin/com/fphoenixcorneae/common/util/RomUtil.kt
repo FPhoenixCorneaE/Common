@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Environment
 import android.text.TextUtils
+import com.fphoenixcorneae.common.ext.closeQuietly
 import java.io.*
 import java.util.*
 
@@ -455,7 +456,7 @@ class RomUtil private constructor() {
                 }
             } catch (ignore: IOException) {
             } finally {
-                CloseUtil.closeIOQuietly(input)
+                input.closeQuietly()
             }
             return ""
         }
@@ -471,7 +472,7 @@ class RomUtil private constructor() {
                 return prop.getProperty(key, "")
             } catch (ignore: Exception) { /**/
             } finally {
-                CloseUtil.closeIOQuietly(`is`)
+                `is`.closeQuietly()
             }
             return ""
         }

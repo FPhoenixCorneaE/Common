@@ -16,7 +16,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
-import com.fphoenixcorneae.common.util.CloseUtil.Companion.closeIOQuietly
+import com.fphoenixcorneae.common.ext.closeQuietly
 
 
 /**
@@ -86,7 +86,7 @@ class ShortcutUtil private constructor() {
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
-                closeIOQuietly(cursor)
+                cursor.closeQuietly()
             }
             return isInstallShortcut
         }

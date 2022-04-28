@@ -17,7 +17,8 @@ import java.util.*
 import javax.net.ssl.HttpsURLConnection
 import kotlin.experimental.and
 
-val LINE_SEPARATOR = System.getProperty("line.separator")
+val LINE_SEPARATOR: String? = System.getProperty("line.separator")
+val FILE_SEPARATOR: String? = System.getProperty("file.separator")
 
 /**
  * 根据文件路径获取文件
