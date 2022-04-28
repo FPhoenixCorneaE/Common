@@ -220,7 +220,7 @@ class CrashUtil private constructor() {
                             "\nApp VersionCode    : " + versionCode +
                             "\n************* Log Head ****************\n\n"
                     sb.append(head)
-                        .append(ThrowableUtil.getFullStackTrace(e))
+                        .append(e.getFullStackTrace())
                     val crashInfo = sb.toString()
                     val fullPath =
                         (if (dir == null) defaultDir else dir) + time + ".txt"

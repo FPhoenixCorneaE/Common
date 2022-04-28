@@ -27,7 +27,7 @@ object OpenFileUtil {
         // 取得文件扩展名
         val end =
             file.name.substring(file.name.lastIndexOf(".") + 1, file.name.length)
-                .toLowerCase(Locale.getDefault())
+                .lowercase(Locale.getDefault())
         when (end) {
             "3gp", "mp4" -> openVideoFileIntent(file, FileType.DATA_TYPE_VIDEO)
             "m4a", "mp3", "mid", "xmf", "ogg", "wav" -> openAudioFileIntent(

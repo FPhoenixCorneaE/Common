@@ -587,10 +587,10 @@ class ReflectUtil private constructor(
                     ""
                 }
                 1 -> {
-                    string.toLowerCase(Locale.getDefault())
+                    string.lowercase(Locale.getDefault())
                 }
                 else -> {
-                    string.substring(0, 1).toLowerCase(Locale.getDefault()) + string.substring(1)
+                    string.substring(0, 1).lowercase(Locale.getDefault()) + string.substring(1)
                 }
             }
         }

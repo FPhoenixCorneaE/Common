@@ -390,7 +390,7 @@ class RomUtil private constructor() {
                 try {
                     val manufacturer = Build.MANUFACTURER
                     if (!TextUtils.isEmpty(manufacturer)) {
-                        return manufacturer.toLowerCase(Locale.getDefault())
+                        return manufacturer.lowercase(Locale.getDefault())
                     }
                 } catch (ignore: Throwable) { /**/
                 }
@@ -403,7 +403,7 @@ class RomUtil private constructor() {
                 try {
                     val brand = Build.BRAND
                     if (!TextUtils.isEmpty(brand)) {
-                        return brand.toLowerCase(Locale.getDefault())
+                        return brand.lowercase(Locale.getDefault())
                     }
                 } catch (ignore: Throwable) { /**/
                 }
@@ -419,7 +419,7 @@ class RomUtil private constructor() {
                 try {
                     val display = Build.DISPLAY
                     if (!TextUtils.isEmpty(display)) {
-                        ret = display.toLowerCase(Locale.getDefault())
+                        ret = display.lowercase(Locale.getDefault())
                     }
                 } catch (ignore: Throwable) { /**/
                 }

@@ -1,6 +1,7 @@
-package com.fphoenixcorneae.common.util
+package com.fphoenixcorneae.common.compat
 
 import android.R
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.res.Resources
 import android.graphics.Rect
@@ -22,6 +23,7 @@ class AndroidBug5497Workaround private constructor(activity: Activity) {
     private val statusBarHeight: Int
 
     //重新调整跟布局的高度
+    @SuppressLint("ObsoleteSdkInt")
     private fun possiblyResizeChildOfContent() {
         val usableHeightNow = computeUsableHeight()
 
