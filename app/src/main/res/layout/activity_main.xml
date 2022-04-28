@@ -37,6 +37,7 @@
             android:layout_height="50dp"
             android:layout_margin="16dp"
             android:text="申请权限"
+            android:textColor="@android:color/white"
             tools:ignore="HardcodedText" />
 
         <SeekBar

@@ -2,29 +2,33 @@ package com.fphoenixcorneae.common.drawable
 
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.util.DisplayMetrics
 import android.util.TypedValue
+import androidx.annotation.ColorInt
+import com.fphoenixcorneae.common.annotation.GradientType
+import com.fphoenixcorneae.common.annotation.Shape
 import java.lang.ref.WeakReference
 
 /**
  * @desc：GradientDrawable
  * @date：2022/03/31 11:18
  */
-class GradientDrawable private constructor(
+class CodeGradientDrawable private constructor(
     theme: Resources.Theme,
     shapeType: Int,
     gradient: Gradient?,
     corner: Corner?,
-    solidColor: ColorStateList?,
+    solidColor: CodeColorStateList?,
     stroke: Stroke?,
     padding: Padding?,
     width: Int,
     height: Int
-) : android.graphics.drawable.GradientDrawable() {
+) : GradientDrawable() {
 
     companion object {
-        private val sCache = HashMap<Int, WeakReference<GradientDrawable>>()
+        private val sCache = HashMap<Int, WeakReference<CodeGradientDrawable>>()
     }
 
     init {
@@ -84,18 +88,18 @@ class GradientDrawable private constructor(
         }
     }
 
-    class Builder constructor(context: Context) {
+    class Builder constructor(val context: Context) {
         private var debugName: String? = "Debug"
-        private var solidColor: ColorStateList? = null
+        private var solidColor: CodeColorStateList? = null
         private var shape: Int = RECTANGLE
 
         private var width: Int = -1
         private var height: Int = -1
 
-        private var gradient: Gradient.Builder? = null
-        private var corner: Corner.Builder? = null
-        private var stroke: Stroke.Builder? = null
-        private var padding: Padding.Builder? = null
+        private var gradient: Gradient? = null
+        private var corner: Corner? = null
+        private var stroke: Stroke? = null
+        private var padding: Padding? = null
         private var theme: Resources.Theme = context.theme
         private val metrics = context.resources.displayMetrics
 
@@ -103,29 +107,35 @@ class GradientDrawable private constructor(
             this.debugName = debugName
         }
 
-        fun shape(shape: Int) = apply {
+        fun shape(@Shape shape: Int) = apply {
             this.shape = shape
         }
 
-        fun solidColor(solidColor: ColorStateList) = apply {
+        fun solidColor(solidColor: CodeColorStateList) = apply {
             this.solidColor = solidColor
             this.gradient = null
         }
 
-        fun gradient(gradient: Gradient.Builder) = apply {
+        fun solidColor(@ColorInt color: Int) = apply {
+            solidColor(CodeColorStateList.Builder().apply {
+                addSelectorColorItem(SelectorColorItem.Builder().apply { color(color) }.run { build() })
+            }.run { build() })
+        }
+
+        fun gradient(gradient: Gradient) = apply {
             this.gradient = gradient
             this.corner = null
         }
 
-        fun corner(corner: Corner.Builder) = apply {
+        fun corner(corner: Corner) = apply {
             this.corner = corner
         }
 
-        fun stroke(stroke: Stroke.Builder) = apply {
+        fun stroke(stroke: Stroke) = apply {
             this.stroke = stroke
         }
 
-        fun padding(padding: Padding.Builder) = apply {
+        fun padding(padding: Padding) = apply {
             this.padding = padding
         }
 
@@ -136,20 +146,20 @@ class GradientDrawable private constructor(
                 this.height = getDimensionPixelSize(heightUnit, height.toFloat(), metrics)
             }
 
-        fun build(): GradientDrawable {
+        fun build(): CodeGradientDrawable {
             synchronized(sCache) {
                 val key = hashCode()
                 val cached = sCache[key]?.get()
                 if (cached == null) {
                     println("GradientDrawable is null $this")
-                    val drawable = GradientDrawable(
+                    val drawable = CodeGradientDrawable(
                         theme,
                         shape,
-                        gradient?.build(),
-                        corner?.build(),
+                        gradient,
+                        corner,
                         solidColor,
-                        stroke?.build(),
-                        padding?.build(),
+                        stroke,
+                        padding,
                         width,
                         height
                     )
@@ -157,7 +167,6 @@ class GradientDrawable private constructor(
                     return drawable
                 } else {
                     println("GradientDrawable not null $this")
-
                     return cached
                 }
             }
@@ -209,17 +218,16 @@ class Gradient private constructor(
     internal val useLevel: Boolean,
     internal val gradientType: Int,
     internal val gradientRadius: Float,
-    internal val orientation: android.graphics.drawable.GradientDrawable.Orientation,
+    internal val orientation: GradientDrawable.Orientation,
     internal val gradientColors: IntArray
 ) {
     class Builder constructor(context: Context) {
         private var centerX: Float = 0.5f
         private var centerY: Float = 0.5f
         private var useLevel: Boolean = false
-        private var gradientType: Int = android.graphics.drawable.GradientDrawable.LINEAR_GRADIENT
+        private var gradientType: Int = GradientDrawable.LINEAR_GRADIENT
         private var gradientRadius: Float = 0.5f
-        private var orientation: android.graphics.drawable.GradientDrawable.Orientation =
-            android.graphics.drawable.GradientDrawable.Orientation.LEFT_RIGHT
+        private var orientation: GradientDrawable.Orientation = GradientDrawable.Orientation.LEFT_RIGHT
         private lateinit var gradientColors: IntArray
         private val metrics = context.resources.displayMetrics
 
@@ -232,11 +240,11 @@ class Gradient private constructor(
             this.useLevel = useLevel
         }
 
-        fun gradientType(gradientType: Int): Builder = apply {
+        fun gradientType(@GradientType gradientType: Int): Builder = apply {
             this.gradientType = gradientType
         }
 
-        fun orientation(orientation: android.graphics.drawable.GradientDrawable.Orientation): Builder = apply {
+        fun orientation(orientation: GradientDrawable.Orientation): Builder = apply {
             this.orientation = orientation
         }
 
@@ -381,39 +389,35 @@ class Corner private constructor(
 
 class Stroke private constructor(
     internal val width: Int,
-    internal val colorStateList: ColorStateList,
+    internal val colorStateList: CodeColorStateList,
     internal val dashWidth: Float,
     internal val dashGap: Float
 ) {
     class Builder constructor(context: Context) {
         private var width: Int = 0
-        private lateinit var colorStateList: ColorStateList
+        private lateinit var colorStateList: CodeColorStateList
         private var dashWidth: Float = 0.0f
         private var dashGap: Float = 0.0f
         private val metrics = context.resources.displayMetrics
 
-        @JvmOverloads
-        fun setStroke(width: Float, widthUnit: Int = DP_UNIT, colorStateList: ColorStateList) =
+        fun width(width: Float, widthUnit: Int = DP_UNIT) =
             apply {
                 this.width = getDimensionPixelSize(widthUnit, width, metrics)
-                this.colorStateList = colorStateList
             }
 
-        @JvmOverloads
-        fun setStroke(
-            width: Float,
-            widthUnit: Int = DP_UNIT,
-            colorStateList: ColorStateList,
-            dashWidth: Float,
-            dashWidthUnit: Int = DP_UNIT,
-            dashGap: Float,
-            dashGapUnit: Int
-        ) =
+        fun dashWidth(dashWidth: Float, dashWidthUnit: Int = DP_UNIT) =
             apply {
-                this.width = getDimensionPixelSize(widthUnit, width, metrics)
-                this.colorStateList = colorStateList
                 this.dashWidth = getDimension(dashWidthUnit, dashWidth, metrics)
+            }
+
+        fun dashGap(dashGap: Float, dashGapUnit: Int = DP_UNIT) =
+            apply {
                 this.dashGap = getDimension(dashGapUnit, dashGap, metrics)
+            }
+
+        fun color(colorStateList: CodeColorStateList) =
+            apply {
+                this.colorStateList = colorStateList
             }
 
         internal fun build(): Stroke {
@@ -463,19 +467,19 @@ class Padding private constructor(
 
         @JvmOverloads
         fun setPadding(
-            top: Int = 0,
+            top: Float = 0f,
             topUnit: Int = DP_UNIT,
-            bottom: Int = 0,
+            bottom: Float = 0f,
             bottomUnit: Int = DP_UNIT,
-            left: Int = 0,
+            left: Float = 0f,
             leftUnit: Int = DP_UNIT,
-            right: Int = 0,
+            right: Float = 0f,
             rightUnit: Int = DP_UNIT,
         ) = apply {
-            this.top = getDimensionPixelSize(topUnit, top.toFloat(), metrics)
-            this.bottom = getDimensionPixelSize(bottomUnit, bottom.toFloat(), metrics)
-            this.left = getDimensionPixelSize(leftUnit, left.toFloat(), metrics)
-            this.right = getDimensionPixelSize(rightUnit, right.toFloat(), metrics)
+            this.top = getDimensionPixelSize(topUnit, top, metrics)
+            this.bottom = getDimensionPixelSize(bottomUnit, bottom, metrics)
+            this.left = getDimensionPixelSize(leftUnit, left, metrics)
+            this.right = getDimensionPixelSize(rightUnit, right, metrics)
         }
 
         internal fun build(): Padding {

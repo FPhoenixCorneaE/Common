@@ -1,6 +1,6 @@
 # Common
 
-通用类库：Kotlin 扩展、Kotlin-Dsl（animation、layout）、权限申请、缓存（内存、磁盘、内存+磁盘）。
+通用类库：Kotlin 扩展、Kotlin-DSL（animation、layout、代码构造Drawable）、动态权限申请、缓存（内存、磁盘、内存+磁盘）。
 
 [![](https://jitpack.io/v/FPhoenixCorneaE/Common.svg)](https://jitpack.io/#FPhoenixCorneaE/Common)
 
@@ -57,4 +57,103 @@ dependencies {
 }
 ```
 
-### How to use：[Kotlin扩展属性、函数](https://github.com/FPhoenixCorneaE/Common/blob/main/READMEKT.md)
+### How to use：
+
+#### 1.[Kotlin扩展属性、函数](https://github.com/FPhoenixCorneaE/Common/blob/main/READMEKT.md)
+
+#### 2.若是有自定义 Startup Initializer，需要依赖`CommonInitializer`
+
+```kotlin
+override fun dependencies(): MutableList<Class<out Initializer<*>>> {
+    return mutableListOf(CommonInitializer::class.java)
+}
+```
+
+#### 3.动态权限申请
+
+```kotlin
+private fun requestPermissions() {
+    requestPhonePermission {
+        onGranted {
+            "onGranted".logd("requestPermissions")
+            // TODO
+        }
+        onDenied {
+            "onDenied".logd("requestPermissions")
+            requestPermissions()
+        }
+        onShowRationale {
+            "onShowRationale".logd("requestPermissions")
+            it.retry()
+        }
+        onNeverAskAgain {
+            "onNeverAskAgain".logd("requestPermissions")
+            IntentUtil.openApplicationDetailsSettings()
+        }
+    }
+}
+```
+
+#### 4.代码构造Drawable
+
+```kotlin
+gradientDrawable(this) {
+    shape(Shape.RECTANGLE)
+    solidColor(Color.GRAY)
+//            solidColor {
+//                item {
+//                    color(Color.RED)
+//                    state(StatePressed)
+//                }
+//                item {
+//                    color(Color.BLUE)
+//                    minusState(StatePressed)
+//                }
+//            }
+    corner {
+//                radius(20f)
+        radii(topLeftRadius = 5f, topRightRadius = 10f, bottomLeftRadius = 15f, bottomRightRadius = 20f)
+    }
+    stroke {
+        width(3f)
+        dashWidth(8f)
+        dashGap(3f)
+        color {
+            item {
+                color(Color.BLUE)
+                state(StatePressed)
+            }
+            item {
+                color(Color.RED)
+                minusState(StatePressed)
+            }
+        }
+    }
+    padding {
+        setPadding(left = 8f, top = 8f, right = 8f, bottom = 8f)
+    }
+    size(width = 100, height = 20)
+//            gradient {
+//                gradientCenter(0.5f, 0.5f)
+//                useLevel(false)
+//                gradientType(GradientType.LINEAR_GRADIENT)
+//                orientation(GradientDrawable.Orientation.LEFT_RIGHT)
+//                gradientRadius(10f)
+//                gradientColors(intArrayOf(Color.TRANSPARENT, Color.BLACK))
+//            }
+}
+```
+
+```kotlin
+stateListDrawable {
+    item {
+        drawable(ColorDrawable(Color.GRAY))
+        minusState(StatePressed)
+    }
+    item {
+        drawable(ColorDrawable(Color.GREEN))
+        state(StatePressed)
+    }
+}
+```
+

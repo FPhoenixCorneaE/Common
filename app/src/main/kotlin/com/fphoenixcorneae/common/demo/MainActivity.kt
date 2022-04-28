@@ -1,19 +1,24 @@
 package com.fphoenixcorneae.common.demo
 
 import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.fphoenixcorneae.common.annotation.Shape
+import com.fphoenixcorneae.common.demo.databinding.ActivityMainBinding
+import com.fphoenixcorneae.common.drawable.*
 import com.fphoenixcorneae.common.dsl.layout.TextView
 import com.fphoenixcorneae.common.ext.*
 import com.fphoenixcorneae.common.ext.algorithm.*
-import com.fphoenixcorneae.common.ext.view.textAction
-import com.fphoenixcorneae.common.permission.requestPhonePermission
-import com.fphoenixcorneae.common.util.IntentUtil
-import com.fphoenixcorneae.common.demo.databinding.ActivityMainBinding
 import com.fphoenixcorneae.common.ext.view.queryTextListener
 import com.fphoenixcorneae.common.ext.view.setOnSeekBarChangeListener
 import com.fphoenixcorneae.common.ext.view.setUnderLine
+import com.fphoenixcorneae.common.ext.view.textAction
+import com.fphoenixcorneae.common.permission.requestPhonePermission
+import com.fphoenixcorneae.common.util.IntentUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -83,6 +88,8 @@ class MainActivity : AppCompatActivity() {
         mViewBinding.btnRequestPermissions.setOnClickListener {
             requestPermissions()
         }
+//        mViewBinding.btnRequestPermissions.background = codeConstructsGradientDrawable()
+        mViewBinding.btnRequestPermissions.background = codeConstructsStateListDrawable()
 
         // 设置亮度
         mViewBinding.sbBrightness.setOnSeekBarChangeListener(
@@ -104,6 +111,73 @@ class MainActivity : AppCompatActivity() {
     private fun initObserver() {
         appViewModel.global.observe(this) {
             "MainActivity: $it".logd("GlobalAndroid")
+        }
+    }
+
+    /**
+     * 代码构造StateListDrawable
+     */
+    private fun codeConstructsStateListDrawable(): Drawable {
+        return stateListDrawable {
+            item {
+                drawable(ColorDrawable(Color.GRAY))
+                minusState(StatePressed)
+            }
+            item {
+                drawable(ColorDrawable(Color.GREEN))
+                state(StatePressed)
+            }
+        }
+    }
+
+    /**
+     * 代码构造GradientDrawable
+     */
+    private fun codeConstructsGradientDrawable(): Drawable {
+        return gradientDrawable(this) {
+            shape(Shape.RECTANGLE)
+            solidColor(Color.GRAY)
+//            solidColor {
+//                item {
+//                    color(Color.RED)
+//                    state(StatePressed)
+//                }
+//                item {
+//                    color(Color.BLUE)
+//                    minusState(StatePressed)
+//                }
+//            }
+            corner {
+//                radius(20f)
+                radii(topLeftRadius = 5f, topRightRadius = 10f, bottomLeftRadius = 15f, bottomRightRadius = 20f)
+            }
+            stroke {
+                width(3f)
+                dashWidth(8f)
+                dashGap(3f)
+                color {
+                    item {
+                        color(Color.BLUE)
+                        state(StatePressed)
+                    }
+                    item {
+                        color(Color.RED)
+                        minusState(StatePressed)
+                    }
+                }
+            }
+            padding {
+                setPadding(left = 8f, top = 8f, right = 8f, bottom = 8f)
+            }
+            size(width = 100, height = 20)
+//            gradient {
+//                gradientCenter(0.5f, 0.5f)
+//                useLevel(false)
+//                gradientType(GradientType.LINEAR_GRADIENT)
+//                orientation(GradientDrawable.Orientation.LEFT_RIGHT)
+//                gradientRadius(10f)
+//                gradientColors(intArrayOf(Color.TRANSPARENT, Color.BLACK))
+//            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.fphoenixcorneae.common.drawable
 
+import android.content.res.ColorStateList
 import android.util.SparseArray
 import androidx.annotation.ColorInt
 import java.lang.ref.WeakReference
@@ -8,25 +9,25 @@ import java.lang.ref.WeakReference
  * @desc：状态颜色列表
  * @date：2022/03/31 11:12
  */
-class ColorStateList private constructor(
+class CodeColorStateList private constructor(
     private val states: Array<out IntArray>,
     private val colors: IntArray
-) : android.content.res.ColorStateList(states, colors) {
+) : ColorStateList(states, colors) {
 
     companion object {
         private val EMPTY = arrayOf(IntArray(0))
 
         /** Thread-safe cache of single-color ColorStateLists.  */
-        private val sCache = SparseArray<WeakReference<ColorStateList>>()
+        private val sCache = SparseArray<WeakReference<CodeColorStateList>>()
 
         /**
          * @return A ColorStateList containing a single color.
          */
-        fun valueOf(@ColorInt color: Int): ColorStateList {
+        fun valueOf(@ColorInt color: Int): CodeColorStateList {
             synchronized(sCache) {
                 val index: Int = sCache.indexOfKey(color)
                 if (index >= 0) {
-                    val cached: ColorStateList? = sCache.valueAt(index).get()
+                    val cached: CodeColorStateList? = sCache.valueAt(index).get()
                     if (cached != null) {
                         return cached
                     }
@@ -42,7 +43,7 @@ class ColorStateList private constructor(
                         sCache.removeAt(i)
                     }
                 }
-                val csl = ColorStateList(EMPTY, intArrayOf(color))
+                val csl = CodeColorStateList(EMPTY, intArrayOf(color))
                 sCache.put(color, WeakReference(csl))
                 return csl
             }
@@ -52,7 +53,7 @@ class ColorStateList private constructor(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-        other as ColorStateList
+        other as CodeColorStateList
         return states.contentDeepEquals(other.states) && colors.contentEquals(other.colors)
     }
 
@@ -68,13 +69,12 @@ class ColorStateList private constructor(
         private var colorItems: MutableList<SelectorColorItem> = arrayListOf()
         private var maxAttributeNum = 0
 
-        fun addSelectorColorItem(colorItemBuilder: SelectorColorItem.Builder) = apply {
-            val colorItem = colorItemBuilder.build()
+        fun addSelectorColorItem(colorItem: SelectorColorItem) = apply {
             colorItems.add(colorItem)
             maxAttributeNum = maxAttributeNum.coerceAtLeast(colorItem.states.size)
         }
 
-        fun build(): ColorStateList {
+        fun build(): CodeColorStateList {
             if (colorItems.isEmpty()) throw IllegalArgumentException("colorItems is empty")
             val colors = IntArray(colorItems.size)
 
@@ -90,7 +90,7 @@ class ColorStateList private constructor(
                     states[index][index2] = state
                 }
             }
-            return ColorStateList(states, colors)
+            return CodeColorStateList(states, colors)
         }
     }
 }
@@ -100,14 +100,14 @@ class SelectorColorItem private constructor(val color: Int, val states: MutableL
         private var color: Int = -1
         private var states: MutableList<Int> = arrayListOf()
 
-        fun color(color: Int): Builder = apply {
+        fun color(@ColorInt color: Int): Builder = apply {
             this.color = color
         }
 
         /**
          * 动态添加正向状态 android:state_pressed="true"
          */
-        fun addState(state: State): Builder = apply {
+        fun state(state: State): Builder = apply {
             if (!states.contains(state.value)) {
                 states.add(state.value)
             }
@@ -127,7 +127,7 @@ class SelectorColorItem private constructor(val color: Int, val states: MutableL
 
             /**
              * 两个SelectorColorItem添加state的内容相同，添加顺序不同，会被认为是相同
-             * @see ColorStateList.equals(other: Any?)
+             * @see CodeColorStateList.equals(other: Any?)
              */
             states.sort()
             return SelectorColorItem(color, states)

@@ -2,6 +2,7 @@ package com.fphoenixcorneae.common.drawable
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.StateListDrawable
 import android.os.Build
 
 /**
@@ -9,7 +10,7 @@ import android.os.Build
  * @date：2022/03/31 11:14
  * todo 增加缓存机制
  */
-class StateListDrawable private constructor() : android.graphics.drawable.StateListDrawable() {
+class CodeStateListDrawable private constructor() : StateListDrawable() {
     class Builder {
         private var drawableItems: MutableList<SelectorDrawableItem> = arrayListOf()
         private var isConstantSize: Boolean = false
@@ -20,8 +21,8 @@ class StateListDrawable private constructor() : android.graphics.drawable.StateL
         private var dither: Boolean = false
         private var autoMirrored: Boolean = false
 
-        fun addSelectorDrawableItem(drawableItemBuilder: SelectorDrawableItem.Builder) = apply {
-            drawableItems.add(drawableItemBuilder.build())
+        fun addSelectorDrawableItem(drawableItem: SelectorDrawableItem) = apply {
+            drawableItems.add(drawableItem)
         }
 
         fun constantSize(isConstantSize: Boolean) = apply {
@@ -61,8 +62,8 @@ class StateListDrawable private constructor() : android.graphics.drawable.StateL
         }
 
         @SuppressLint("ObsoleteSdkInt")
-        fun build(): StateListDrawable {
-            val stateListDrawable = StateListDrawable()
+        fun build(): CodeStateListDrawable {
+            val stateListDrawable = CodeStateListDrawable()
             for (item in drawableItems) {
                 stateListDrawable.addState(item.states.toIntArray(), item.drawable)
             }
@@ -99,7 +100,7 @@ class SelectorDrawableItem private constructor(
         /**
          * 动态添加正向状态 android:state_pressed="true"
          */
-        fun addState(state: State): Builder = apply {
+        fun state(state: State): Builder = apply {
             if (!states.contains(state.value)) {
                 states.add(state.value)
             }
