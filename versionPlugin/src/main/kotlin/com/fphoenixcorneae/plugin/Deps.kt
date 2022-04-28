@@ -7,8 +7,8 @@ object Deps {
         const val buildToolsVersion = "31.0.0"
         const val minSdkVersion = 21
         const val targetSdkVersion = 31
-        const val versionCode = 203
-        const val versionName = "2.0.3"
+        const val versionCode = 204
+        const val versionName = "2.0.4"
     }
 
     /** BuildType */
@@ -48,6 +48,11 @@ object Deps {
         const val fragmentKtx = "androidx.navigation:navigation-fragment-ktx:$version"
         const val runtimeKtx = "androidx.navigation:navigation-runtime-ktx:$version"
         const val uiKtx = "androidx.navigation:navigation-ui-ktx:$version"
+    }
+
+    /** Startup */
+    object Startup {
+        const val runtime = "androidx.startup:startup-runtime:1.1.1"
     }
 
     /** Coroutines */

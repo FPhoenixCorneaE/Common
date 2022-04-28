@@ -94,6 +94,8 @@ dependencies {
     implementation(Deps.Navigation.runtimeKtx)
     implementation(Deps.Navigation.fragmentKtx)
     implementation(Deps.Navigation.uiKtx)
+    // startup
+    implementation(Deps.Startup.runtime)
     // coil
     implementation(Deps.Coil.coil)
     implementation(Deps.Coil.gif)

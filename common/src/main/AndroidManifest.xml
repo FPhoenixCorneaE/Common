@@ -67,15 +67,28 @@
         tools:targetApi="n">
         <!--  Android 7.0适配-应用之间共享文件  -->
         <provider
-            android:name="com.fphoenixcorneae.common.CommonProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true"
             tools:replace="name, authorities, exported, grantUriPermissions">
+
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_provider"
                 tools:replace="name, resource" />
+        </provider>
+
+        <!-- Startup -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+
+            <meta-data
+                android:name="com.fphoenixcorneae.common.CommonInitializer"
+                android:value="androidx.startup" />
         </provider>
     </application>
 </manifest>

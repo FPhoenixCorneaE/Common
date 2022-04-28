@@ -1,7 +1,8 @@
 package com.fphoenixcorneae.common
 
 import android.app.Application
-import androidx.core.content.FileProvider
+import android.content.Context
+import androidx.startup.Initializer
 import com.fphoenixcorneae.common.ext.isDebuggable
 import com.fphoenixcorneae.common.ext.logd
 import com.fphoenixcorneae.common.ext.relaunchApp
@@ -11,28 +12,29 @@ import com.fphoenixcorneae.common.util.toast.ToastUtil
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import com.orhanobut.logger.PrettyFormatStrategy
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
 
 /**
- * 工具集文件提供者:
- * 1、初始化 ContextUtil;
- * 2、初始化 ToastUtil;
- * 3、初始化 CrashUtil;
- * 4、初始化日志打印配置;
+ * @desc：Startup 初始化Context、Log、Toast、Crash
+ * @date：2022/04/28 11:20
  */
-class CommonProvider : FileProvider() {
-
-    override fun onCreate(): Boolean {
-        "CommonProvider 初始化".logd()
+class CommonInitializer : Initializer<Unit>, CoroutineScope by MainScope() {
+    override fun create(context: Context) {
         // 初始化 ContextUtil
-        ContextUtil.init(context!!)
-        // 初始化 ToastUtil
-        ToastUtil.init(context!!.applicationContext as Application)
-        // 初始化 CrashUtil
-        initCrashUtil()
+        ContextUtil.init(context)
         // 初始化日志打印配置
         initLoggerConfig()
-        // 返回 true 表示初始化成功,返回 false 则初始化失败.
-        return true
+        // 初始化 ToastUtil
+        ToastUtil.init(context.applicationContext as Application)
+        // 初始化 CrashUtil
+        initCrashUtil()
+        "CommonInitializer 初始化".logd("startup")
+    }
+
+    override fun dependencies(): MutableList<Class<out Initializer<*>>> {
+        // No dependencies on other libraries.
+        return mutableListOf()
     }
 
     /**
