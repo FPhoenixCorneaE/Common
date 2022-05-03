@@ -16,8 +16,7 @@ import java.util.concurrent.atomic.AtomicLong
  */
 object ThreadUtil {
     private val TYPE_PRIORITY_POOLS: MutableMap<Int, MutableMap<Int, ExecutorService?>> = HashMap()
-    private val TASK_TASKINFO_MAP: MutableMap<Task<*>, TaskInfo> =
-        ConcurrentHashMap()
+    private val TASK_TASK_INFO_MAP: MutableMap<Task<*>, TaskInfo> = ConcurrentHashMap()
     private val CPU_COUNT = Runtime.getRuntime().availableProcessors()
     private val TIMER = Timer()
     private const val TYPE_SINGLE: Byte = -1
@@ -25,6 +24,7 @@ object ThreadUtil {
     private const val TYPE_IO: Byte = -4
     private const val TYPE_CPU: Byte = -8
     private var sDeliver: Executor? = null
+
     /**
      * Return whether the thread is the main thread.
      *
@@ -41,7 +41,7 @@ object ThreadUtil {
      * @param size The size of thread in the pool.
      * @return a fixed thread pool
      */
-    fun getFixedPool(@IntRange(from = 1) size: Int): ExecutorService? {
+    fun getFixedPool(@IntRange(from = 1) size: Int): ExecutorService {
         return getPoolByTypeAndPriority(size)
     }
 
@@ -68,7 +68,7 @@ object ThreadUtil {
      *
      * @return a single thread pool
      */
-    val singlePool: ExecutorService?
+    val singlePool: ExecutorService
         get() = getPoolByTypeAndPriority(TYPE_SINGLE.toInt())
 
     /**
@@ -85,10 +85,7 @@ object ThreadUtil {
             to = 10
         ) priority: Int
     ): ExecutorService {
-        return getPoolByTypeAndPriority(
-            TYPE_SINGLE.toInt(),
-            priority
-        )
+        return getPoolByTypeAndPriority(TYPE_SINGLE.toInt(), priority)
     }
 
     /**
@@ -98,7 +95,7 @@ object ThreadUtil {
      *
      * @return a cached thread pool
      */
-    val cachedPool: ExecutorService?
+    val cachedPool: ExecutorService
         get() = getPoolByTypeAndPriority(TYPE_CACHED.toInt())
 
     /**
@@ -115,10 +112,7 @@ object ThreadUtil {
             to = 10
         ) priority: Int = Thread.NORM_PRIORITY
     ): ExecutorService {
-        return getPoolByTypeAndPriority(
-            TYPE_CACHED.toInt(),
-            priority
-        )
+        return getPoolByTypeAndPriority(TYPE_CACHED.toInt(), priority)
     }
 
     /**
@@ -127,7 +121,7 @@ object ThreadUtil {
      *
      * @return a IO thread pool
      */
-    val ioPool: ExecutorService?
+    val ioPool: ExecutorService
         get() = getPoolByTypeAndPriority(TYPE_IO.toInt())
 
     /**
@@ -143,10 +137,7 @@ object ThreadUtil {
             to = 10
         ) priority: Int
     ): ExecutorService {
-        return getPoolByTypeAndPriority(
-            TYPE_IO.toInt(),
-            priority
-        )
+        return getPoolByTypeAndPriority(TYPE_IO.toInt(), priority)
     }
 
     /**
@@ -156,7 +147,7 @@ object ThreadUtil {
      *
      * @return a cpu thread pool for
      */
-    val cpuPool: ExecutorService?
+    val cpuPool: ExecutorService
         get() = getPoolByTypeAndPriority(TYPE_CPU.toInt())
 
     /**
@@ -173,10 +164,7 @@ object ThreadUtil {
             to = 10
         ) priority: Int
     ): ExecutorService {
-        return getPoolByTypeAndPriority(
-            TYPE_CPU.toInt(),
-            priority
-        )
+        return getPoolByTypeAndPriority(TYPE_CPU.toInt(), priority)
     }
 
     /**
@@ -187,10 +175,7 @@ object ThreadUtil {
      * @param <T>  The type of the task's result.
     </T> */
     fun <T> executeByFixed(@IntRange(from = 1) size: Int, task: Task<T>) {
-        execute(
-            getPoolByTypeAndPriority(size),
-            task
-        )
+        execute(getPoolByTypeAndPriority(size), task)
     }
 
     /**
@@ -206,12 +191,7 @@ object ThreadUtil {
         task: Task<T>,
         @IntRange(from = 1, to = 10) priority: Int
     ) {
-        execute(
-            getPoolByTypeAndPriority(
-                size,
-                priority
-            ), task
-        )
+        execute(getPoolByTypeAndPriority(size, priority), task)
     }
 
     /**
@@ -229,11 +209,7 @@ object ThreadUtil {
         delay: Long,
         unit: TimeUnit
     ) {
-        executeWithDelay(
-            getPoolByTypeAndPriority(
-                size
-            ), task, delay, unit
-        )
+        executeWithDelay(getPoolByTypeAndPriority(size), task, delay, unit)
     }
 
     /**
@@ -253,12 +229,7 @@ object ThreadUtil {
         unit: TimeUnit,
         @IntRange(from = 1, to = 10) priority: Int
     ) {
-        executeWithDelay(
-            getPoolByTypeAndPriority(
-                size,
-                priority
-            ), task, delay, unit
-        )
+        executeWithDelay(getPoolByTypeAndPriority(size, priority), task, delay, unit)
     }
 
     /**
@@ -276,11 +247,7 @@ object ThreadUtil {
         period: Long,
         unit: TimeUnit
     ) {
-        executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                size
-            ), task, 0, period, unit
-        )
+        executeAtFixedRate(getPoolByTypeAndPriority(size), task, 0, period, unit)
     }
 
     /**
@@ -300,12 +267,7 @@ object ThreadUtil {
         unit: TimeUnit,
         @IntRange(from = 1, to = 10) priority: Int
     ) {
-        executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                size,
-                priority
-            ), task, 0, period, unit
-        )
+        executeAtFixedRate(getPoolByTypeAndPriority(size, priority), task, 0, period, unit)
     }
 
     /**
@@ -325,11 +287,7 @@ object ThreadUtil {
         period: Long,
         unit: TimeUnit
     ) {
-        executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                size
-            ), task, initialDelay, period, unit
-        )
+        executeAtFixedRate(getPoolByTypeAndPriority(size), task, initialDelay, period, unit)
     }
 
     /**
@@ -352,10 +310,11 @@ object ThreadUtil {
         @IntRange(from = 1, to = 10) priority: Int
     ) {
         executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                size,
-                priority
-            ), task, initialDelay, period, unit
+            getPoolByTypeAndPriority(size, priority),
+            task,
+            initialDelay,
+            period,
+            unit
         )
     }
 
@@ -366,10 +325,7 @@ object ThreadUtil {
      * @param <T>  The type of the task's result.
     </T> */
     fun <T> executeBySingle(task: Task<T>) {
-        execute(
-            getPoolByTypeAndPriority(TYPE_SINGLE.toInt()),
-            task
-        )
+        execute(getPoolByTypeAndPriority(TYPE_SINGLE.toInt()), task)
     }
 
     /**
@@ -383,12 +339,7 @@ object ThreadUtil {
         task: Task<T>,
         @IntRange(from = 1, to = 10) priority: Int
     ) {
-        execute(
-            getPoolByTypeAndPriority(
-                TYPE_SINGLE.toInt(),
-                priority
-            ), task
-        )
+        execute(getPoolByTypeAndPriority(TYPE_SINGLE.toInt(), priority), task)
     }
 
     /**
@@ -404,11 +355,7 @@ object ThreadUtil {
         delay: Long,
         unit: TimeUnit
     ) {
-        executeWithDelay(
-            getPoolByTypeAndPriority(
-                TYPE_SINGLE.toInt()
-            ), task, delay, unit
-        )
+        executeWithDelay(getPoolByTypeAndPriority(TYPE_SINGLE.toInt()), task, delay, unit)
     }
 
     /**
@@ -426,12 +373,7 @@ object ThreadUtil {
         unit: TimeUnit,
         @IntRange(from = 1, to = 10) priority: Int
     ) {
-        executeWithDelay(
-            getPoolByTypeAndPriority(
-                TYPE_SINGLE.toInt(),
-                priority
-            ), task, delay, unit
-        )
+        executeWithDelay(getPoolByTypeAndPriority(TYPE_SINGLE.toInt(), priority), task, delay, unit)
     }
 
     /**
@@ -447,11 +389,7 @@ object ThreadUtil {
         period: Long,
         unit: TimeUnit
     ) {
-        executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_SINGLE.toInt()
-            ), task, 0, period, unit
-        )
+        executeAtFixedRate(getPoolByTypeAndPriority(TYPE_SINGLE.toInt()), task, 0, period, unit)
     }
 
     /**
@@ -470,10 +408,11 @@ object ThreadUtil {
         @IntRange(from = 1, to = 10) priority: Int
     ) {
         executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_SINGLE.toInt(),
-                priority
-            ), task, 0, period, unit
+            getPoolByTypeAndPriority(TYPE_SINGLE.toInt(), priority),
+            task,
+            0,
+            period,
+            unit
         )
     }
 
@@ -493,9 +432,11 @@ object ThreadUtil {
         unit: TimeUnit
     ) {
         executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_SINGLE.toInt()
-            ), task, initialDelay, period, unit
+            getPoolByTypeAndPriority(TYPE_SINGLE.toInt()),
+            task,
+            initialDelay,
+            period,
+            unit
         )
     }
 
@@ -517,10 +458,11 @@ object ThreadUtil {
         @IntRange(from = 1, to = 10) priority: Int
     ) {
         executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_SINGLE.toInt(),
-                priority
-            ), task, initialDelay, period, unit
+            getPoolByTypeAndPriority(TYPE_SINGLE.toInt(), priority),
+            task,
+            initialDelay,
+            period,
+            unit
         )
     }
 
@@ -531,10 +473,7 @@ object ThreadUtil {
      * @param <T>  The type of the task's result.
     </T> */
     fun <T> executeByCached(task: Task<T>) {
-        execute(
-            getPoolByTypeAndPriority(TYPE_CACHED.toInt()),
-            task
-        )
+        execute(getPoolByTypeAndPriority(TYPE_CACHED.toInt()), task)
     }
 
     /**
@@ -548,12 +487,7 @@ object ThreadUtil {
         task: Task<T>,
         @IntRange(from = 1, to = 10) priority: Int
     ) {
-        execute(
-            getPoolByTypeAndPriority(
-                TYPE_CACHED.toInt(),
-                priority
-            ), task
-        )
+        execute(getPoolByTypeAndPriority(TYPE_CACHED.toInt(), priority), task)
     }
 
     /**
@@ -569,11 +503,7 @@ object ThreadUtil {
         delay: Long,
         unit: TimeUnit
     ) {
-        executeWithDelay(
-            getPoolByTypeAndPriority(
-                TYPE_CACHED.toInt()
-            ), task, delay, unit
-        )
+        executeWithDelay(getPoolByTypeAndPriority(TYPE_CACHED.toInt()), task, delay, unit)
     }
 
     /**
@@ -591,12 +521,7 @@ object ThreadUtil {
         unit: TimeUnit,
         @IntRange(from = 1, to = 10) priority: Int
     ) {
-        executeWithDelay(
-            getPoolByTypeAndPriority(
-                TYPE_CACHED.toInt(),
-                priority
-            ), task, delay, unit
-        )
+        executeWithDelay(getPoolByTypeAndPriority(TYPE_CACHED.toInt(), priority), task, delay, unit)
     }
 
     /**
@@ -612,11 +537,7 @@ object ThreadUtil {
         period: Long,
         unit: TimeUnit
     ) {
-        executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_CACHED.toInt()
-            ), task, 0, period, unit
-        )
+        executeAtFixedRate(getPoolByTypeAndPriority(TYPE_CACHED.toInt()), task, 0, period, unit)
     }
 
     /**
@@ -635,10 +556,11 @@ object ThreadUtil {
         @IntRange(from = 1, to = 10) priority: Int
     ) {
         executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_CACHED.toInt(),
-                priority
-            ), task, 0, period, unit
+            getPoolByTypeAndPriority(TYPE_CACHED.toInt(), priority),
+            task,
+            0,
+            period,
+            unit
         )
     }
 
@@ -658,9 +580,11 @@ object ThreadUtil {
         unit: TimeUnit
     ) {
         executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_CACHED.toInt()
-            ), task, initialDelay, period, unit
+            getPoolByTypeAndPriority(TYPE_CACHED.toInt()),
+            task,
+            initialDelay,
+            period,
+            unit
         )
     }
 
@@ -682,10 +606,11 @@ object ThreadUtil {
         @IntRange(from = 1, to = 10) priority: Int
     ) {
         executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_CACHED.toInt(),
-                priority
-            ), task, initialDelay, period, unit
+            getPoolByTypeAndPriority(TYPE_CACHED.toInt(), priority),
+            task,
+            initialDelay,
+            period,
+            unit
         )
     }
 
@@ -696,10 +621,7 @@ object ThreadUtil {
      * @param <T>  The type of the task's result.
     </T> */
     fun <T> executeByIo(task: Task<T>) {
-        execute(
-            getPoolByTypeAndPriority(TYPE_IO.toInt()),
-            task
-        )
+        execute(getPoolByTypeAndPriority(TYPE_IO.toInt()), task)
     }
 
     /**
@@ -713,12 +635,7 @@ object ThreadUtil {
         task: Task<T>,
         @IntRange(from = 1, to = 10) priority: Int
     ) {
-        execute(
-            getPoolByTypeAndPriority(
-                TYPE_IO.toInt(),
-                priority
-            ), task
-        )
+        execute(getPoolByTypeAndPriority(TYPE_IO.toInt(), priority), task)
     }
 
     /**
@@ -734,11 +651,7 @@ object ThreadUtil {
         delay: Long,
         unit: TimeUnit
     ) {
-        executeWithDelay(
-            getPoolByTypeAndPriority(
-                TYPE_IO.toInt()
-            ), task, delay, unit
-        )
+        executeWithDelay(getPoolByTypeAndPriority(TYPE_IO.toInt()), task, delay, unit)
     }
 
     /**
@@ -756,12 +669,7 @@ object ThreadUtil {
         unit: TimeUnit,
         @IntRange(from = 1, to = 10) priority: Int
     ) {
-        executeWithDelay(
-            getPoolByTypeAndPriority(
-                TYPE_IO.toInt(),
-                priority
-            ), task, delay, unit
-        )
+        executeWithDelay(getPoolByTypeAndPriority(TYPE_IO.toInt(), priority), task, delay, unit)
     }
 
     /**
@@ -777,11 +685,7 @@ object ThreadUtil {
         period: Long,
         unit: TimeUnit
     ) {
-        executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_IO.toInt()
-            ), task, 0, period, unit
-        )
+        executeAtFixedRate(getPoolByTypeAndPriority(TYPE_IO.toInt()), task, 0, period, unit)
     }
 
     /**
@@ -800,10 +704,11 @@ object ThreadUtil {
         @IntRange(from = 1, to = 10) priority: Int
     ) {
         executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_IO.toInt(),
-                priority
-            ), task, 0, period, unit
+            getPoolByTypeAndPriority(TYPE_IO.toInt(), priority),
+            task,
+            0,
+            period,
+            unit
         )
     }
 
@@ -823,9 +728,11 @@ object ThreadUtil {
         unit: TimeUnit
     ) {
         executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_IO.toInt()
-            ), task, initialDelay, period, unit
+            getPoolByTypeAndPriority(TYPE_IO.toInt()),
+            task,
+            initialDelay,
+            period,
+            unit
         )
     }
 
@@ -847,10 +754,11 @@ object ThreadUtil {
         @IntRange(from = 1, to = 10) priority: Int
     ) {
         executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_IO.toInt(),
-                priority
-            ), task, initialDelay, period, unit
+            getPoolByTypeAndPriority(TYPE_IO.toInt(), priority),
+            task,
+            initialDelay,
+            period,
+            unit
         )
     }
 
@@ -861,10 +769,7 @@ object ThreadUtil {
      * @param <T>  The type of the task's result.
     </T> */
     fun <T> executeByCpu(task: Task<T>) {
-        execute(
-            getPoolByTypeAndPriority(TYPE_CPU.toInt()),
-            task
-        )
+        execute(getPoolByTypeAndPriority(TYPE_CPU.toInt()), task)
     }
 
     /**
@@ -878,12 +783,7 @@ object ThreadUtil {
         task: Task<T>,
         @IntRange(from = 1, to = 10) priority: Int
     ) {
-        execute(
-            getPoolByTypeAndPriority(
-                TYPE_CPU.toInt(),
-                priority
-            ), task
-        )
+        execute(getPoolByTypeAndPriority(TYPE_CPU.toInt(), priority), task)
     }
 
     /**
@@ -899,11 +799,7 @@ object ThreadUtil {
         delay: Long,
         unit: TimeUnit
     ) {
-        executeWithDelay(
-            getPoolByTypeAndPriority(
-                TYPE_CPU.toInt()
-            ), task, delay, unit
-        )
+        executeWithDelay(getPoolByTypeAndPriority(TYPE_CPU.toInt()), task, delay, unit)
     }
 
     /**
@@ -921,12 +817,7 @@ object ThreadUtil {
         unit: TimeUnit,
         @IntRange(from = 1, to = 10) priority: Int
     ) {
-        executeWithDelay(
-            getPoolByTypeAndPriority(
-                TYPE_CPU.toInt(),
-                priority
-            ), task, delay, unit
-        )
+        executeWithDelay(getPoolByTypeAndPriority(TYPE_CPU.toInt(), priority), task, delay, unit)
     }
 
     /**
@@ -942,11 +833,7 @@ object ThreadUtil {
         period: Long,
         unit: TimeUnit
     ) {
-        executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_CPU.toInt()
-            ), task, 0, period, unit
-        )
+        executeAtFixedRate(getPoolByTypeAndPriority(TYPE_CPU.toInt()), task, 0, period, unit)
     }
 
     /**
@@ -965,10 +852,11 @@ object ThreadUtil {
         @IntRange(from = 1, to = 10) priority: Int
     ) {
         executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_CPU.toInt(),
-                priority
-            ), task, 0, period, unit
+            getPoolByTypeAndPriority(TYPE_CPU.toInt(), priority),
+            task,
+            0,
+            period,
+            unit
         )
     }
 
@@ -988,9 +876,11 @@ object ThreadUtil {
         unit: TimeUnit
     ) {
         executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_CPU.toInt()
-            ), task, initialDelay, period, unit
+            getPoolByTypeAndPriority(TYPE_CPU.toInt()),
+            task,
+            initialDelay,
+            period,
+            unit
         )
     }
 
@@ -1012,10 +902,11 @@ object ThreadUtil {
         @IntRange(from = 1, to = 10) priority: Int
     ) {
         executeAtFixedRate(
-            getPoolByTypeAndPriority(
-                TYPE_CPU.toInt(),
-                priority
-            ), task, initialDelay, period, unit
+            getPoolByTypeAndPriority(TYPE_CPU.toInt(), priority),
+            task,
+            initialDelay,
+            period,
+            unit
         )
     }
 
@@ -1107,7 +998,7 @@ object ThreadUtil {
      * @param tasks The tasks to cancel.
      */
     fun cancel(vararg tasks: Task<*>?) {
-        if (tasks == null || tasks.size == 0) {
+        if (tasks.isEmpty()) {
             return
         }
         for (task in tasks) {
@@ -1124,7 +1015,7 @@ object ThreadUtil {
      * @param tasks The tasks to cancel.
      */
     fun cancel(tasks: List<Task<*>?>?) {
-        if (tasks == null || tasks.size == 0) {
+        if (tasks == null || tasks.isEmpty()) {
             return
         }
         for (task in tasks) {
@@ -1142,7 +1033,7 @@ object ThreadUtil {
      */
     fun cancel(executorService: ExecutorService) {
         if (executorService is PriorityThreadPoolExecutor) {
-            for ((key, value) in TASK_TASKINFO_MAP) {
+            for ((key, value) in TASK_TASK_INFO_MAP) {
                 if (value.mService === executorService) {
                     cancel(key)
                 }
@@ -1188,42 +1079,45 @@ object ThreadUtil {
     }
 
     private fun <T> execute(
-        pool: ExecutorService?, task: Task<T>,
-        delay: Long, period: Long, unit: TimeUnit?
+        pool: ExecutorService?,
+        task: Task<T>,
+        delay: Long,
+        period: Long,
+        unit: TimeUnit?
     ) {
         var taskInfo: TaskInfo
-        synchronized(TASK_TASKINFO_MAP) {
-            if (TASK_TASKINFO_MAP[task] != null) {
+        synchronized(TASK_TASK_INFO_MAP) {
+            if (TASK_TASK_INFO_MAP[task] != null) {
                 "Task can only be executed once.".logi()
                 return
             }
             taskInfo = TaskInfo(pool)
-            TASK_TASKINFO_MAP.put(task, taskInfo)
+            TASK_TASK_INFO_MAP.put(task, taskInfo)
         }
         if (period == 0L) {
             if (delay == 0L) {
-                pool!!.execute(task)
+                pool?.execute(task)
             } else {
                 val timerTask: TimerTask = object : TimerTask() {
                     override fun run() {
-                        pool!!.execute(task)
+                        pool?.execute(task)
                     }
                 }
                 taskInfo.mTimerTask = timerTask
-                TIMER.schedule(timerTask, unit!!.toMillis(delay))
+                TIMER.schedule(timerTask, unit?.toMillis(delay) ?: delay)
             }
         } else {
             task.setSchedule(true)
             val timerTask: TimerTask = object : TimerTask() {
                 override fun run() {
-                    pool!!.execute(task)
+                    pool?.execute(task)
                 }
             }
             taskInfo.mTimerTask = timerTask
             TIMER.scheduleAtFixedRate(
                 timerTask,
-                unit!!.toMillis(delay),
-                unit.toMillis(period)
+                unit?.toMillis(delay) ?: delay,
+                unit?.toMillis(period) ?: period
             )
         }
     }
@@ -1262,8 +1156,7 @@ object ThreadUtil {
         get() {
             if (sDeliver == null) {
                 sDeliver = object : Executor {
-                    private val mHandler =
-                        Handler(Looper.getMainLooper())
+                    private val mHandler = Handler(Looper.getMainLooper())
 
                     override fun execute(command: Runnable) {
                         mHandler.post(command)
@@ -1274,8 +1167,10 @@ object ThreadUtil {
         }
 
     internal class PriorityThreadPoolExecutor(
-        corePoolSize: Int, maximumPoolSize: Int,
-        keepAliveTime: Long, unit: TimeUnit?,
+        corePoolSize: Int,
+        maximumPoolSize: Int,
+        keepAliveTime: Long,
+        unit: TimeUnit?,
         workQueue: RunnableLinkedBlockingQueue,
         threadFactory: ThreadFactory?
     ) : ThreadPoolExecutor(
@@ -1284,15 +1179,14 @@ object ThreadUtil {
         workQueue,
         threadFactory
     ) {
-        private val mSubmittedCount =
-            AtomicInteger()
+        private val mSubmittedCount = AtomicInteger()
         private val mWorkQueue: RunnableLinkedBlockingQueue
         private val submittedCount: Int
             get() = mSubmittedCount.get()
 
         override fun afterExecute(
             r: Runnable,
-            t: Throwable
+            t: Throwable?
         ) {
             mSubmittedCount.decrementAndGet()
             super.afterExecute(r, t)
@@ -1392,14 +1286,15 @@ object ThreadUtil {
         private val priority: Int,
         private val isDaemon: Boolean = false
     ) : AtomicLong(), ThreadFactory {
-        private val namePrefix: String = prefix + "-pool-" + POOL_NUMBER.getAndIncrement() + "-thread-"
+        private val namePrefix = prefix + "-pool-" + POOL_NUMBER.getAndIncrement() + "-thread-"
+
         override fun newThread(r: Runnable): Thread {
             val t: Thread = object : Thread(r, namePrefix + andIncrement) {
                 override fun run() {
                     try {
                         super.run()
                     } catch (t: Throwable) {
-                        "Request threw uncaught throwable:$t".loge()
+                        "Thread $namePrefix request threw uncaught throwable:$t".loge("ThreadFactory")
                     }
                 }
             }
@@ -1440,12 +1335,15 @@ object ThreadUtil {
     abstract class Task<T> : Runnable {
         private val state =
             AtomicInteger(NEW)
+
         @Volatile
         private var isSchedule = false
+
         @Volatile
         private var runner: Thread? = null
         private var mTimer: Timer? = null
         private var deliver: Executor? = null
+
         @Throws(Throwable::class)
         abstract fun doInBackground(): T
 
@@ -1578,18 +1476,14 @@ object ThreadUtil {
         }
 
         private fun getDeliver(): Executor? {
-            return if (deliver == null) {
-                globalDeliver
-            } else deliver
+            return deliver ?: globalDeliver
         }
 
         @CallSuper
         protected fun onDone() {
-            TASK_TASKINFO_MAP.remove(this)
-            if (mTimer != null) {
-                mTimer!!.cancel()
-                mTimer = null
-            }
+            TASK_TASK_INFO_MAP.remove(this)
+            mTimer?.cancel()
+            mTimer = null
         }
 
         interface OnTimeoutListener {

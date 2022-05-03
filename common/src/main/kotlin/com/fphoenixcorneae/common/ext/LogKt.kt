@@ -1,39 +1,39 @@
 package com.fphoenixcorneae.common.ext
 
-import com.orhanobut.logger.Logger
+import com.fphoenixcorneae.common.log.AndroidLog
 
 fun Any?.logd() {
-    Logger.d(this)
+    AndroidLog.getPrinter().d(null, this.toString())
 }
 
 fun String.logd(tag: String? = null) {
-    Logger.t(tag).d(this)
+    AndroidLog.getPrinter().d(tag, this)
 }
 
 fun String.loge(tag: String? = null) {
-    Logger.t(tag).e(this)
+    AndroidLog.getPrinter().e(tag, this)
 }
 
 fun String.logi(tag: String? = null) {
-    Logger.t(tag).i(this)
+    AndroidLog.getPrinter().i(tag, this)
 }
 
 fun String.logw(tag: String? = null) {
-    Logger.t(tag).w(this)
+    AndroidLog.getPrinter().w(tag, this)
 }
 
 fun String.logv(tag: String? = null) {
-    Logger.t(tag).v(this)
+    AndroidLog.getPrinter().v(tag, this)
 }
 
 fun String.logWtf(tag: String? = null) {
-    Logger.t(tag).wtf(this)
+    AndroidLog.getPrinter().wtf(tag, this)
 }
 
 fun String?.logJson(tag: String? = null) {
-    Logger.t(tag).json(this)
+    AndroidLog.getPrinter().json(tag, this)
 }
 
 fun String?.logXml(tag: String? = null) {
-    Logger.t(tag).xml(this)
+    AndroidLog.getPrinter().xml(tag, this)
 }

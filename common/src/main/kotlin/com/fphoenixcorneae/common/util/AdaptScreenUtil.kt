@@ -113,20 +113,19 @@ class AdaptScreenUtil private constructor() {
             if (sMetricsFields == null) {
                 sMetricsFields = ArrayList()
                 var resCls: Class<*>? = resources.javaClass
-                var declaredFields = resCls!!.declaredFields
-                while (declaredFields.isNotEmpty()) {
+                var declaredFields = resCls?.declaredFields
+                while (declaredFields != null && declaredFields.isNotEmpty()) {
                     for (field in declaredFields) {
                         if (field.type.isAssignableFrom(DisplayMetrics::class.java)) {
                             field.isAccessible = true
-                            val tmpDm =
-                                getMetricsFromField(resources, field)
+                            val tmpDm = getMetricsFromField(resources, field)
                             if (tmpDm != null) {
                                 sMetricsFields!!.add(field)
                                 tmpDm.xdpi = newXdpi
                             }
                         }
                     }
-                    resCls = resCls!!.superclass
+                    resCls = resCls?.superclass
                     declaredFields = resCls?.declaredFields ?: break
                 }
             } else {
