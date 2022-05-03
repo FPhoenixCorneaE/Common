@@ -21,8 +21,8 @@ class App : Application(), ViewModelStoreOwner {
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         // 初始化日志打印配置
-//        initLoggerConfig()
-//        AndroidLog.setPrinter(CustomPrinter())
+        initLoggerConfig()
+        AndroidLog.setPrinter(CustomPrinter())
     }
 
     /**
