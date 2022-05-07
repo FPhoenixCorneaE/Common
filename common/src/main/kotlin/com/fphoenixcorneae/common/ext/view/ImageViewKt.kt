@@ -12,14 +12,13 @@ import androidx.annotation.Px
 import androidx.core.graphics.drawable.DrawableCompat
 import coil.Coil
 import coil.request.ImageRequest
+import coil.transform.CircleCropTransformation
+import coil.transform.Transformation
 import com.fphoenixcorneae.common.ext.action
 import com.fphoenixcorneae.common.ext.applicationContext
 import com.fphoenixcorneae.common.ext.toDrawable
 import com.fphoenixcorneae.common.util.ImageUtil
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.io.FileDescriptor
 
 /**
@@ -54,13 +53,22 @@ fun ImageView.setTintColor(
 /**
  * 在协程中，使用 Coil 的同步方法加载图片。
  */
-fun ImageView.load(imgUrl: Any?, placeholderDrawable: Drawable? = null) {
-    GlobalScope.launch {
+fun ImageView.load(
+    imgUrl: Any?,
+    placeholderDrawable: Drawable? = null,
+    isCircle: Boolean = false
+) {
+    CoroutineScope(Dispatchers.Default).launch {
         val resultDrawable = Coil.imageLoader(context)
             .execute(
                 ImageRequest.Builder(context)
                     .data(imgUrl)
                     .placeholder(placeholderDrawable)
+                    .transformations(arrayListOf<Transformation>().apply {
+                        if (isCircle) {
+                            add(CircleCropTransformation())
+                        }
+                    })
                     .build()
             ).drawable
         withContext(Dispatchers.Main) {
@@ -81,7 +89,7 @@ fun ImageView.load(
     onSuccess: ((result: Drawable) -> Unit)? = null,
     onError: ((error: Drawable?) -> Unit)? = null
 ) {
-    GlobalScope.launch {
+    CoroutineScope(Dispatchers.Default).launch {
         Coil.imageLoader(context)
             .enqueue(
                 ImageRequest.Builder(context)
@@ -94,17 +102,17 @@ fun ImageView.load(
                     }
                     .target(
                         onStart = { placeholder ->
-                            GlobalScope.launch(Dispatchers.Main) {
+                            MainScope().launch {
                                 onStart?.invoke(placeholder)
                             }
                         },
                         onSuccess = { result ->
-                            GlobalScope.launch(Dispatchers.Main) {
+                            MainScope().launch {
                                 onSuccess?.invoke(result)
                             }
                         },
                         onError = { error ->
-                            GlobalScope.launch(Dispatchers.Main) {
+                            MainScope().launch {
                                 onError?.invoke(error)
                             }
                         }
