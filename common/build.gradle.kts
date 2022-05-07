@@ -112,8 +112,6 @@ dependencies {
     implementation(Deps.Eventbus.eventbus)
     // gson
     implementation(Deps.Gson.gson)
-    // logger
-    implementation(Deps.Log.logger)
 
     // test
     testImplementation(Deps.Test.junit)

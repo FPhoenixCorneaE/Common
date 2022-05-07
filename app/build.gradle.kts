@@ -30,6 +30,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            signingConfig = signingConfigs.create(Deps.BuildType.Release)
+            signingConfig?.initWith(buildTypes.getByName(Deps.BuildType.Debug).signingConfig!!)
         }
         getByName(Deps.BuildType.Debug) {
             // 执行proguard混淆
