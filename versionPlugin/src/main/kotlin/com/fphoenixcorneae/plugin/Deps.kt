@@ -7,8 +7,8 @@ object Deps {
         const val buildToolsVersion = "31.0.0"
         const val minSdkVersion = 21
         const val targetSdkVersion = 31
-        const val versionCode = 205
-        const val versionName = "2.0.5"
+        const val versionCode = 206
+        const val versionName = "2.0.6"
     }
 
     /** BuildType */
@@ -63,8 +63,9 @@ object Deps {
     }
 
     /** Kotlin Coroutines Image Loader: https://github.com/coil-kt/coil */
+    /** 完整文档: https://coil-kt.github.io/coil/getting_started/ */
     object Coil {
-        private const val version = "1.4.0"
+        private const val version = "2.0.0-rc03"
         const val coil = "io.coil-kt:coil:$version"
         const val gif = "io.coil-kt:coil-gif:$version"
         const val svg = "io.coil-kt:coil-svg:$version"
@@ -73,7 +74,7 @@ object Deps {
 
     /** CoilTransformations: https://github.com/Commit451/coil-transformations */
     object CoilTransformations {
-        private const val version = "1.0.0"
+        private const val version = "1.1.2"
         const val transformations =
             "com.github.Commit451.coil-transformations:transformations:$version"
         const val transformationsGpu =
