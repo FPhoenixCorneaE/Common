@@ -16,6 +16,17 @@ val Int.dp: Int
         ).toInt()
 
 /**
+ * Int 类型： dp 转换为 px
+ */
+val Int.Dp: Float
+    get() =
+        TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            this.toFloat(),
+            Resources.getSystem().displayMetrics
+        )
+
+/**
  * Float 类型： dp 转换为 px
  */
 val Float.dp: Int
@@ -27,6 +38,17 @@ val Float.dp: Int
         ).toInt()
 
 /**
+ * Float 类型： dp 转换为 px
+ */
+val Float.Dp: Float
+    get() =
+        TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            this,
+            Resources.getSystem().displayMetrics
+        )
+
+/**
  * Double 类型： dp 转换为 px
  */
 val Double.dp: Int
@@ -36,6 +58,17 @@ val Double.dp: Int
             this.toFloat(),
             Resources.getSystem().displayMetrics
         ).toInt()
+
+/**
+ * Double 类型： dp 转换为 px
+ */
+val Double.Dp: Float
+    get() =
+        TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            this.toFloat(),
+            Resources.getSystem().displayMetrics
+        )
 
 /**
  * Int 类型： sp 转换为 px
