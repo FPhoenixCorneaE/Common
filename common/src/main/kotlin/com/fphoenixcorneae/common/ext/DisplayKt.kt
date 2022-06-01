@@ -7,17 +7,7 @@ import android.util.TypedValue
 /**
  * Int 类型： dp 转换为 px
  */
-val Int.dp: Int
-    get() =
-        TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            this.toFloat(),
-            Resources.getSystem().displayMetrics
-        ).toInt()
-
-/**
- * Int 类型： dp 转换为 px
- */
+val Int.dp: Int get() = Dp.toInt()
 val Int.Dp: Float
     get() =
         TypedValue.applyDimension(
@@ -29,17 +19,7 @@ val Int.Dp: Float
 /**
  * Float 类型： dp 转换为 px
  */
-val Float.dp: Int
-    get() =
-        TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            this,
-            Resources.getSystem().displayMetrics
-        ).toInt()
-
-/**
- * Float 类型： dp 转换为 px
- */
+val Float.dp: Int get() = Dp.toInt()
 val Float.Dp: Float
     get() =
         TypedValue.applyDimension(
@@ -51,17 +31,7 @@ val Float.Dp: Float
 /**
  * Double 类型： dp 转换为 px
  */
-val Double.dp: Int
-    get() =
-        TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            this.toFloat(),
-            Resources.getSystem().displayMetrics
-        ).toInt()
-
-/**
- * Double 类型： dp 转换为 px
- */
+val Double.dp: Int get() = Dp.toInt()
 val Double.Dp: Float
     get() =
         TypedValue.applyDimension(
@@ -73,42 +43,45 @@ val Double.Dp: Float
 /**
  * Int 类型： sp 转换为 px
  */
-val Int.sp: Int
+val Int.sp: Int get() = Sp.toInt()
+val Int.Sp: Float
     get() =
         TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_SP,
             this.toFloat(),
             Resources.getSystem().displayMetrics
-        ).toInt()
+        )
 
 /**
  * Float 类型： sp 转换为 px
  */
-val Float.sp: Int
+val Float.sp: Int get() = Sp.toInt()
+val Float.Sp: Float
     get() =
         TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_SP,
             this,
             Resources.getSystem().displayMetrics
-        ).toInt()
+        )
 
 /**
  * Double 类型： sp 转换为 px
  */
-val Double.sp: Int
+val Double.sp: Int get() = Sp.toInt()
+val Double.Sp: Float
     get() =
         TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_SP,
             this.toFloat(),
             Resources.getSystem().displayMetrics
-        ).toInt()
+        )
 
 /**
  * Int 类型： px 转换为 dp
  */
 fun Int.toDp(): Float = run {
     val scale = Resources.getSystem().displayMetrics.density
-    this@toDp / scale + 0.5f
+    this / scale + 0.5f
 }
 
 /**
@@ -116,7 +89,7 @@ fun Int.toDp(): Float = run {
  */
 fun Float.toDp(): Float = run {
     val scale = Resources.getSystem().displayMetrics.density
-    this@toDp / scale + 0.5f
+    this / scale + 0.5f
 }
 
 /**
@@ -124,7 +97,7 @@ fun Float.toDp(): Float = run {
  */
 fun Double.toDp(): Float = run {
     val scale = Resources.getSystem().displayMetrics.density
-    this@toDp / scale + 0.5f
+    this / scale + 0.5f
 }.toFloat()
 
 /**
@@ -132,7 +105,7 @@ fun Double.toDp(): Float = run {
  */
 fun Int.toSp(): Float = run {
     val fontScale = Resources.getSystem().displayMetrics.scaledDensity
-    this@toSp / fontScale + 0.5f
+    this / fontScale + 0.5f
 }
 
 /**
@@ -140,7 +113,7 @@ fun Int.toSp(): Float = run {
  */
 fun Float.toSp(): Float = run {
     val fontScale = Resources.getSystem().displayMetrics.scaledDensity
-    this@toSp / fontScale + 0.5f
+    this / fontScale + 0.5f
 }
 
 /**
@@ -148,6 +121,6 @@ fun Float.toSp(): Float = run {
  */
 fun Double.toSp(): Float = run {
     val fontScale = Resources.getSystem().displayMetrics.scaledDensity
-    this@toSp / fontScale + 0.5f
+    this / fontScale + 0.5f
 }.toFloat()
 
