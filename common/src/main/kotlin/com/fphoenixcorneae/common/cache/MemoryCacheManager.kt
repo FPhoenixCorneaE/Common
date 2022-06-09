@@ -1,10 +1,10 @@
 package com.fphoenixcorneae.common.cache
 
 /**
- * @desc：StaticMemoryCache
- * @date：2022/01/05 14:36
+ * @desc：MemoryCacheManager
+ * @date：2022/06/07 11:42
  */
-object StaticMemoryCache {
+class MemoryCacheManager private constructor(){
     private var sDefaultMemoryCache: MemoryCache? = null
 
     /**
@@ -82,5 +82,17 @@ object StaticMemoryCache {
      */
     fun clear(memoryCache: MemoryCache = defaultMemoryCache) {
         memoryCache.clear()
+    }
+
+    companion object {
+        @Volatile
+        private var sMemoryCacheManager: MemoryCacheManager? = null
+
+        @Synchronized
+        fun getInstance(): MemoryCacheManager {
+            return sMemoryCacheManager ?: synchronized(MemoryCacheManager::class.java) {
+                sMemoryCacheManager ?: MemoryCacheManager().also { sMemoryCacheManager = it }
+            }
+        }
     }
 }

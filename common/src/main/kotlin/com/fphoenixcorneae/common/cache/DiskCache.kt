@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import com.fphoenixcorneae.common.ext.*
+import kotlinx.parcelize.Parceler
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -22,15 +23,15 @@ class DiskCache private constructor(
     private val mMaxSize: Long,
     private val mMaxCount: Int
 ) {
-    private var mDiskCacheManager: DiskCacheManager? = null
+    private var mDiskCacheWorker: DiskCacheWorker? = null
         get() {
             if (mCacheDir.exists()) {
                 if (field == null) {
-                    mDiskCacheManager = DiskCacheManager(mCacheDir, mMaxSize, mMaxCount)
+                    field = DiskCacheWorker(mCacheDir, mMaxSize, mMaxCount)
                 }
             } else {
                 if (mCacheDir.mkdirs()) {
-                    mDiskCacheManager = DiskCacheManager(mCacheDir, mMaxSize, mMaxCount)
+                    field = DiskCacheWorker(mCacheDir, mMaxSize, mMaxCount)
                 } else {
                     "can't make dirs in " + mCacheDir.absolutePath.loge("DiskCache")
                 }
@@ -43,175 +44,48 @@ class DiskCache private constructor(
     }
 
     /**
-     * Put bytes in cache.
+     * Put value in cache.
      *
-     * @param key   The key of cache.
-     * @param value The value of cache.
-     * @param saveTime The save time of cache, in seconds.
+     * @param key            The key of cache.
+     * @param value          The value of cache.
+     * @param saveTime       The save time of cache, in seconds.
      */
-    fun put(key: String, value: ByteArray?, saveTime: Int = -1) {
-        realPutBytes(TYPE_BYTE + key, value, saveTime)
-    }
-
-    private fun realPutBytes(key: String, value: ByteArray?, saveTime: Int) {
-        var value = value ?: return
-        val diskCacheManager = mDiskCacheManager ?: return
-        if (saveTime >= 0) {
-            value = DiskCacheHelper.newByteArrayWithTime(saveTime, value)
+    fun put(key: String, value: Any?, saveTime: Int = -1) {
+        when (value) {
+            is ByteArray? -> realPutBytes(TYPE_BYTE + key, value, saveTime)
+            is String? -> realPutBytes(TYPE_STRING + key, value?.toByteArray(), saveTime)
+            is JSONObject? -> realPutBytes(TYPE_JSON_OBJECT + key, value?.toBytes(), saveTime)
+            is JSONArray? -> realPutBytes(TYPE_JSON_ARRAY + key, value?.toBytes(), saveTime)
+            is Bitmap? -> realPutBytes(TYPE_BITMAP + key, value.toBytes(), saveTime)
+            is Drawable? -> realPutBytes(TYPE_DRAWABLE + key, value.toBytes(), saveTime)
+            is Parcelable? -> realPutBytes(TYPE_PARCELABLE + key, value.toBytes(), saveTime)
+            is Serializable? -> realPutBytes(TYPE_SERIALIZABLE + key, value.toBytes(), saveTime)
+            else -> {}
         }
-        val file = diskCacheManager.getFileBeforePut(key)
-        writeFileFromBytesByChannel(file, value)
-        diskCacheManager.updateModify(file)
-        diskCacheManager.put(file)
     }
 
     /**
-     * Return the bytes in cache.
+     * Return the value in cache.
      *
-     * @param key          The key of cache.
-     * @param defaultValue The default value if the cache doesn't exist.
-     * @return the bytes if cache exists or defaultValue otherwise
-     */
-    fun getBytes(key: String, defaultValue: ByteArray? = null): ByteArray? {
-        return realGetBytes(TYPE_BYTE + key, defaultValue)
-    }
-
-    private fun realGetBytes(key: String, defaultValue: ByteArray? = null): ByteArray? {
-        val diskCacheManager = mDiskCacheManager ?: return defaultValue
-        val file = diskCacheManager.getFileIfExists(key) ?: return defaultValue
-        val data: ByteArray = readFile2Bytes(file) ?: return null
-        if (DiskCacheHelper.isDue(data)) {
-            diskCacheManager.removeByKey(key)
-            return defaultValue
+     * @param key              The key of cache.
+     * @param defaultValue     The default value if the cache doesn't exist.
+     * @param <T>              The value type.
+     * @return the value if cache exists or defaultValue otherwise
+    </T> */
+    inline operator fun <reified T> get(
+        key: String,
+        defaultValue: T? = null,
+    ): T? {
+        return when (T::class) {
+            ByteArray::class -> realGetBytes(TYPE_BYTE + key, defaultValue as ByteArray?) as T?
+            String::class -> realGetBytes(TYPE_STRING + key)?.run { String(this) as T? } ?: defaultValue
+            JSONObject::class -> realGetBytes(TYPE_JSON_OBJECT + key)?.run { toJSONObject() as T? } ?: defaultValue
+            JSONArray::class -> realGetBytes(TYPE_JSON_ARRAY + key)?.run { toJSONArray() as T? } ?: defaultValue
+            Bitmap::class -> realGetBytes(TYPE_BITMAP + key)?.run { toBitmap() as T? } ?: defaultValue
+            Drawable::class -> realGetBytes(TYPE_DRAWABLE + key)?.run { toDrawable() as T? } ?: defaultValue
+            Serializable::class -> realGetBytes(TYPE_SERIALIZABLE + key)?.run { toObject() as T? } ?: defaultValue
+            else -> null
         }
-        diskCacheManager.updateModify(file)
-        return DiskCacheHelper.getDataWithoutDueTime(data)
-    }
-
-    /**
-     * Put string value in cache.
-     *
-     * @param key      The key of cache.
-     * @param value    The value of cache.
-     * @param saveTime The save time of cache, in seconds.
-     */
-    fun put(key: String, value: String?, saveTime: Int = -1) {
-        realPutBytes(TYPE_STRING + key, value?.toBytes(), saveTime)
-    }
-
-    /**
-     * Return the string value in cache.
-     *
-     * @param key          The key of cache.
-     * @param defaultValue The default value if the cache doesn't exist.
-     * @return the string value if cache exists or defaultValue otherwise
-     */
-    fun getString(key: String, defaultValue: String? = null): String? {
-        val bytes = realGetBytes(TYPE_STRING + key) ?: return defaultValue
-        return bytes.toString()
-    }
-
-    /**
-     * Put JSONObject in cache.
-     *
-     * @param key      The key of cache.
-     * @param value    The value of cache.
-     * @param saveTime The save time of cache, in seconds.
-     */
-    fun put(key: String, value: JSONObject?, saveTime: Int = -1) {
-        realPutBytes(TYPE_JSON_OBJECT + key, value?.toString()?.toBytes(), saveTime)
-    }
-
-    /**
-     * Return the JSONObject in cache.
-     *
-     * @param key          The key of cache.
-     * @param defaultValue The default value if the cache doesn't exist.
-     * @return the JSONObject if cache exists or defaultValue otherwise
-     */
-    fun getJSONObject(key: String, defaultValue: JSONObject? = null): JSONObject? {
-        val bytes = realGetBytes(TYPE_JSON_OBJECT + key) ?: return defaultValue
-        return bytes.toJSONObject()
-    }
-
-    /**
-     * Put JSONArray in cache.
-     *
-     * @param key      The key of cache.
-     * @param value    The value of cache.
-     * @param saveTime The save time of cache, in seconds.
-     */
-    fun put(key: String, value: JSONArray?, saveTime: Int = -1) {
-        realPutBytes(TYPE_JSON_ARRAY + key, value?.toString()?.toBytes(), saveTime)
-    }
-
-    /**
-     * Return the JSONArray in cache.
-     *
-     * @param key          The key of cache.
-     * @param defaultValue The default value if the cache doesn't exist.
-     * @return the JSONArray if cache exists or defaultValue otherwise
-     */
-    fun getJSONArray(key: String, defaultValue: JSONArray? = null): JSONArray? {
-        val bytes = realGetBytes(TYPE_JSON_ARRAY + key) ?: return defaultValue
-        return bytes.toJSONArray()
-    }
-
-    /**
-     * Put bitmap in cache.
-     *
-     * @param key      The key of cache.
-     * @param value    The value of cache.
-     * @param saveTime The save time of cache, in seconds.
-     */
-    fun put(key: String, value: Bitmap?, saveTime: Int = -1) {
-        realPutBytes(TYPE_BITMAP + key, value.toBytes(), saveTime)
-    }
-
-    /**
-     * Return the bitmap in cache.
-     *
-     * @param key          The key of cache.
-     * @param defaultValue The default value if the cache doesn't exist.
-     * @return the bitmap if cache exists or defaultValue otherwise
-     */
-    fun getBitmap(key: String, defaultValue: Bitmap? = null): Bitmap? {
-        val bytes = realGetBytes(TYPE_BITMAP + key) ?: return defaultValue
-        return bytes.toBitmap()
-    }
-
-    /**
-     * Put drawable in cache.
-     *
-     * @param key      The key of cache.
-     * @param value    The value of cache.
-     * @param saveTime The save time of cache, in seconds.
-     */
-    fun put(key: String, value: Drawable?, saveTime: Int = -1) {
-        realPutBytes(TYPE_DRAWABLE + key, value.toBytes(), saveTime)
-    }
-
-    /**
-     * Return the drawable in cache.
-     *
-     * @param key          The key of cache.
-     * @param defaultValue The default value if the cache doesn't exist.
-     * @return the drawable if cache exists or defaultValue otherwise
-     */
-    fun getDrawable(key: String, defaultValue: Drawable? = null): Drawable? {
-        val bytes = realGetBytes(TYPE_DRAWABLE + key) ?: return defaultValue
-        return bytes.toDrawable()
-    }
-
-    /**
-     * Put parcelable in cache.
-     *
-     * @param key      The key of cache.
-     * @param value    The value of cache.
-     * @param saveTime The save time of cache, in seconds.
-     */
-    fun put(key: String, value: Parcelable?, saveTime: Int = -1) {
-        realPutBytes(TYPE_PARCELABLE + key, value.toBytes(), saveTime)
     }
 
     /**
@@ -233,26 +107,45 @@ class DiskCache private constructor(
     }
 
     /**
-     * Put serializable in cache.
-     *
-     * @param key      The key of cache.
-     * @param value    The value of cache.
-     * @param saveTime The save time of cache, in seconds.
-     */
-    fun put(key: String, value: Serializable?, saveTime: Int = -1) {
-        realPutBytes(TYPE_SERIALIZABLE + key, value.toBytes(), saveTime)
-    }
-
-    /**
-     * Return the serializable in cache.
+     * Return the parcelable in cache.
      *
      * @param key          The key of cache.
+     * @param parceler     The parceler.
      * @param defaultValue The default value if the cache doesn't exist.
-     * @return the bitmap if cache exists or defaultValue otherwise
+     * @param <T>          The value type.
+     * @return the parcelable if cache exists or defaultValue otherwise
      */
-    fun getSerializable(key: String, defaultValue: Any? = null): Any? {
-        val bytes = realGetBytes(TYPE_SERIALIZABLE + key) ?: return defaultValue
-        return bytes.toObject()
+    fun <T> getParcelable(
+        key: String,
+        parceler: Parceler<T>,
+        defaultValue: T? = null
+    ): T? {
+        val bytes = realGetBytes(TYPE_PARCELABLE + key) ?: return defaultValue
+        return bytes.toParcelable(parceler)
+    }
+
+    private fun realPutBytes(key: String, value: ByteArray?, saveTime: Int) {
+        var value = value ?: return
+        val diskCacheManager = mDiskCacheWorker ?: return
+        if (saveTime >= 0) {
+            value = DiskCacheHelper.newByteArrayWithTime(saveTime, value)
+        }
+        val file = diskCacheManager.getFileBeforePut(key)
+        writeFileFromBytesByChannel(file, value)
+        diskCacheManager.updateModify(file)
+        diskCacheManager.put(file)
+    }
+
+    fun realGetBytes(key: String, defaultValue: ByteArray? = null): ByteArray? {
+        val diskCacheManager = mDiskCacheWorker ?: return defaultValue
+        val file = diskCacheManager.getFileIfExists(key) ?: return defaultValue
+        val data: ByteArray = readFile2Bytes(file) ?: return null
+        if (DiskCacheHelper.isDue(data)) {
+            diskCacheManager.removeByKey(key)
+            return defaultValue
+        }
+        diskCacheManager.updateModify(file)
+        return DiskCacheHelper.getDataWithoutDueTime(data)
     }
 
     /**
@@ -261,7 +154,7 @@ class DiskCache private constructor(
      * @return the size of cache, in bytes
      */
     val cacheSize: Long
-        get() = mDiskCacheManager?.getCacheSize() ?: 0
+        get() = mDiskCacheWorker?.getCacheSize() ?: 0
 
     /**
      * Return the count of cache.
@@ -269,7 +162,7 @@ class DiskCache private constructor(
      * @return the count of cache
      */
     val cacheCount: Int
-        get() = mDiskCacheManager?.getCacheCount() ?: 0
+        get() = mDiskCacheWorker?.getCacheCount() ?: 0
 
     /**
      * Remove the cache by key.
@@ -278,7 +171,7 @@ class DiskCache private constructor(
      * @return `true`: success<br></br>`false`: fail
      */
     fun remove(key: String): Boolean {
-        val diskCacheManager = mDiskCacheManager ?: return true
+        val diskCacheManager = mDiskCacheWorker ?: return true
         return (diskCacheManager.removeByKey(TYPE_BYTE + key)
                 && diskCacheManager.removeByKey(TYPE_STRING + key)
                 && diskCacheManager.removeByKey(TYPE_JSON_OBJECT + key)
@@ -294,17 +187,30 @@ class DiskCache private constructor(
      *
      * @return `true`: success<br></br>`false`: fail
      */
-    fun clear(): Boolean = mDiskCacheManager?.clear() ?: true
+    fun clear(): Boolean = mDiskCacheWorker?.clear() ?: true
 
-    private class DiskCacheManager(
+    private class DiskCacheWorker(
         private val cacheDir: File,
         private val sizeLimit: Long,
         private val countLimit: Int
     ) {
-        private val cacheSize: AtomicLong
-        private val cacheCount: AtomicInteger
+        private val cacheSize: AtomicLong = AtomicLong()
+        private val cacheCount: AtomicInteger = AtomicInteger()
         private val lastUsageDates = Collections.synchronizedMap(HashMap<File, Long>())
-        private val mThread: Thread
+        private val mThread: Thread = Thread {
+            var size = 0
+            var count = 0
+            val cachedFiles = cacheDir.listFiles { dir, name -> name.startsWith(CACHE_PREFIX) }
+            if (cachedFiles != null) {
+                for (cachedFile in cachedFiles) {
+                    size += cachedFile.length().toInt()
+                    count += 1
+                    lastUsageDates[cachedFile] = cachedFile.lastModified()
+                }
+                cacheSize.getAndAdd(size.toLong())
+                cacheCount.getAndAdd(count)
+            }
+        }
 
         fun getCacheSize(): Long {
             wait2InitOk()
@@ -370,7 +276,7 @@ class DiskCache private constructor(
         }
 
         fun clear(): Boolean {
-            val files = cacheDir.listFiles { _, name -> name.startsWith(CACHE_PREFIX) }
+            val files = cacheDir.listFiles { dir, name -> name.startsWith(CACHE_PREFIX) }
             if (files == null || files.isEmpty()) {
                 return true
             }
@@ -424,22 +330,6 @@ class DiskCache private constructor(
         }
 
         init {
-            cacheSize = AtomicLong()
-            cacheCount = AtomicInteger()
-            mThread = Thread {
-                var size = 0
-                var count = 0
-                val cachedFiles = cacheDir.listFiles { _, name -> name.startsWith(CACHE_PREFIX) }
-                if (cachedFiles != null) {
-                    for (cachedFile in cachedFiles) {
-                        size += cachedFile.length().toInt()
-                        count += 1
-                        lastUsageDates[cachedFile] = cachedFile.lastModified()
-                    }
-                    cacheSize.getAndAdd(size.toLong())
-                    cacheCount.getAndAdd(count)
-                }
-            }
             mThread.start()
         }
     }
@@ -510,17 +400,17 @@ class DiskCache private constructor(
     }
 
     companion object {
+        const val TYPE_BYTE = "by_"
+        const val TYPE_STRING = "st_"
+        const val TYPE_JSON_OBJECT = "jo_"
+        const val TYPE_JSON_ARRAY = "ja_"
+        const val TYPE_BITMAP = "bi_"
+        const val TYPE_DRAWABLE = "dr_"
+        const val TYPE_PARCELABLE = "pa_"
+        const val TYPE_SERIALIZABLE = "se_"
         private const val DEFAULT_MAX_SIZE = Long.MAX_VALUE
         private const val DEFAULT_MAX_COUNT = Int.MAX_VALUE
         private const val CACHE_PREFIX = "cdu_"
-        private const val TYPE_BYTE = "by_"
-        private const val TYPE_STRING = "st_"
-        private const val TYPE_JSON_OBJECT = "jo_"
-        private const val TYPE_JSON_ARRAY = "ja_"
-        private const val TYPE_BITMAP = "bi_"
-        private const val TYPE_DRAWABLE = "dr_"
-        private const val TYPE_PARCELABLE = "pa_"
-        private const val TYPE_SERIALIZABLE = "se_"
         private val MAP: MutableMap<String, DiskCache> = HashMap()
 
         /**

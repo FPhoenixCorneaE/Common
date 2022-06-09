@@ -26,6 +26,7 @@ object Deps {
     /** AndroidX */
     object AndroidX {
         const val appcompat = "androidx.appcompat:appcompat:1.4.0"
+        const val material = "com.google.android.material:material:1.6.1"
         const val coreKtx = "androidx.core:core-ktx:1.7.0"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.1.2"
         const val activityKtx = "androidx.activity:activity-ktx:1.4.0"

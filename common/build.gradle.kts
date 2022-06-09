@@ -4,6 +4,7 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("kapt")
+    id("kotlin-parcelize")
     id("com.FPhoenixCorneaE.plugin")
     `maven-publish`
 }

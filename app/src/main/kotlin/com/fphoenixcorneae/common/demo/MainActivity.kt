@@ -5,9 +5,11 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.fphoenixcorneae.common.annotation.Shape
+import com.fphoenixcorneae.common.demo.cache.CacheActivity
 import com.fphoenixcorneae.common.demo.databinding.ActivityMainBinding
 import com.fphoenixcorneae.common.drawable.*
 import com.fphoenixcorneae.common.dsl.layout.TextView
@@ -51,9 +53,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         TextView {}.textAction({
-
+            "notNull".logd("textAction====")
         }, {
-
+            "null".logd("textAction====")
         })
 
         mViewBinding.svSearch.queryTextListener {
@@ -65,6 +67,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // 计算md5、sha值
         val origin2Md5 = "a123456"
         ("md5: ${origin2Md5.md5()}\n\n" +
                 "sha1: ${origin2Md5.sha1()}\n\n" +
@@ -72,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                 "sha256: ${origin2Md5.sha256()}\n\n" +
                 "sha384: ${origin2Md5.sha384()}\n\n" +
                 "sha512: ${origin2Md5.sha512()}").also {
-            mViewBinding.tvMd5.text = it
+            "hash: $it".logd()
         }
 
         val fruit = Fruit(1, Watermalon(2f, 30f))
@@ -200,6 +203,10 @@ class MainActivity : AppCompatActivity() {
                 IntentUtil.openApplicationDetailsSettings()
             }
         }
+    }
+
+    fun go2CacheActivity(view: View) {
+        startKtxActivity<CacheActivity>()
     }
 }
 

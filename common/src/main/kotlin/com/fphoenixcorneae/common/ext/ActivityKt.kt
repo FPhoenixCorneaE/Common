@@ -111,13 +111,6 @@ fun Context?.getActivity(): Activity? {
     return null
 }
 
-inline fun <reified T : Activity> Activity.startKtxActivity(
-    flags: Int? = null,
-    extra: Bundle? = null,
-    vararg values: Pair<String, Any>
-) =
-    startActivity(getIntent<T>(flags, extra, *values))
-
 inline fun <reified T : Activity> Fragment.startKtxActivity(
     flags: Int? = null,
     extra: Bundle? = null,

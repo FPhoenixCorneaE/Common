@@ -1,55 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/white">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <data>
+
+    </data>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:context=".MainActivity">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
-        <Button
-            android:id="@+id/btnTest"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_margin="16dp"
-            android:text="测试"
-            tools:ignore="HardcodedText" />
-
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/svSearch"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_margin="16dp" />
-
-        <TextView
-            android:id="@+id/tvMd5"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp" />
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <Button
-            android:id="@+id/btnRequestPermissions"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_margin="16dp"
-            android:text="申请权限"
-            android:textColor="@android:color/white"
-            tools:ignore="HardcodedText" />
+            <Button
+                android:id="@+id/btnTest"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="测试"
+                tools:ignore="HardcodedText" />
 
-        <SeekBar
-            android:id="@+id/sbBrightness"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp" />
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/svSearch"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp" />
 
-        <fragment
-            android:id="@+id/fragmentHome"
-            android:name="com.fphoenixcorneae.common.demo.HomeFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#448"
+                android:onClick="go2CacheActivity"
+                android:text="内存、磁盘、双重缓存"
+                android:textColor="@android:color/darker_gray"
+                tools:ignore="HardcodedText,UsingOnClickInXml" />
+
+            <Button
+                android:id="@+id/btnRequestPermissions"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:text="申请权限"
+                android:textColor="@android:color/white"
+                tools:ignore="HardcodedText" />
+
+            <SeekBar
+                android:id="@+id/sbBrightness"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" />
+
+            <fragment
+                android:id="@+id/fragmentHome"
+                android:name="com.fphoenixcorneae.common.demo.HomeFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

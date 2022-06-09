@@ -3,6 +3,8 @@ import com.fphoenixcorneae.plugin.Deps
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("kapt")
+    id("kotlin-parcelize")
     id("com.FPhoenixCorneaE.plugin")
 }
 
@@ -82,6 +84,7 @@ dependencies {
     implementation(Deps.Kotlin.stdlib)
     implementation(Deps.AndroidX.appcompat)
     implementation(Deps.AndroidX.constraintLayout)
+    implementation(Deps.AndroidX.material)
     implementation(Deps.AndroidX.coreKtx)
     implementation(Deps.AndroidX.activityKtx)
     implementation(Deps.AndroidX.fragmentKtx)

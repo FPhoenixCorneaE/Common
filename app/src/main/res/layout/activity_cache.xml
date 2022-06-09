@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.fphoenixcorneae.common.demo.cache.CacheViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioGroup
+                    android:id="@+id/rgCacheDataType"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ByteArray"
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="String"
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="JSONObject"
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="JSONArray"
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bitmap"
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Drawable"
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Parcelable"
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Serializable"
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
+                </RadioGroup>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <TextView
+                        visible="@{viewModel.textViewVisible}"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@{viewModel.cacheData}"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        imgUrl="@{viewModel.imageCache}"
+                        visible="@{viewModel.imageViewVisible}"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        tools:ignore="ContentDescription" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnMemoryCachePut"
+                onSingleClick="@{() -> viewModel.putCache(0)}"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="#44f"
+                android:text="存入内存缓存"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                android:id="@+id/btnMemoryCacheGet"
+                onSingleClick="@{() -> viewModel.getCache(0)}"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="#44f"
+                android:text="从内存缓存中取出"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                onSingleClick="@{() -> viewModel.removeCache(0)}"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="#44f"
+                android:text="从内存缓存中移除"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                android:id="@+id/btnDiskCachePut"
+                onSingleClick="@{() -> viewModel.putCache(1)}"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#a22"
+                android:text="存入磁盘缓存"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                android:id="@+id/btnDiskCacheGet"
+                onSingleClick="@{() -> viewModel.getCache(1)}"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="#a22"
+                android:text="从磁盘缓存取出"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                onSingleClick="@{() -> viewModel.removeCache(1)}"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="#a22"
+                android:text="从磁盘缓存中移除"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                android:id="@+id/btnDoubleCachePut"
+                onSingleClick="@{() -> viewModel.putCache(2)}"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@android:color/black"
+                android:text="存入内存、磁盘缓存"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                android:id="@+id/btnDoubleCacheGet"
+                onSingleClick="@{() -> viewModel.getCache(2)}"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="@android:color/black"
+                android:text="从内存/磁盘缓存取出"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                onSingleClick="@{() -> viewModel.removeCache(2)}"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="@android:color/black"
+                android:text="从内存/磁盘缓存中移除"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.core.widget.NestedScrollView>
+</layout>

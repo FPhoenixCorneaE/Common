@@ -11,13 +11,12 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.fphoenixcorneae.common.annotation.MemoryUnit
 import com.fphoenixcorneae.common.annotation.TimeUnit
+import kotlinx.parcelize.Parceler
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.*
-import java.lang.Exception
 import java.nio.charset.Charset
 import java.util.*
-import kotlin.experimental.or
 
 /**
  * 十六进制数字
@@ -221,30 +220,6 @@ fun String?.toOutputStream(
         e.printStackTrace()
         null
     }
-}
-
-/**
- * Bits to bytes.
- */
-fun String.toBytes(): ByteArray {
-    var bits = this
-    val lenMod = bits.length % 8
-    var byteLen = bits.length / 8
-    // add "0" until length to 8 times
-    if (lenMod != 0) {
-        for (i in lenMod..7) {
-            bits = "0$bits"
-        }
-        byteLen++
-    }
-    val bytes = ByteArray(byteLen)
-    for (i in 0 until byteLen) {
-        for (j in 0..7) {
-            bytes[i] = bytes[i].toInt().shl(1).toByte()
-            bytes[i] = bytes[i] or (bits[i * 8 + j] - '0').toByte()
-        }
-    }
-    return bytes
 }
 
 /**
@@ -513,7 +488,7 @@ fun ByteArray?.toJSONObject(): JSONObject? = this?.runCatching {
 /**
  * JSONObject to bytes.
  */
-fun JSONObject?.toBytes(): ByteArray? = this?.toString()?.toBytes()
+fun JSONObject?.toBytes(): ByteArray? = this?.toString()?.toByteArray()
 
 /**
  * Bytes to JSONArray.
@@ -527,7 +502,7 @@ fun ByteArray?.toJSONArray(): JSONArray? = this?.runCatching {
 /**
  * JSONArray to bytes.
  */
-fun JSONArray?.toBytes(): ByteArray? = this?.toString()?.toBytes()
+fun JSONArray?.toBytes(): ByteArray? = this?.toString()?.toByteArray()
 
 /**
  * Bytes to Parcelable
@@ -540,6 +515,21 @@ fun <T> ByteArray?.toParcelable(
         parcel.unmarshall(this, 0, this.size)
         parcel.setDataPosition(0)
         val result = creator.createFromParcel(parcel)
+        parcel.recycle()
+        result
+    }
+
+/**
+ * Bytes to Parcelable
+ */
+fun <T> ByteArray?.toParcelable(
+    parceler: Parceler<T>
+): T? =
+    this?.run {
+        val parcel = Parcel.obtain()
+        parcel.unmarshall(this, 0, this.size)
+        parcel.setDataPosition(0)
+        val result = parceler.create(parcel)
         parcel.recycle()
         result
     }
