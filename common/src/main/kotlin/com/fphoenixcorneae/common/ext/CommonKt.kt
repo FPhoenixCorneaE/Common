@@ -2,9 +2,9 @@ package com.fphoenixcorneae.common.ext
 
 import android.app.Application
 import android.text.TextUtils
-import com.fphoenixcorneae.common.util.ContextUtil
+import com.fphoenixcorneae.common.CommonInitializer
 
-val applicationContext: Application by lazy { ContextUtil.context }
+val applicationContext: Application by lazy { CommonInitializer.sApplication }
 
 /**
  * 判断是否为空 并传入相关操作

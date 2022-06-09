@@ -12,7 +12,6 @@ import android.content.pm.PackageManager.NameNotFoundException
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Process
-import com.fphoenixcorneae.common.util.ContextUtil
 import java.io.ByteArrayInputStream
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -359,7 +358,6 @@ fun relaunchApp(isKillProcess: Boolean = true) {
  * Exit the application.
  */
 fun exitApp() {
-    val activityList = ContextUtil.getActivityList()
     for (i in activityList.indices.reversed()) {
         // remove from top
         val activity = activityList[i]

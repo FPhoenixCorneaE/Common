@@ -11,11 +11,10 @@ import android.os.Parcelable
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.fphoenixcorneae.common.ext.view.createBitmap
-import com.fphoenixcorneae.common.util.ContextUtil
 import java.io.Serializable
+import java.util.*
 
-val activityList: MutableList<Activity>
-    get() = ContextUtil.getActivityList()
+val activityList: MutableList<Activity> = Collections.synchronizedList(LinkedList())
 
 val launcherActivity: String
     get() = getLauncherActivity(appPackageName)

@@ -1,109 +1,24 @@
-package com.fphoenixcorneae.common.util
+package com.fphoenixcorneae.common.lifecycle
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
-import android.app.Application.ActivityLifecycleCallbacks
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.WindowManager
 import com.fphoenixcorneae.common.ext.*
-import java.util.*
+import com.fphoenixcorneae.common.util.LanguageUtil
 import java.util.concurrent.CopyOnWriteArrayList
-
-/**
- * 上下文工具类,very important：必须首先初始化！
- * 1、在Application的onCreate()中进行初始化！
- * 2、在ContentProvider的onCreate()中进行初始化,然后在AndroidManifest.xml中配置Provider！
- * @date 2019/06/20 21:33
- */
-class ContextUtil private constructor() {
-
-    init {
-        throw UnsupportedOperationException("You can't initialize me...")
-    }
-
-    companion object {
-
-        private val sActivityLifecycleCallbacks = ActivityLifecycleCallbacksImpl()
-        private val sThreadPool = ThreadUtil.getCachedPool()
-        private val sHandler = Handler(Looper.getMainLooper())
-
-        @SuppressLint("StaticFieldLeak")
-        private var sContext: Application? = null
-
-        /**
-         * 初始化上下文
-         *
-         * @param context 上下文
-         */
-        fun init(context: Context) {
-            sContext = context.applicationContext as Application
-            // 注册应用生命周期回调
-            sContext?.registerActivityLifecycleCallbacks(sActivityLifecycleCallbacks)
-            sThreadPool.execute { AdaptScreenUtil.preLoad() }
-        }
-
-        /**
-         * 获取ApplicationContext
-         *
-         * @return ApplicationContext
-         */
-        val context: Application
-            get() {
-                if (sContext == null) {
-                    throw NullPointerException("U should call ContextUtil.init(context: Context) first!")
-                }
-                return sContext as Application
-            }
-
-        fun getActivityLifecycle(): ActivityLifecycleCallbacksImpl {
-            return sActivityLifecycleCallbacks
-        }
-
-        fun getActivityList(): MutableList<Activity> {
-            return sActivityLifecycleCallbacks.mActivityList
-        }
-
-        fun runOnUiThread(runnable: Runnable) {
-            if (Looper.myLooper() == Looper.getMainLooper()) {
-                runnable.run()
-            } else {
-                sHandler.post(runnable)
-            }
-        }
-
-        fun runOnUiThreadDelayed(
-            runnable: Runnable,
-            delayMillis: Long
-        ) {
-            sHandler.postDelayed(runnable, delayMillis)
-        }
-
-        /**
-         * 销毁
-         */
-        fun dispose() {
-            sContext = null
-        }
-    }
-}
 
 /**
  * ActivityLifecycleCallbacks接口实现
  * 1、每一个Activity的生命周期都会回调到这里的对应方法;
  * 2、可以统计Activity的个数等;
  */
-class ActivityLifecycleCallbacksImpl : ActivityLifecycleCallbacks {
-    val mActivityList = Collections.synchronizedList(LinkedList<Activity>())
-    val mStatusListeners: MutableList<OnAppStatusChangedListener?> =
-        ArrayList()
-    val mDestroyedListenerMap: MutableMap<Activity, MutableList<OnActivityDestroyedListener?>> =
-        HashMap()
+class ActivityLifecycleCallbacksImpl : Application.ActivityLifecycleCallbacks {
+    private val mStatusListeners: MutableList<OnAppStatusChangedListener?> = mutableListOf()
+    private val mDestroyedListenerMap: MutableMap<Activity, MutableList<OnActivityDestroyedListener?>> = hashMapOf()
     private var mForegroundCount = 0
     private var mConfigCount = 0
     private var mIsBackground = false
@@ -188,7 +103,7 @@ class ActivityLifecycleCallbacksImpl : ActivityLifecycleCallbacks {
      */
     override fun onActivityDestroyed(activity: Activity) {
         logActivityLifecycle("onDestroyed(): ", activity)
-        mActivityList.remove(activity)
+        activityList.remove(activity)
         consumeOnActivityDestroyedListener(activity)
         activity.fixSoftInputLeaks()
     }
@@ -197,7 +112,7 @@ class ActivityLifecycleCallbacksImpl : ActivityLifecycleCallbacks {
      * 打印activity生命周期
      */
     private fun logActivityLifecycle(message: String, activity: Activity) {
-        (message + activity.componentName.className).logd("ActivityLifecycle")
+        "ActivityLifecycle: $message${activity.componentName.className}".logd()
     }
 
     fun addOnAppStatusChangedListener(listener: OnAppStatusChangedListener?) {
@@ -218,11 +133,9 @@ class ActivityLifecycleCallbacksImpl : ActivityLifecycleCallbacks {
         listener: OnActivityDestroyedListener?
     ) {
         if (activity == null || listener == null) return
-        var listeners: MutableList<OnActivityDestroyedListener?>? =
-            mDestroyedListenerMap[activity]
+        var listeners: MutableList<OnActivityDestroyedListener?>? = mDestroyedListenerMap[activity]
         if (listeners == null) {
-            listeners =
-                CopyOnWriteArrayList()
+            listeners = CopyOnWriteArrayList()
             mDestroyedListenerMap[activity] = listeners
         } else {
             if (listeners.contains(listener)) return
@@ -243,14 +156,13 @@ class ActivityLifecycleCallbacksImpl : ActivityLifecycleCallbacks {
             val attrs = activity.window.attributes
             val softInputMode = attrs.softInputMode
             activity.window.decorView.setTag(-123, softInputMode)
-            activity.window
-                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+            activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         } else {
             val tag = activity.window.decorView.getTag(-123) as? Int ?: return
-            ContextUtil.runOnUiThreadDelayed(Runnable {
+            runOnUiThreadDelayed(100) {
                 val window = activity.window
                 window?.setSoftInputMode(tag)
-            }, 100)
+            }
         }
     }
 
@@ -306,6 +218,7 @@ class ActivityLifecycleCallbacksImpl : ActivityLifecycleCallbacks {
     }
 }
 
+
 interface OnAppStatusChangedListener {
     fun onForeground(activity: Activity?)
     fun onBackground(activity: Activity?)
@@ -313,8 +226,4 @@ interface OnAppStatusChangedListener {
 
 interface OnActivityDestroyedListener {
     fun onActivityDestroyed(activity: Activity?)
-}
-
-interface Func1<Ret, Par> {
-    fun call(param: Par): Ret
 }

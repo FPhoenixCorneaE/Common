@@ -5,22 +5,25 @@ import android.content.Context
 import androidx.startup.Initializer
 import com.fphoenixcorneae.common.ext.logd
 import com.fphoenixcorneae.common.ext.relaunchApp
-import com.fphoenixcorneae.common.util.ContextUtil
+import com.fphoenixcorneae.common.lifecycle.ActivityLifecycleCallbacksImpl
 import com.fphoenixcorneae.common.util.CrashUtil
 import com.fphoenixcorneae.common.util.toast.ToastUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 
 /**
- * @desc：Startup 初始化Context、Log、Toast、Crash
+ * @desc：Startup 初始化Toast、Crash
  * @date：2022/04/28 11:20
  */
 class CommonInitializer : Initializer<Unit>, CoroutineScope by MainScope() {
+
     override fun create(context: Context) {
-        // 初始化 ContextUtil
-        ContextUtil.init(context)
-        // 初始化 ToastUtil
-        ToastUtil.init(context.applicationContext as Application)
+        sApplication = (context.applicationContext as Application).also {
+            // 注册应用生命周期回调
+            it.registerActivityLifecycleCallbacks(ActivityLifecycleCallbacksImpl())
+            // 初始化 ToastUtil
+            ToastUtil.init(it)
+        }
         // 初始化 CrashUtil
         initCrashUtil()
         "CommonInitializer 初始化".logd("startup")
@@ -42,5 +45,9 @@ class CommonInitializer : Initializer<Unit>, CoroutineScope by MainScope() {
                 relaunchApp()
             }
         })
+    }
+
+    companion object {
+        lateinit var sApplication: Application
     }
 }
