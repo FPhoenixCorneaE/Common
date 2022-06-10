@@ -10,45 +10,41 @@ import androidx.annotation.AnimatorRes
 import androidx.annotation.IdRes
 import androidx.fragment.app.*
 
-inline fun <reified T : Fragment> Fragment.newInstanceFragment(args: Bundle? = null): T {
-    return requireContext().newInstanceFragment(args)
+/**
+ * 实例化 Fragment
+ */
+inline fun <reified T : Fragment> Fragment.newInstanceFragment(
+    args: Bundle? = null,
+    vararg pair: Pair<String, String>
+): T {
+    return requireContext().newInstanceFragment(args, *pair)
 }
 
-inline fun <reified T : Fragment> Fragment.newInstanceFragment(vararg pair: Pair<String, String>): T {
-    return requireContext().newInstanceFragment(*pair)
-}
-
-/**实例化 Fragment*/
-inline fun <reified T : Fragment> Context.newInstanceFragment(args: Bundle? = null): T {
+/**
+ * 实例化 Fragment
+ */
+inline fun <reified T : Fragment> Context.newInstanceFragment(
+    args: Bundle? = null,
+    vararg pair: Pair<String, String>
+): T {
     val className = T::class.java.name
     val clazz = FragmentFactory.loadFragmentClass(classLoader, className)
     val f = clazz.getConstructor().newInstance()
     (args ?: Bundle()).also {
+        pair.forEach { arg ->
+            it.putString(arg.first, arg.second)
+        }
         it.classLoader = f.javaClass.classLoader
         f.arguments = it
     }
     return f as T
 }
 
-/**实例化 Fragment*/
-inline fun <reified T : Fragment> Context.newInstanceFragment(vararg pair: Pair<String, String>): T {
-    val className = T::class.java.name
-    val clazz = FragmentFactory.loadFragmentClass(classLoader, className)
-    val f = clazz.getConstructor().newInstance()
-    val args = Bundle()
-    pair.forEach { arg ->
-        args.putString(arg.first, arg.second)
-    }
-    args.classLoader = f.javaClass.classLoader
-    f.arguments = args
-    return f as T
-}
-
 
 inline fun FragmentManager.inTransaction(
-    func: FragmentTransaction.() -> FragmentTransaction
-) = run {
-    beginTransaction().func().commitAllowingStateLoss()
+    func: FragmentTransaction.() -> Unit
+): Boolean = run {
+    beginTransaction().apply { func() }.commitAllowingStateLoss()
     executePendingTransactions()
 }
 
@@ -65,19 +61,17 @@ fun Fragment.addFragment(
     @AnimatorRes @AnimRes popExitAnim: Int = 0,
     vararg sharedElement: View
 ) = childFragmentManager.inTransaction {
-    apply {
-        if (addToBackStack) {
-            addToBackStack(fragment.javaClass.name)
+    if (addToBackStack) {
+        addToBackStack(fragment.javaClass.name)
+    }
+    setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        sharedElement.forEach { view ->
+            addSharedElement(view, view.transitionName)
         }
-        setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            sharedElement.forEach { view ->
-                addSharedElement(view, view.transitionName)
-            }
-        }
-        if (!fragment.isAdded) {
-            add(containerViewId, fragment, fragment.javaClass.name)
-        }
+    }
+    if (!fragment.isAdded) {
+        add(containerViewId, fragment, fragment.javaClass.name)
     }
 }
 
@@ -93,25 +87,23 @@ fun Fragment.hideShowFragment(
     @AnimatorRes @AnimRes popExitAnim: Int = 0,
     vararg sharedElement: View
 ) = childFragmentManager.inTransaction {
-    apply {
-        if (addToBackStack) {
-            addToBackStack(newFragment.javaClass.name)
+    if (addToBackStack) {
+        addToBackStack(newFragment.javaClass.name)
+    }
+    setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        sharedElement.forEach { view ->
+            addSharedElement(view, view.transitionName)
         }
-        setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            sharedElement.forEach { view ->
-                addSharedElement(view, view.transitionName)
-            }
-        }
-        if (previousFragment != null) {
-            hide(previousFragment)
-        }
-        if (newFragment.isAdded) {
-            show(newFragment)
-        } else {
-            add(containerViewId, newFragment, newFragment.javaClass.name)
-            show(newFragment)
-        }
+    }
+    if (previousFragment != null) {
+        hide(previousFragment)
+    }
+    if (newFragment.isAdded) {
+        show(newFragment)
+    } else {
+        add(containerViewId, newFragment, newFragment.javaClass.name)
+        show(newFragment)
     }
 }
 
@@ -126,29 +118,25 @@ fun Fragment.replaceFragment(
     @AnimatorRes @AnimRes popExitAnim: Int = 0,
     vararg sharedElement: View
 ) = childFragmentManager.inTransaction {
-    apply {
-        if (addToBackStack) {
-            addToBackStack(fragment.javaClass.name)
-        }
-        setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            sharedElement.forEach { view ->
-                addSharedElement(view, view.transitionName)
-            }
-        }
-        replace(containerViewId, fragment)
+    if (addToBackStack) {
+        addToBackStack(fragment.javaClass.name)
     }
+    setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        sharedElement.forEach { view ->
+            addSharedElement(view, view.transitionName)
+        }
+    }
+    replace(containerViewId, fragment)
 }
 
 fun Fragment.removeFragment(vararg names: String) {
     childFragmentManager.inTransaction {
-        apply {
-            names.forEach { name ->
-                childFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                val fragment = childFragmentManager.findFragmentByTag(name)
-                if (fragment != null) {
-                    remove(fragment)
-                }
+        names.forEach { name ->
+            childFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            val fragment = childFragmentManager.findFragmentByTag(name)
+            if (fragment != null) {
+                remove(fragment)
             }
         }
     }
@@ -168,19 +156,17 @@ fun FragmentActivity.addFragment(
     @AnimatorRes @AnimRes popExitAnim: Int = 0,
     vararg sharedElement: View
 ) = supportFragmentManager.inTransaction {
-    apply {
-        if (addToBackStack) {
-            addToBackStack(fragment.javaClass.name)
+    if (addToBackStack) {
+        addToBackStack(fragment.javaClass.name)
+    }
+    setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        sharedElement.forEach { view ->
+            addSharedElement(view, view.transitionName)
         }
-        setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            sharedElement.forEach { view ->
-                addSharedElement(view, view.transitionName)
-            }
-        }
-        if (!fragment.isAdded) {
-            add(containerViewId, fragment, fragment.javaClass.name)
-        }
+    }
+    if (!fragment.isAdded) {
+        add(containerViewId, fragment, fragment.javaClass.name)
     }
 }
 
@@ -196,25 +182,23 @@ fun FragmentActivity.hideShowFragment(
     @AnimatorRes @AnimRes popExitAnim: Int = 0,
     vararg sharedElement: View
 ) = supportFragmentManager.inTransaction {
-    apply {
-        if (addToBackStack) {
-            addToBackStack(newFragment.javaClass.name)
+    if (addToBackStack) {
+        addToBackStack(newFragment.javaClass.name)
+    }
+    setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        sharedElement.forEach { view ->
+            addSharedElement(view, view.transitionName)
         }
-        setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            sharedElement.forEach { view ->
-                addSharedElement(view, view.transitionName)
-            }
-        }
-        if (previousFragment != null) {
-            hide(previousFragment)
-        }
-        if (newFragment.isAdded) {
-            show(newFragment)
-        } else {
-            add(containerViewId, newFragment, newFragment.javaClass.name)
-            show(newFragment)
-        }
+    }
+    if (previousFragment != null) {
+        hide(previousFragment)
+    }
+    if (newFragment.isAdded) {
+        show(newFragment)
+    } else {
+        add(containerViewId, newFragment, newFragment.javaClass.name)
+        show(newFragment)
     }
 }
 
@@ -229,29 +213,25 @@ fun FragmentActivity.replaceFragment(
     @AnimatorRes @AnimRes popExitAnim: Int = 0,
     vararg sharedElement: View
 ) = supportFragmentManager.inTransaction {
-    apply {
-        if (addToBackStack) {
-            addToBackStack(fragment.javaClass.name)
-        }
-        setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            sharedElement.forEach { view ->
-                addSharedElement(view, view.transitionName)
-            }
-        }
-        replace(containerViewId, fragment)
+    if (addToBackStack) {
+        addToBackStack(fragment.javaClass.name)
     }
+    setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        sharedElement.forEach { view ->
+            addSharedElement(view, view.transitionName)
+        }
+    }
+    replace(containerViewId, fragment)
 }
 
 fun FragmentActivity.removeFragment(vararg names: String) {
     supportFragmentManager.inTransaction {
-        apply {
-            names.forEach { name ->
-                supportFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                val fragment = supportFragmentManager.findFragmentByTag(name)
-                if (fragment != null) {
-                    remove(fragment)
-                }
+        names.forEach { name ->
+            supportFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            val fragment = supportFragmentManager.findFragmentByTag(name)
+            if (fragment != null) {
+                remove(fragment)
             }
         }
     }

@@ -18,12 +18,8 @@ import com.fphoenixcorneae.common.ext.applicationContext
  * 通知工具类
  */
 object NotificationUtil {
-    const val IMPORTANCE_UNSPECIFIED = -1000
-    const val IMPORTANCE_NONE = 0
-    const val IMPORTANCE_MIN = 1
-    const val IMPORTANCE_LOW = 2
-    const val IMPORTANCE_DEFAULT = 3
-    const val IMPORTANCE_HIGH = 4
+
+
     /**
      * Return whether the notifications enabled.
      *
@@ -140,21 +136,13 @@ object NotificationUtil {
      *
      * @param isVisible True to set notification bar visible, false otherwise.
      */
+    @SuppressLint("ObsoleteSdkInt")
     @RequiresPermission(Manifest.permission.EXPAND_STATUS_BAR)
     fun setNotificationBarVisibility(isVisible: Boolean) {
-        (when {
-            isVisible -> {
-                when {
-                    Build.VERSION.SDK_INT <= 16 -> "expand"
-                    else -> "expandNotificationsPanel"
-                }
-            }
-            else -> {
-                when {
-                    Build.VERSION.SDK_INT <= 16 -> "collapse"
-                    else -> "collapsePanels"
-                }
-            }
+        (if (isVisible) {
+            if (Build.VERSION.SDK_INT <= 16) "expand" else "expandNotificationsPanel"
+        } else {
+            if (Build.VERSION.SDK_INT <= 16) "collapse" else "collapsePanels"
         }).also {
             invokePanels(it)
         }
@@ -163,11 +151,10 @@ object NotificationUtil {
     private fun invokePanels(methodName: String) {
         try {
             @SuppressLint("WrongConstant")
-            val service =
-                applicationContext.getSystemService("statusbar")
+            val service = applicationContext.getSystemService("statusbar")
+
             @SuppressLint("PrivateApi")
-            val statusBarManager =
-                Class.forName("android.app.StatusBarManager")
+            val statusBarManager = Class.forName("android.app.StatusBarManager")
             val expand = statusBarManager.getMethod(methodName)
             expand.invoke(service)
         } catch (e: Exception) {
@@ -176,25 +163,35 @@ object NotificationUtil {
     }
 
     @IntDef(
-        IMPORTANCE_UNSPECIFIED,
-        IMPORTANCE_NONE,
-        IMPORTANCE_MIN,
-        IMPORTANCE_LOW,
-        IMPORTANCE_DEFAULT,
-        IMPORTANCE_HIGH
+        Importance.IMPORTANCE_UNSPECIFIED,
+        Importance.IMPORTANCE_NONE,
+        Importance.IMPORTANCE_MIN,
+        Importance.IMPORTANCE_LOW,
+        Importance.IMPORTANCE_DEFAULT,
+        Importance.IMPORTANCE_HIGH
     )
     @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
-    annotation class Importance
+    annotation class Importance{
+        companion object{
+            const val IMPORTANCE_UNSPECIFIED = -1000
+            const val IMPORTANCE_NONE = 0
+            const val IMPORTANCE_MIN = 1
+            const val IMPORTANCE_LOW = 2
+            const val IMPORTANCE_DEFAULT = 3
+            const val IMPORTANCE_HIGH = 4
+        }
+    }
 
     class ChannelConfig(
         id: String?,
-        name: CharSequence?, @Importance importance: Int
+        name: CharSequence?,
+        @Importance importance: Int
     ) {
         var notificationChannel: NotificationChannel? = null
 
         /**
          * Sets whether or not notifications posted to this channel can interrupt the user in
-         * [android.app.NotificationManager.Policy.INTERRUPTION_FILTER_PRIORITY] mode.
+         * [android.app.NotificationManager.INTERRUPTION_FILTER_PRIORITY] mode.
          *
          *
          * Only modifiable by the system and notification ranker.
@@ -354,7 +351,7 @@ object NotificationUtil {
             val DEFAULT_CHANNEL_CONFIG = ChannelConfig(
                 applicationContext.packageName,
                 applicationContext.packageName,
-                IMPORTANCE_DEFAULT
+                Importance.IMPORTANCE_DEFAULT
             )
         }
 
