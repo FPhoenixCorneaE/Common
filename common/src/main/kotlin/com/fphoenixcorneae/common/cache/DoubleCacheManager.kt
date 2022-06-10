@@ -8,23 +8,23 @@ import kotlinx.parcelize.Parceler
  * @date：2022/06/07 11:42
  */
 class DoubleCacheManager private constructor() {
-    private var sDefaultDoubleCache: DoubleCache? = null
+    private var customDoubleCache: DoubleCache? = null
 
     /**
      * Get the default instance of [DoubleCache].
      */
     val defaultDoubleCache: DoubleCache
-        get() = sDefaultDoubleCache ?: DoubleCache.getInstance()
+        get() = customDoubleCache ?: DoubleCache.getInstance()
 
     /**
      * Set the default instance of [DoubleCache].
      */
     fun setDefaultDoubleCache(doubleCache: DoubleCache) {
-        sDefaultDoubleCache = doubleCache
+        customDoubleCache = doubleCache
     }
 
     /**
-     * Put bytes in cache.
+     * Put value in cache.
      *
      * @param key            The key of cache.
      * @param value          The value of cache.

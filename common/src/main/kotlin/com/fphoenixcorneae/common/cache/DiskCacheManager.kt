@@ -13,23 +13,23 @@ import java.io.Serializable
  * @date：2022/06/07 11:42
  */
 class DiskCacheManager private constructor() {
-    private var sDefaultDiskCache: DiskCache? = null
+    private var customDiskCache: DiskCache? = null
 
     /**
      * Get the default instance of [DiskCache].
      */
     val defaultDiskCache: DiskCache
-        get() = sDefaultDiskCache ?: DiskCache.getInstance()
+        get() = customDiskCache ?: DiskCache.getInstance()
 
     /**
      * Set the default instance of [DiskCache].
      */
     fun setDefaultDiskCache(diskCache: DiskCache) {
-        sDefaultDiskCache = diskCache
+        customDiskCache = diskCache
     }
 
     /**
-     * Put bytes in cache.
+     * Put value in cache.
      *
      * @param key            The key of cache.
      * @param value          The value of cache.

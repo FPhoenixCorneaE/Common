@@ -5,23 +5,23 @@ package com.fphoenixcorneae.common.cache
  * @date：2022/06/07 11:42
  */
 class MemoryCacheManager private constructor(){
-    private var sDefaultMemoryCache: MemoryCache? = null
+    private var customMemoryCache: MemoryCache? = null
 
     /**
      * Get the default instance of [MemoryCache].
      */
     private val defaultMemoryCache: MemoryCache
-        get() = sDefaultMemoryCache ?: MemoryCache.getInstance()
+        get() = customMemoryCache ?: MemoryCache.getInstance()
 
     /**
      * Set the default instance of [MemoryCache].
      */
     fun setDefaultMemoryCache(memoryCache: MemoryCache) {
-        sDefaultMemoryCache = memoryCache
+        customMemoryCache = memoryCache
     }
 
     /**
-     * Put bytes in cache.
+     * Put value in cache.
      *
      * @param key              The key of cache.
      * @param value            The value of cache.
