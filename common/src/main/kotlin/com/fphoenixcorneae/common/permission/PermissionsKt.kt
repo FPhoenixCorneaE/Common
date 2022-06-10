@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.fphoenixcorneae.common.ext.logd
 
-const val TAG = "KtxPermissionFragment"
+const val TAG = "RequestPermissionsFragment"
 
 /** 定位权限 */
 private val LOCATION = arrayOf(
@@ -18,8 +18,9 @@ private val LOCATION = arrayOf(
 )
 
 /** 电话权限 */
-private val PHONE =
-    arrayOf(Manifest.permission.CALL_PHONE)
+private val PHONE = arrayOf(
+    Manifest.permission.CALL_PHONE
+)
 
 /** 读写存储权限 */
 private val WRITE = arrayOf(
@@ -28,8 +29,9 @@ private val WRITE = arrayOf(
 )
 
 /** 短信权限 */
-private val SMS =
-    arrayOf(Manifest.permission.SEND_SMS)
+private val SMS = arrayOf(
+    Manifest.permission.SEND_SMS
+)
 
 /** 相机权限，相机权限包括读写文件权限 */
 private val CAMERA = arrayOf(
@@ -40,35 +42,36 @@ private val CAMERA = arrayOf(
 
 /** 申请定位权限 */
 fun FragmentActivity.requestLocationPermission(callbacks: (PermissionsCallbackDSL.() -> Unit)? = null) {
-    request(permissions = LOCATION, callbacks = callbacks)
+    requestPermission(permissions = LOCATION, callbacks = callbacks)
 }
 
 /** 申请电话权限 */
 fun FragmentActivity.requestPhonePermission(callbacks: (PermissionsCallbackDSL.() -> Unit)? = null) {
-    request(permissions = PHONE, callbacks = callbacks)
+    requestPermission(permissions = PHONE, callbacks = callbacks)
 }
 
 /** 申请读写权限 */
 fun FragmentActivity.requestWritePermission(callbacks: (PermissionsCallbackDSL.() -> Unit)? = null) {
-    request(permissions = WRITE, callbacks = callbacks)
+    requestPermission(permissions = WRITE, callbacks = callbacks)
 }
 
 /** 申请短信息权限 */
 fun FragmentActivity.requestSmsPermission(callbacks: (PermissionsCallbackDSL.() -> Unit)? = null) {
-    request(permissions = SMS, callbacks = callbacks)
+    requestPermission(permissions = SMS, callbacks = callbacks)
 }
 
 /** 申请相机权限 */
 fun FragmentActivity.requestCameraPermission(callbacks: (PermissionsCallbackDSL.() -> Unit)? = null) {
-    request(permissions = CAMERA, callbacks = callbacks)
+    requestPermission(permissions = CAMERA, callbacks = callbacks)
 }
 
 /** 申请权限 */
-fun FragmentActivity.request(vararg permissions: String) {
-    ActivityCompat.requestPermissions(this, permissions, 0XFF)
+fun FragmentActivity.requestPermission(vararg permissions: String) {
+    ActivityCompat.requestPermissions(this, permissions, 0xff)
 }
 
-fun FragmentActivity.request(
+/** 申请权限 */
+fun FragmentActivity.requestPermission(
     vararg permissions: String,
     callbacks: (PermissionsCallbackDSL.() -> Unit)? = null,
 ) {
@@ -98,8 +101,8 @@ fun FragmentActivity.request(
 
         if (shouldShowRationalePermissions.isNotEmpty()) {
             permissionsCallback.onShowRationale(
-                PermissionRequest(
-                    getKtxPermissionFragment(this),
+                PermissionsRequest(
+                    getKtxPermissionFragment(this, permissionsCallback, shouldShowRationalePermissions.toTypedArray()),
                     shouldShowRationalePermissions,
                     requestCode
                 )
@@ -107,30 +110,36 @@ fun FragmentActivity.request(
         }
 
         if (shouldNotShowRationalePermissions.isNotEmpty()) {
-            getKtxPermissionFragment(this).requestPermissionsByFragment(
-                shouldNotShowRationalePermissions.toTypedArray(),
-                requestCode
+            getKtxPermissionFragment(
+                this,
+                permissionsCallback,
+                shouldNotShowRationalePermissions.toTypedArray()
             )
         }
     }
 }
 
-private fun getKtxPermissionFragment(activity: FragmentActivity): KtxPermissionFragment {
-    var fragment = activity.supportFragmentManager.findFragmentByTag(TAG)
+private fun getKtxPermissionFragment(
+    activity: FragmentActivity,
+    permissionsCallback: PermissionsCallback,
+    permissions: Array<String>
+): RequestPermissionsFragment {
+    var fragment = activity.supportFragmentManager.findFragmentByTag(TAG) as RequestPermissionsFragment?
     if (fragment == null) {
-        fragment = KtxPermissionFragment()
-        activity.supportFragmentManager.beginTransaction().add(fragment, TAG).commitNow()
+        fragment =
+            RequestPermissionsFragment.getInstance(permissions = permissions, permissionsCallback = permissionsCallback)
+        activity.supportFragmentManager.beginTransaction().add(fragment, TAG).commitNowAllowingStateLoss()
     }
-    return fragment as KtxPermissionFragment
+    return fragment
 }
 
 
 fun Activity.isGranted(permission: String): Boolean {
     return Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-        ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 }
 
 fun Activity.isRevoked(permission: String): Boolean {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-        packageManager.isPermissionRevokedByPolicy(permission, packageName)
+            packageManager.isPermissionRevokedByPolicy(permission, packageName)
 }

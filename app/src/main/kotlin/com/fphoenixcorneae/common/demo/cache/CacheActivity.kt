@@ -2,6 +2,7 @@ package com.fphoenixcorneae.common.demo.cache
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.fphoenixcorneae.common.demo.databinding.ActivityCacheBinding
 import com.fphoenixcorneae.common.ext.logd
@@ -29,11 +30,15 @@ class CacheActivity : AppCompatActivity() {
             viewModel = mViewModel
 
             rgCacheDataType.setOnCheckedChangeListener { radioGroup, i ->
-                "radioGroup: index: ${i - (i-1) / 8 * 8}".logd()
-                mViewModel.setCacheTypePosition(i - (i-1) / 8 * 8 - 1)
+                "radioGroup: index: ${i - (i - 1) / 8 * 8}".logd()
+                mViewModel.setCacheTypePosition(i - (i - 1) / 8 * 8 - 1)
             }
         }
 
+        requestPermissions()
+    }
+
+    private fun requestPermissions() {
         requestWritePermission {
             onGranted {
                 "onGranted".logd("requestPermissions")
@@ -44,7 +49,17 @@ class CacheActivity : AppCompatActivity() {
             }
             onShowRationale {
                 "onShowRationale".logd("requestPermissions")
-                it.retry()
+                AlertDialog.Builder(this@CacheActivity)
+                    .setTitle("权限申请")
+                    .setMessage("需要申请读写权限")
+                    .setNegativeButton("取消") { dialog, which ->
+                        dialog.dismiss()
+                    }
+                    .setPositiveButton("确定") { dialog, which ->
+                        dialog.dismiss()
+                        requestPermissions()
+                    }
+                    .show()
             }
             onNeverAskAgain {
                 "onNeverAskAgain".logd("requestPermissions")

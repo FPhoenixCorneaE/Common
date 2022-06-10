@@ -1,11 +1,13 @@
 package com.fphoenixcorneae.common.demo
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.fphoenixcorneae.common.annotation.Shape
@@ -196,7 +198,17 @@ class MainActivity : AppCompatActivity() {
             }
             onShowRationale {
                 "onShowRationale".logd("requestPermissions")
-                it.retry()
+                AlertDialog.Builder(this@MainActivity)
+                    .setTitle("权限申请")
+                    .setMessage("需要申请电话权限")
+                    .setNegativeButton("取消") { dialog, which ->
+                        dialog.dismiss()
+                    }
+                    .setPositiveButton("确定") { dialog, which ->
+                        dialog.dismiss()
+                        requestPermissions()
+                    }
+                    .show()
             }
             onNeverAskAgain {
                 "onNeverAskAgain".logd("requestPermissions")

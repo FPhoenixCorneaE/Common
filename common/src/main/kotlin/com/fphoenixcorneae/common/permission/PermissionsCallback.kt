@@ -1,12 +1,14 @@
 package com.fphoenixcorneae.common.permission
 
+/**
+ * 权限回调
+ */
 interface PermissionsCallback {
-
     fun onGranted()
 
     fun onDenied(permissions: List<String>)
 
-    fun onShowRationale(permissionRequest: PermissionRequest)
+    fun onShowRationale(permissionsRequest: PermissionsRequest)
 
     fun onNeverAskAgain(permissions: List<String>)
 }
@@ -18,7 +20,7 @@ class PermissionsCallbackDSL : PermissionsCallback {
 
     private var onGranted: () -> Unit = {}
     private var onDenied: (permissions: List<String>) -> Unit = {}
-    private var onShowRationale: (request: PermissionRequest) -> Unit = {}
+    private var onShowRationale: (request: PermissionsRequest) -> Unit = {}
     private var onNeverAskAgain: (permissions: List<String>) -> Unit = {}
 
     fun onGranted(func: () -> Unit) {
@@ -29,7 +31,7 @@ class PermissionsCallbackDSL : PermissionsCallback {
         onDenied = func
     }
 
-    fun onShowRationale(func: (permissionRequest: PermissionRequest) -> Unit) {
+    fun onShowRationale(func: (permissionsRequest: PermissionsRequest) -> Unit) {
         onShowRationale = func
     }
 
@@ -45,8 +47,8 @@ class PermissionsCallbackDSL : PermissionsCallback {
         onDenied.invoke(permissions)
     }
 
-    override fun onShowRationale(permissionRequest: PermissionRequest) {
-        onShowRationale.invoke(permissionRequest)
+    override fun onShowRationale(permissionsRequest: PermissionsRequest) {
+        onShowRationale.invoke(permissionsRequest)
     }
 
     override fun onNeverAskAgain(permissions: List<String>) {

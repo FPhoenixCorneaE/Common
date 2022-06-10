@@ -29,7 +29,7 @@ import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.fphoenixcorneae.common.ext.*
-import com.fphoenixcorneae.common.permission.request
+import com.fphoenixcorneae.common.permission.requestPermission
 import com.fphoenixcorneae.common.permission.requestCameraPermission
 import com.fphoenixcorneae.common.permission.requestPhonePermission
 import java.io.File
@@ -279,10 +279,10 @@ object IntentUtil {
                 activity.startActivity(intent)
             }
             onDenied {
-                activity.request(*it.toTypedArray())
+                activity.requestPermission(*it.toTypedArray())
             }
             onShowRationale {
-                activity.request(*it.permissions.toTypedArray())
+                activity.requestPermission(*it.permissions.toTypedArray())
             }
             onNeverAskAgain {
                 openApplicationDetailsSettings()
@@ -314,7 +314,7 @@ object IntentUtil {
         destinationAddress: String,
         textMessage: String
     ) {
-        activity?.request(Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE){
+        activity?.requestPermission(Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE){
             onGranted {
                 if (destinationAddress.isNotBlank()) {
                     // 移动运营商允许每次发送的字节数据有限，我们可以使用Android给我们提供的短信工具
@@ -327,10 +327,10 @@ object IntentUtil {
                 }
             }
             onDenied {
-                activity.request(*it.toTypedArray())
+                activity.requestPermission(*it.toTypedArray())
             }
             onShowRationale {
-                activity.request(*it.permissions.toTypedArray())
+                activity.requestPermission(*it.permissions.toTypedArray())
             }
             onNeverAskAgain {
                 openApplicationDetailsSettings()
@@ -415,10 +415,10 @@ object IntentUtil {
                 startActivity(activity, MediaStore.ACTION_IMAGE_CAPTURE)
             }
             onDenied {
-                activity.request(*it.toTypedArray())
+                activity.requestPermission(*it.toTypedArray())
             }
             onShowRationale {
-                activity.request(*it.permissions.toTypedArray())
+                activity.requestPermission(*it.permissions.toTypedArray())
             }
             onNeverAskAgain {
                 openApplicationDetailsSettings()
