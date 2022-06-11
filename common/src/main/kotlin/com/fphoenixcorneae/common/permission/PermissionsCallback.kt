@@ -1,42 +1,60 @@
 package com.fphoenixcorneae.common.permission
 
+internal typealias OnGranted = () -> Unit
+
+internal typealias OnDenied = (
+    @ParameterName("permissions") List<String>
+) -> Unit
+
+internal typealias OnShowRationale = (
+    @ParameterName("permissions") List<String>,
+    @ParameterName("positive") () -> Unit,
+    @ParameterName("negative") () -> Unit
+) -> Unit
+
+internal typealias OnNeverAsk = (
+    @ParameterName("permissions") List<String>
+) -> Unit
+
 /**
- * 权限回调
+ * @desc：PermissionsCallback
+ * @date：2022/6/11 18:37
  */
 interface PermissionsCallback {
     fun onGranted()
 
     fun onDenied(permissions: List<String>)
 
-    fun onShowRationale(permissionsRequest: PermissionsRequest)
+    fun onShowRationale(permissions: List<String>, positive: () -> Unit, negative: () -> Unit)
 
-    fun onNeverAskAgain(permissions: List<String>)
+    fun onNeverAsk(permissions: List<String>)
 }
 
 /**
- * DSL implementation for [PermissionsCallback].
+ * @desc：DSL implementation for [PermissionsCallback].
+ * @date：2022/6/11 18:37
  */
 class PermissionsCallbackDSL : PermissionsCallback {
 
-    private var onGranted: () -> Unit = {}
-    private var onDenied: (permissions: List<String>) -> Unit = {}
-    private var onShowRationale: (request: PermissionsRequest) -> Unit = {}
-    private var onNeverAskAgain: (permissions: List<String>) -> Unit = {}
+    private var onGranted: OnGranted = {}
+    private var onDenied: OnDenied = {}
+    private var onShowRationale: OnShowRationale = { _, _, _ -> }
+    private var onNeverAsk: OnNeverAsk = {}
 
-    fun onGranted(func: () -> Unit) {
+    fun onGranted(func: OnGranted) {
         onGranted = func
     }
 
-    fun onDenied(func: (permissions: List<String>) -> Unit) {
+    fun onDenied(func: OnDenied) {
         onDenied = func
     }
 
-    fun onShowRationale(func: (permissionsRequest: PermissionsRequest) -> Unit) {
+    fun onShowRationale(func: OnShowRationale) {
         onShowRationale = func
     }
 
-    fun onNeverAskAgain(func: (permissions: List<String>) -> Unit) {
-        onNeverAskAgain = func
+    fun onNeverAsk(func: OnNeverAsk) {
+        onNeverAsk = func
     }
 
     override fun onGranted() {
@@ -47,12 +65,15 @@ class PermissionsCallbackDSL : PermissionsCallback {
         onDenied.invoke(permissions)
     }
 
-    override fun onShowRationale(permissionsRequest: PermissionsRequest) {
-        onShowRationale.invoke(permissionsRequest)
+    override fun onShowRationale(
+        permissions: List<String>,
+        positive: () -> Unit,
+        negative: () -> Unit
+    ) {
+        onShowRationale.invoke(permissions, positive, negative)
     }
 
-    override fun onNeverAskAgain(permissions: List<String>) {
-        onNeverAskAgain.invoke(permissions)
+    override fun onNeverAsk(permissions: List<String>) {
+        onNeverAsk.invoke(permissions)
     }
-
 }

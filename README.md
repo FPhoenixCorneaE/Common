@@ -72,24 +72,30 @@ override fun dependencies(): MutableList<Class<out Initializer<*>>> {
 ### 3.动态权限申请
 
 ```kotlin
-private fun requestPermissions() {
-    requestPhonePermission {
-        onGranted {
-            "onGranted".logd("requestPermissions")
-            // TODO
-        }
-        onDenied {
-            "onDenied".logd("requestPermissions")
-            // TODO
-        }
-        onShowRationale {
-            "onShowRationale".logd("requestPermissions")
-            it.retry()
-        }
-        onNeverAskAgain {
-            "onNeverAskAgain".logd("requestPermissions")
-            IntentUtil.openApplicationDetailsSettings()
-        }
+requestPhonePermission(shouldShowRationale = true) {
+    onGranted {
+        // TODO
+    }
+    onDenied {
+        // ignore
+    }
+    onShowRationale { permissions, positive, negative ->
+        AlertDialog.Builder(this@MainActivity)
+            .setTitle("权限申请")
+            .setMessage("需要申请电话权限")
+            .setCancelable(false)
+            .setNegativeButton("取消") { dialog, which ->
+                negative.invoke()
+                dialog.dismiss()
+            }
+            .setPositiveButton("确定") { dialog, which ->
+                positive.invoke()
+                dialog.dismiss()
+            }
+            .show()
+    }
+    onNeverAsk {
+        IntentUtil.openApplicationDetailsSettings()
     }
 }
 ```
@@ -114,7 +120,12 @@ gradientDrawable(this) {
 //            }
     corner {
 //                radius(20f)
-        radii(topLeftRadius = 5f, topRightRadius = 10f, bottomLeftRadius = 15f, bottomRightRadius = 20f)
+        radii(
+            topLeftRadius = 5f,
+            topRightRadius = 10f,
+            bottomLeftRadius = 15f,
+            bottomRightRadius = 20f
+        )
     }
     stroke {
         width(3f)
@@ -251,65 +262,69 @@ override fun attachBaseContext(base: Context?) {
 
 * #### DiskCacheManager：磁盘缓存管理
 
-  - [ ] 设置自定义的默认磁盘缓存(可选)：
+    - [ ] 设置自定义的默认磁盘缓存(可选)：
 
-    `setDefaultDiskCache(diskCache: DiskCache)`，默认有一个defaultDiskCache
+      `setDefaultDiskCache(diskCache: DiskCache)`，默认有一个defaultDiskCache
 
-  - [ ] 将值放入磁盘缓存：
+    - [ ] 将值放入磁盘缓存：
 
-    `put(key: String, value: Any?)`
+      `put(key: String, value: Any?)`
 
-  - [ ] 将值从磁盘缓存中取出：
+    - [ ] 将值从磁盘缓存中取出：
 
-    `get(key: String, defaultValue: T?)`、`getParcelable(key: String, creator: Parcelable.Creator<T>)`/`getParcelable(key: String, parceler: Parceler<T>)`
+      `get(key: String, defaultValue: T?)`
+      、`getParcelable(key: String, creator: Parcelable.Creator<T>)`
+      /`getParcelable(key: String, parceler: Parceler<T>)`
 
-  - [ ] 获取磁盘缓存大小(字节数)：
+    - [ ] 获取磁盘缓存大小(字节数)：
 
-    `getCacheSize()`
+      `getCacheSize()`
 
-  - [ ] 获取磁盘缓存计数：
+    - [ ] 获取磁盘缓存计数：
 
-    `getCacheCount()`
+      `getCacheCount()`
 
-  - [ ] 根据key将值从磁盘缓存中移除：
+    - [ ] 根据key将值从磁盘缓存中移除：
 
-    `remove(key: String)`
+      `remove(key: String)`
 
-  - [ ] 清除所有磁盘缓存：
+    - [ ] 清除所有磁盘缓存：
 
-    `clear()`
+      `clear()`
 
 * #### DoubleCacheManager：双重(内存+磁盘)缓存管理
 
-  - [ ] 设置自定义的默认双重缓存(可选)：
+    - [ ] 设置自定义的默认双重缓存(可选)：
 
-    setDefaultDoubleCache(doubleCache: DoubleCache)，默认有一个defaultDoubleCache
+      setDefaultDoubleCache(doubleCache: DoubleCache)，默认有一个defaultDoubleCache
 
-  - [ ] 将值放入双重缓存：
+    - [ ] 将值放入双重缓存：
 
-    `put(key: String, value: Any?)`
+      `put(key: String, value: Any?)`
 
-  - [ ] 将值从双重缓存中取出：
+    - [ ] 将值从双重缓存中取出：
 
-    `get(key: String, defaultValue: T?)`、`getParcelable(key: String, creator: Parcelable.Creator<T>)`/`getParcelable(key: String, parceler: Parceler<T>)`
+      `get(key: String, defaultValue: T?)`
+      、`getParcelable(key: String, creator: Parcelable.Creator<T>)`
+      /`getParcelable(key: String, parceler: Parceler<T>)`
 
-  - [ ] 获取磁盘缓存大小(字节数)：
+    - [ ] 获取磁盘缓存大小(字节数)：
 
-    `getCacheDiskSize()`
-  
-  - [ ] 获取磁盘缓存计数：
-  
-    `getCacheDiskCount()`
-  
-  - [ ] 获取内存缓存计数：
-  
-    `getCacheMemoryCount()`
-  
-  - [ ] 根据key将值从双重缓存中移除：
-  
-    `remove(key: String)`
-  
-  - [ ] 清除所有双重缓存：
-  
-    `clear()`
+      `getCacheDiskSize()`
+
+    - [ ] 获取磁盘缓存计数：
+
+      `getCacheDiskCount()`
+
+    - [ ] 获取内存缓存计数：
+
+      `getCacheMemoryCount()`
+
+    - [ ] 根据key将值从双重缓存中移除：
+
+      `remove(key: String)`
+
+    - [ ] 清除所有双重缓存：
+
+      `clear()`
 

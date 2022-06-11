@@ -41,28 +41,26 @@ class CacheActivity : AppCompatActivity() {
     private fun requestPermissions() {
         requestWritePermission {
             onGranted {
-                "onGranted".logd("requestPermissions")
                 toast("读写权限申请成功！")
             }
             onDenied {
-                "onDenied".logd("requestPermissions")
             }
-            onShowRationale {
-                "onShowRationale".logd("requestPermissions")
+            onShowRationale { permissions, positive, negative ->
                 AlertDialog.Builder(this@CacheActivity)
                     .setTitle("权限申请")
                     .setMessage("需要申请读写权限")
+                    .setCancelable(false)
                     .setNegativeButton("取消") { dialog, which ->
+                        negative.invoke()
                         dialog.dismiss()
                     }
                     .setPositiveButton("确定") { dialog, which ->
+                        positive.invoke()
                         dialog.dismiss()
-                        requestPermissions()
                     }
                     .show()
             }
-            onNeverAskAgain {
-                "onNeverAskAgain".logd("requestPermissions")
+            onNeverAsk {
                 IntentUtil.openApplicationDetailsSettings()
             }
         }

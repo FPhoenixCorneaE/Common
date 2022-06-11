@@ -1,7 +1,7 @@
 package com.fphoenixcorneae.common.demo
 
+import android.Manifest
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -21,6 +21,7 @@ import com.fphoenixcorneae.common.ext.view.queryTextListener
 import com.fphoenixcorneae.common.ext.view.setOnSeekBarChangeListener
 import com.fphoenixcorneae.common.ext.view.setUnderLine
 import com.fphoenixcorneae.common.ext.view.textAction
+import com.fphoenixcorneae.common.permission.requestPermissionsOnLifecycle
 import com.fphoenixcorneae.common.permission.requestPhonePermission
 import com.fphoenixcorneae.common.util.IntentUtil
 import kotlinx.coroutines.Dispatchers
@@ -154,7 +155,12 @@ class MainActivity : AppCompatActivity() {
 //            }
             corner {
 //                radius(20f)
-                radii(topLeftRadius = 5f, topRightRadius = 10f, bottomLeftRadius = 15f, bottomRightRadius = 20f)
+                radii(
+                    topLeftRadius = 5f,
+                    topRightRadius = 10f,
+                    bottomLeftRadius = 15f,
+                    bottomRightRadius = 20f
+                )
             }
             stroke {
                 width(3f)
@@ -187,31 +193,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestPermissions() {
-        requestPhonePermission {
+        requestPhonePermission(shouldShowRationale = true) {
             onGranted {
-                "onGranted".logd("requestPermissions")
                 // TODO
             }
             onDenied {
-                "onDenied".logd("requestPermissions")
-                requestPermissions()
+                // ignore
             }
-            onShowRationale {
-                "onShowRationale".logd("requestPermissions")
+            onShowRationale { permissions, positive, negative ->
                 AlertDialog.Builder(this@MainActivity)
                     .setTitle("权限申请")
                     .setMessage("需要申请电话权限")
+                    .setCancelable(false)
                     .setNegativeButton("取消") { dialog, which ->
+                        negative.invoke()
                         dialog.dismiss()
                     }
                     .setPositiveButton("确定") { dialog, which ->
+                        positive.invoke()
                         dialog.dismiss()
-                        requestPermissions()
                     }
                     .show()
             }
-            onNeverAskAgain {
-                "onNeverAskAgain".logd("requestPermissions")
+            onNeverAsk {
                 IntentUtil.openApplicationDetailsSettings()
             }
         }

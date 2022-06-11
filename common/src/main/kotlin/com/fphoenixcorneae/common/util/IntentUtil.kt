@@ -22,6 +22,7 @@ import android.util.SizeF
 import android.util.SparseArray
 import android.view.View
 import androidx.annotation.AnimRes
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.FileProvider
@@ -29,8 +30,8 @@ import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.fphoenixcorneae.common.ext.*
-import com.fphoenixcorneae.common.permission.requestPermission
 import com.fphoenixcorneae.common.permission.requestCameraPermission
+import com.fphoenixcorneae.common.permission.requestPermissionsOnLifecycle
 import com.fphoenixcorneae.common.permission.requestPhonePermission
 import java.io.File
 import java.io.Serializable
@@ -273,18 +274,29 @@ object IntentUtil {
         }
         activity!!.requestPhonePermission {
             onGranted {
-                val intent =
-                    Intent(Intent.ACTION_CALL, Uri.parse("tel:$telephoneNumber"))
+                val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:$telephoneNumber"))
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 activity.startActivity(intent)
             }
             onDenied {
-                activity.requestPermission(*it.toTypedArray())
+
             }
-            onShowRationale {
-                activity.requestPermission(*it.permissions.toTypedArray())
+            onShowRationale { permissions, positive, negative ->
+                AlertDialog.Builder(activity)
+                    .setTitle("权限申请")
+                    .setMessage("需要申请电话权限")
+                    .setCancelable(false)
+                    .setNegativeButton("取消") { dialog, which ->
+                        negative.invoke()
+                        dialog.dismiss()
+                    }
+                    .setPositiveButton("确定") { dialog, which ->
+                        positive.invoke()
+                        dialog.dismiss()
+                    }
+                    .show()
             }
-            onNeverAskAgain {
+            onNeverAsk {
                 openApplicationDetailsSettings()
             }
         }
@@ -314,7 +326,12 @@ object IntentUtil {
         destinationAddress: String,
         textMessage: String
     ) {
-        activity?.requestPermission(Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE){
+        activity?.requestPermissionsOnLifecycle(
+            listOf(
+                Manifest.permission.SEND_SMS,
+                Manifest.permission.READ_PHONE_STATE
+            )
+        ) {
             onGranted {
                 if (destinationAddress.isNotBlank()) {
                     // 移动运营商允许每次发送的字节数据有限，我们可以使用Android给我们提供的短信工具
@@ -327,12 +344,23 @@ object IntentUtil {
                 }
             }
             onDenied {
-                activity.requestPermission(*it.toTypedArray())
             }
-            onShowRationale {
-                activity.requestPermission(*it.permissions.toTypedArray())
+            onShowRationale { permissions, positive, negative ->
+                AlertDialog.Builder(activity)
+                    .setTitle("权限申请")
+                    .setMessage("需要申请短信与手机状态权限")
+                    .setCancelable(false)
+                    .setNegativeButton("取消") { dialog, which ->
+                        negative.invoke()
+                        dialog.dismiss()
+                    }
+                    .setPositiveButton("确定") { dialog, which ->
+                        positive.invoke()
+                        dialog.dismiss()
+                    }
+                    .show()
             }
-            onNeverAskAgain {
+            onNeverAsk {
                 openApplicationDetailsSettings()
             }
         }
@@ -415,12 +443,24 @@ object IntentUtil {
                 startActivity(activity, MediaStore.ACTION_IMAGE_CAPTURE)
             }
             onDenied {
-                activity.requestPermission(*it.toTypedArray())
+
             }
-            onShowRationale {
-                activity.requestPermission(*it.permissions.toTypedArray())
+            onShowRationale { permissions, positive, negative ->
+                AlertDialog.Builder(activity)
+                    .setTitle("权限申请")
+                    .setMessage("需要申请相机权限")
+                    .setCancelable(false)
+                    .setNegativeButton("取消") { dialog, which ->
+                        negative.invoke()
+                        dialog.dismiss()
+                    }
+                    .setPositiveButton("确定") { dialog, which ->
+                        positive.invoke()
+                        dialog.dismiss()
+                    }
+                    .show()
             }
-            onNeverAskAgain {
+            onNeverAsk {
                 openApplicationDetailsSettings()
             }
         }
