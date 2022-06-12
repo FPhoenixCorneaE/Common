@@ -69,36 +69,7 @@ override fun dependencies(): MutableList<Class<out Initializer<*>>> {
 }
 ```
 
-### 3.动态权限申请
-
-```kotlin
-requestPhonePermission(shouldShowRationale = true) {
-    onGranted {
-        // TODO
-    }
-    onDenied {
-        // ignore
-    }
-    onShowRationale { permissions, positive, negative ->
-        AlertDialog.Builder(this@MainActivity)
-            .setTitle("权限申请")
-            .setMessage("需要申请电话权限")
-            .setCancelable(false)
-            .setNegativeButton("取消") { dialog, which ->
-                negative.invoke()
-                dialog.dismiss()
-            }
-            .setPositiveButton("确定") { dialog, which ->
-                positive.invoke()
-                dialog.dismiss()
-            }
-            .show()
-    }
-    onNeverAsk {
-        IntentUtil.openApplicationDetailsSettings()
-    }
-}
-```
+### 3.[动态权限申请](https://github.com/FPhoenixCorneaE/CoroutinesPermissions)
 
 ### 4.代码构造Drawable
 

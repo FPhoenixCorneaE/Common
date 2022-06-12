@@ -1,6 +1,5 @@
 package com.fphoenixcorneae.common.demo
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -21,9 +20,8 @@ import com.fphoenixcorneae.common.ext.view.queryTextListener
 import com.fphoenixcorneae.common.ext.view.setOnSeekBarChangeListener
 import com.fphoenixcorneae.common.ext.view.setUnderLine
 import com.fphoenixcorneae.common.ext.view.textAction
-import com.fphoenixcorneae.common.permission.requestPermissionsOnLifecycle
-import com.fphoenixcorneae.common.permission.requestPhonePermission
 import com.fphoenixcorneae.common.util.IntentUtil
+import com.fphoenixcorneae.permissions.requestPhonePermission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

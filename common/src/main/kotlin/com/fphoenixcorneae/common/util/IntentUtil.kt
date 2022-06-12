@@ -30,9 +30,9 @@ import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.fphoenixcorneae.common.ext.*
-import com.fphoenixcorneae.common.permission.requestCameraPermission
-import com.fphoenixcorneae.common.permission.requestPermissionsOnLifecycle
-import com.fphoenixcorneae.common.permission.requestPhonePermission
+import com.fphoenixcorneae.permissions.requestCameraPermission
+import com.fphoenixcorneae.permissions.requestPermissionsOnLifecycle
+import com.fphoenixcorneae.permissions.requestPhonePermission
 import java.io.File
 import java.io.Serializable
 

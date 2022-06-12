@@ -79,6 +79,8 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(Deps.Kotlin.stdlib)
+    // FPhoenixCorneaE
+    api(Deps.FPhoenixCorneaE.coroutinesPermissions)
     // androidX
     implementation(Deps.AndroidX.appcompat)
     implementation(Deps.AndroidX.constraintLayout)

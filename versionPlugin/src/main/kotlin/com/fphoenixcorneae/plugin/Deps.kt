@@ -23,6 +23,10 @@ object Deps {
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib:$version"
     }
 
+    object FPhoenixCorneaE {
+        const val coroutinesPermissions = "com.github.FPhoenixCorneaE:CoroutinesPermissions:1.0.0"
+    }
+
     /** AndroidX */
     object AndroidX {
         const val appcompat = "androidx.appcompat:appcompat:1.4.0"
