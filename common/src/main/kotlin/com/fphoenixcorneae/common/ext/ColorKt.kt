@@ -33,7 +33,7 @@ fun Int.setColorAlpha(
     alpha: Float,
 ): Int =
     runCatching {
-        this@setColorAlpha and 0x00ffffff or (alpha * 255f + 0.5f).toInt() shl 24
+        this@setColorAlpha and 0x00ffffff or ((alpha * 255f + 0.5f).toInt() shl 24)
     }.onFailure {
         it.printStackTrace()
     }.getOrDefault(0)
@@ -48,7 +48,7 @@ fun Int.setRedAlpha(
     alpha: Float
 ): Int =
     runCatching {
-        this@setRedAlpha and -0xff0001 or (alpha * 255f + 0.5f).toInt() shl 16
+        this@setRedAlpha and -0xff0001 or ((alpha * 255f + 0.5f).toInt() shl 16)
     }.onFailure {
         it.printStackTrace()
     }.getOrDefault(0)
@@ -63,7 +63,7 @@ fun Int.setGreenAlpha(
     alpha: Float
 ): Int =
     runCatching {
-        this@setGreenAlpha and -0xff01 or (alpha * 255f + 0.5f).toInt() shl 8
+        this@setGreenAlpha and -0xff01 or ((alpha * 255f + 0.5f).toInt() shl 8)
     }.onFailure {
         it.printStackTrace()
     }.getOrDefault(0)
@@ -152,7 +152,8 @@ fun Int.lighter(
  * [ColorInt]是否是深色的颜色
  */
 fun Int.isDarkColor(): Boolean {
-    val darkness = (1 - (0.299 * Color.red(this) + 0.587 * Color.green(this) + 0.114 * Color.blue(this)) / 255)
+    val darkness =
+        (1 - (0.299 * Color.red(this) + 0.587 * Color.green(this) + 0.114 * Color.blue(this)) / 255)
     return darkness >= 0.5
 }
 

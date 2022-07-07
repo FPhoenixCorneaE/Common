@@ -29,24 +29,24 @@ object OpenFileUtil {
             file.name.substring(file.name.lastIndexOf(".") + 1, file.name.length)
                 .lowercase(Locale.getDefault())
         when (end) {
-            "3gp", "mp4" -> openVideoFileIntent(file, FileType.DATA_TYPE_VIDEO)
+            "3gp", "mp4" -> openVideoFileIntent(file, FileType.VIDEO)
             "m4a", "mp3", "mid", "xmf", "ogg", "wav" -> openAudioFileIntent(
                 file,
-                FileType.DATA_TYPE_AUDIO
+                FileType.AUDIO
             )
-            "doc", "docx" -> commonOpenFileWithType(file, FileType.DATA_TYPE_WORD)
-            "xls", "xlsx" -> commonOpenFileWithType(file, FileType.DATA_TYPE_EXCEL)
+            "doc", "docx" -> commonOpenFileWithType(file, FileType.WORD)
+            "xls", "xlsx" -> commonOpenFileWithType(file, FileType.EXCEL)
             "jpg", "gif", "png", "jpeg", "bmp" -> commonOpenFileWithType(
                 file,
-                FileType.DATA_TYPE_IMAGE
+                FileType.IMAGE
             )
-            "txt" -> commonOpenFileWithType(file, FileType.DATA_TYPE_TXT)
-            "htm", "html" -> commonOpenFileWithType(file, FileType.DATA_TYPE_HTML)
-            "apk" -> commonOpenFileWithType(file, FileType.DATA_TYPE_APK)
-            "ppt" -> commonOpenFileWithType(file, FileType.DATA_TYPE_PPT)
-            "pdf" -> commonOpenFileWithType(file, FileType.DATA_TYPE_PDF)
-            "chm" -> commonOpenFileWithType(file, FileType.DATA_TYPE_CHM)
-            else -> commonOpenFileWithType(file, FileType.DATA_TYPE_ALL)
+            "txt" -> commonOpenFileWithType(file, FileType.TXT)
+            "htm", "html" -> commonOpenFileWithType(file, FileType.HTML)
+            "apk" -> commonOpenFileWithType(file, FileType.APK)
+            "ppt" -> commonOpenFileWithType(file, FileType.PPT)
+            "pdf" -> commonOpenFileWithType(file, FileType.PDF)
+            "chm" -> commonOpenFileWithType(file, FileType.CHM)
+            else -> commonOpenFileWithType(file, FileType.ALL)
         }
     }
 
