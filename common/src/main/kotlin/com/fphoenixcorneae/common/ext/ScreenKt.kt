@@ -10,6 +10,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Rect
 import android.provider.Settings
+import android.util.DisplayMetrics
 import android.view.Surface
 import android.view.View
 import android.view.Window
@@ -18,18 +19,39 @@ import androidx.annotation.RequiresPermission
 import kotlin.math.abs
 
 /**
- * 获取屏幕的宽度（单位：px）
+ * 获取屏幕可用的宽度（单位：px）
  */
 val screenWidth: Int
     get() =
         Resources.getSystem().displayMetrics.widthPixels
 
 /**
- * 获取屏幕的高度（单位：px）
+ * 获取屏幕实际的宽度（单位：px）
+ */
+val realScreenWidth: Int
+    get() = run {
+        val displayMetrics = DisplayMetrics()
+        applicationContext.windowManager?.defaultDisplay?.getRealMetrics(displayMetrics)
+        displayMetrics.widthPixels
+    }
+
+/**
+ * 获取屏幕可用的高度（单位：px）
  */
 val screenHeight: Int
     get() =
         Resources.getSystem().displayMetrics.heightPixels
+
+/**
+ * 获取屏幕实际的高度（单位：px）
+ */
+val realScreenHeight: Int
+    get() = run {
+        val displayMetrics = DisplayMetrics()
+        applicationContext.windowManager?.defaultDisplay?.getRealMetrics(displayMetrics)
+        displayMetrics.heightPixels
+    }
+
 
 /**
  * 获取屏幕密度
