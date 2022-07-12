@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
-import com.fphoenixcorneae.common.ext.view.getTintDrawable
 import com.fphoenixcorneae.common.ext.view.load
+import com.fphoenixcorneae.common.ext.view.setTintColor
 
 @BindingAdapter(value = ["android:layout_marginTop"], requireAll = false)
 fun setMargins(view: View, marginTop: Int) {
@@ -21,7 +21,7 @@ fun setMargins(view: View, marginTop: Int) {
 @BindingAdapter(value = ["tint"], requireAll = false)
 fun setTintColor(imageView: ImageView, tintColor: Int) {
     if (tintColor != 0) {
-        imageView.setImageDrawable(getTintDrawable(tintColor, imageView.drawable))
+        imageView.setTintColor(tint = tintColor)
     }
 }
 
@@ -46,7 +46,7 @@ fun isSelected(view: View, selected: Boolean) {
 @BindingAdapter(value = ["onSingleClick"], requireAll = false)
 fun setOnSingleClick(
     view: View,
-    onClickListener: View.OnClickListener
+    onClickListener: View.OnClickListener,
 ) {
     val hits = LongArray(2)
     view.setOnClickListener {
@@ -76,7 +76,7 @@ fun setOnMultiClick(
     view: View,
     clickTimes: Int,
     duration: Long,
-    onClickListener: View.OnClickListener
+    onClickListener: View.OnClickListener,
 ) {
     var tempClickTimes = clickTimes
     if (tempClickTimes <= 2) {

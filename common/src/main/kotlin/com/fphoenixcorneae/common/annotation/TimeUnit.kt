@@ -8,7 +8,7 @@ import com.fphoenixcorneae.common.ext.*
  * @date：2021/12/20 17:11
  */
 @Keep
-@Target(AnnotationTarget.CLASS, AnnotationTarget.FILE, AnnotationTarget.VALUE_PARAMETER)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FILE, AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FUNCTION)
 @kotlin.annotation.Retention(AnnotationRetention.BINARY)
 annotation class TimeUnit {
     companion object {

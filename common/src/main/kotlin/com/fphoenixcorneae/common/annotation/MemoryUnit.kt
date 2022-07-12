@@ -7,7 +7,7 @@ import java.math.BigDecimal
  * @desc 内存单位
  */
 @Keep
-@Target(AnnotationTarget.CLASS, AnnotationTarget.FILE, AnnotationTarget.VALUE_PARAMETER)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FILE, AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FUNCTION)
 @kotlin.annotation.Retention(AnnotationRetention.BINARY)
 annotation class MemoryUnit {
     companion object {

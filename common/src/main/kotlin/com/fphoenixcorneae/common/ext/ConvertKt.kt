@@ -49,7 +49,7 @@ fun OutputStream?.toBytes(): ByteArray? =
  * @param charset  The charset.
  */
 fun OutputStream?.toString(
-    charset: Charset
+    charset: Charset,
 ): String =
     this?.run {
         runCatching {
@@ -180,7 +180,7 @@ fun InputStream?.toBytes(): ByteArray? =
  * @param charset  The charset.
  */
 fun InputStream?.toString(
-    charset: Charset
+    charset: Charset,
 ): String =
     this?.run {
         runCatching {
@@ -195,7 +195,7 @@ fun InputStream?.toString(
  * @param charset  The charset.
  */
 fun String?.toInputStream(
-    charset: Charset
+    charset: Charset,
 ): InputStream? =
     this?.run {
         runCatching {
@@ -210,7 +210,7 @@ fun String?.toInputStream(
  * @param charset  The charset.
  */
 fun String?.toOutputStream(
-    charset: Charset
+    charset: Charset,
 ): OutputStream? {
     return if (this == null) {
         null
@@ -287,7 +287,7 @@ fun Char.hexChar2Int(): Int {
  *  * [MemoryUnit.GB]
  */
 fun Long.memorySize2Byte(
-    @MemoryUnit unit: Long
+    @MemoryUnit unit: Long,
 ): Long {
     return if (this < 0) {
         0
@@ -305,7 +305,7 @@ fun Long.memorySize2Byte(
  *  * [MemoryUnit.GB]
  */
 fun Long.byte2MemorySize(
-    @MemoryUnit unit: Long
+    @MemoryUnit unit: Long,
 ): Double =
     if (this < 0) {
         0.0
@@ -405,11 +405,12 @@ fun Long.millis2FitTimeSpan(precision: Int): String? {
  * @param format The format of bitmap.
  */
 fun Bitmap?.toBytes(
-    format: CompressFormat = CompressFormat.JPEG
+    format: CompressFormat = CompressFormat.JPEG,
+    quality: Int = 100,
 ): ByteArray? =
     this?.run {
         val baos = ByteArrayOutputStream()
-        compress(format, 100, baos)
+        compress(format, quality, baos)
         baos.toByteArray()
     }
 
@@ -452,17 +453,18 @@ fun Drawable?.toBitmap(): Bitmap? =
  * @param format   The format of bitmap.
  */
 fun Drawable?.toBytes(
-    format: CompressFormat = CompressFormat.JPEG
+    format: CompressFormat = CompressFormat.JPEG,
+    quality: Int = 100,
 ): ByteArray? =
-    this?.toBitmap()?.toBytes(format)
+    this?.toBitmap()?.toBytes(format, quality)
 
 /**
  * Bytes to bitmap.
  */
-fun ByteArray?.toBitmap(): Bitmap? =
+fun ByteArray?.toBitmap(offset: Int = 0): Bitmap? =
     this?.run {
         runCatching {
-            BitmapFactory.decodeByteArray(this, 0, this.size)
+            BitmapFactory.decodeByteArray(this, offset, this.size)
         }.onFailure {
             it.printStackTrace()
         }.getOrNull()
@@ -508,7 +510,7 @@ fun JSONArray?.toBytes(): ByteArray? = this?.toString()?.toByteArray()
  * Bytes to Parcelable
  */
 fun <T> ByteArray?.toParcelable(
-    creator: Parcelable.Creator<T>
+    creator: Parcelable.Creator<T>,
 ): T? =
     this?.run {
         val parcel = Parcel.obtain()
@@ -523,7 +525,7 @@ fun <T> ByteArray?.toParcelable(
  * Bytes to Parcelable
  */
 fun <T> ByteArray?.toParcelable(
-    parceler: Parceler<T>
+    parceler: Parceler<T>,
 ): T? =
     this?.run {
         val parcel = Parcel.obtain()

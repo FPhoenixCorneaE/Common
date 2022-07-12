@@ -1,14 +1,14 @@
 package com.fphoenixcorneae.common.ext.view
 
-import android.graphics.Bitmap
+import android.content.res.ColorStateList
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.os.ParcelFileDescriptor
 import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.Px
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import coil.Coil
 import coil.request.ImageRequest
@@ -17,37 +17,55 @@ import coil.transform.Transformation
 import com.fphoenixcorneae.common.ext.action
 import com.fphoenixcorneae.common.ext.applicationContext
 import com.fphoenixcorneae.common.ext.toDrawable
-import com.fphoenixcorneae.common.util.ImageUtil
 import kotlinx.coroutines.*
-import java.io.FileDescriptor
 
 /**
- * 获取着色位图
+ * 获取可以进行tint的Drawable
+ *
+ * 对原drawable进行重新实例化  newDrawable()
+ * 包装  warp()
+ * 可变操作 mutate()
+ *
+ * @param drawable  原始drawable
+ * @param tint      使用着色
+ * @return 可着色的drawable
  */
-fun getTintDrawable(
-    @ColorInt tintColor: Int,
-    drawable: Drawable?
+fun getCanTintDrawable(
+    drawable: Drawable?,
+    tint: ColorStateList,
 ): Drawable? = drawable?.run {
+    // constantState - 获取此drawable的共享状态实例
+    // 对drawable 进行重新实例化、包装、可变操作
     DrawableCompat.wrap(constantState?.newDrawable() ?: this)
         .mutate()
 }?.apply {
-    DrawableCompat.setTint(this, tintColor)
+    DrawableCompat.setTintList(this, tint)
 }
 
 /**
  * 图片着色
- * @param tintColor     着色后的颜色
+ * @param tint          着色后的颜色
  * @param drawableResId 图片资源 id
  */
 fun ImageView.setTintColor(
-    tintColor: Int,
-    @DrawableRes drawableResId: Int? = null
-) {
-    drawableResId.action({
-        ImageUtil.setTintColor(this, it, tintColor)
-    }) {
-        ImageUtil.setTintColor(this, tintColor)
+    @ColorInt tint: Int,
+    @DrawableRes drawableResId: Int? = null,
+) = setTintColorStateList(ColorStateList.valueOf(tint), drawableResId)
+
+/**
+ * 图片着色
+ * @param tint          着色后的颜色
+ * @param drawableResId 图片资源 id
+ */
+fun ImageView.setTintColorStateList(
+    tint: ColorStateList,
+    @DrawableRes drawableResId: Int? = null,
+) = drawableResId.action({
+    ContextCompat.getDrawable(applicationContext, it)?.let {
+        setImageDrawable(getCanTintDrawable(it, tint))
     }
+}) {
+    setImageDrawable(getCanTintDrawable(drawable, tint))
 }
 
 /**
@@ -56,7 +74,7 @@ fun ImageView.setTintColor(
 fun ImageView.load(
     imgUrl: Any?,
     placeholderDrawable: Drawable? = null,
-    isCircle: Boolean = false
+    isCircle: Boolean = false,
 ) {
     CoroutineScope(Dispatchers.Default).launch {
         val resultDrawable = Coil.imageLoader(context)
@@ -87,7 +105,7 @@ fun ImageView.load(
     @Px height: Int = 0,
     onStart: ((placeholder: Drawable?) -> Unit)? = null,
     onSuccess: ((result: Drawable) -> Unit)? = null,
-    onError: ((error: Drawable?) -> Unit)? = null
+    onError: ((error: Drawable?) -> Unit)? = null,
 ) {
     CoroutineScope(Dispatchers.Default).launch {
         Coil.imageLoader(context)
@@ -125,16 +143,12 @@ fun ImageView.load(
 /**
  * 通过 uri 加载图片
  */
-fun getDrawableFromUri(uri: Uri): Drawable? {
-    try {
-        val parcelFileDescriptor: ParcelFileDescriptor? =
-            applicationContext.contentResolver.openFileDescriptor(uri, "r")
-        val fileDescriptor: FileDescriptor? = parcelFileDescriptor?.fileDescriptor
-        val image: Bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
-        parcelFileDescriptor?.close()
-        return image.toDrawable()
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
-    return null
-}
+fun getDrawableFromUri(uri: Uri): Drawable? = runCatching {
+    val parcelFileDescriptor = applicationContext.contentResolver.openFileDescriptor(uri, "r")
+    val fileDescriptor = parcelFileDescriptor?.fileDescriptor
+    val image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+    parcelFileDescriptor?.close()
+    image.toDrawable()
+}.onFailure { e ->
+    e.printStackTrace()
+}.getOrNull()

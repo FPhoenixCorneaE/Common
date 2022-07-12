@@ -8,7 +8,7 @@ import androidx.annotation.Keep
  * @date：2022/04/28 16:03
  */
 @Keep
-@Target(AnnotationTarget.CLASS, AnnotationTarget.FILE, AnnotationTarget.VALUE_PARAMETER)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FILE, AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FUNCTION)
 @kotlin.annotation.Retention(AnnotationRetention.BINARY)
 annotation class Shape {
     companion object {
