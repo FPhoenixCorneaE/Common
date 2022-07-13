@@ -4,10 +4,7 @@ import android.content.res.Resources
 import android.graphics.*
 import android.media.ExifInterface
 import android.os.Build
-import android.renderscript.Allocation
-import android.renderscript.Element
-import android.renderscript.RenderScript
-import android.renderscript.ScriptIntrinsicBlur
+import android.renderscript.*
 import androidx.annotation.ColorInt
 import androidx.annotation.FloatRange
 import androidx.annotation.IntRange
@@ -617,6 +614,8 @@ fun Bitmap.renderScriptBlur(
         blurScript.setRadius(radius)
         blurScript.forEach(output)
         output.copyTo(newBitmap)
+    } catch (e: RSIllegalArgumentException) {
+        e.printStackTrace()
     } finally {
         rs?.destroy()
     }
