@@ -522,7 +522,6 @@ fun Bitmap.toAlpha(
  * @param recycle True to recycle the source of bitmap, false otherwise.
  * @return the gray bitmap
  */
-@JvmOverloads
 fun Bitmap.toGray(
     recycle: Boolean = false,
 ): Bitmap? = run {
@@ -547,15 +546,12 @@ fun Bitmap.toGray(
 /**
  * 图片高斯模糊
  * zoom out, blur, zoom in
- *
- * @param src           The source of bitmap.
  * @param scale         The scale(0...1).
  * @param radius        The radius(0...25).
  * @param recycle       True to recycle the source of bitmap, false otherwise.
  * @param isReturnScale True to return the scale blur bitmap, false otherwise.
  * @return the blur bitmap
  */
-@JvmOverloads
 fun Bitmap.fastBlur(
     @FloatRange(from = 0.0, to = 1.0, fromInclusive = false) scale: Float = 1f,
     @FloatRange(from = 0.0, to = 25.0, fromInclusive = false) radius: Float = 20f,
