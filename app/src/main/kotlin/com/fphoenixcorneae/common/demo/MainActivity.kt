@@ -22,10 +22,12 @@ import com.fphoenixcorneae.common.ext.view.setUnderLine
 import com.fphoenixcorneae.common.ext.view.textAction
 import com.fphoenixcorneae.common.util.IntentUtil
 import com.fphoenixcorneae.permissions.requestPhonePermission
+import com.fphoenixcorneae.permissions.requestWritePermission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -105,10 +107,17 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             delay(2000)
             // 生成位图并保存
+            val filename = "${System.currentTimeMillis()}.jpg"
             writeFileFromIS(
-                filesDir.absolutePath + "/${System.currentTimeMillis()}.jpg",
+                filesDir.absolutePath + "/$filename",
                 createBitmap().toBytes().toInputStream()
-            )
+            ).also {
+                if (it) {
+                    File(filesDir.absolutePath + "/$filename").zip(filesDir.absolutePath + "/压缩.zip").also {
+                        it.unZip(filesDir.absolutePath + "/解压")
+                    }
+                }
+            }
         }
     }
 
@@ -216,6 +225,9 @@ class MainActivity : AppCompatActivity() {
             onNeverAsk {
                 IntentUtil.openApplicationDetailsSettings()
             }
+        }
+        requestWritePermission {
+
         }
     }
 
