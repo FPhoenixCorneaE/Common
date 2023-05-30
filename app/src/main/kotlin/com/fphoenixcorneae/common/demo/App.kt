@@ -12,11 +12,8 @@ import com.orhanobut.logger.PrettyFormatStrategy
 
 class App : Application(), ViewModelStoreOwner {
 
-    private val mViewModelStore by lazy { ViewModelStore() }
-
-    override fun getViewModelStore(): ViewModelStore {
-        return mViewModelStore
-    }
+    override val viewModelStore: ViewModelStore
+        get() = ViewModelStore()
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)

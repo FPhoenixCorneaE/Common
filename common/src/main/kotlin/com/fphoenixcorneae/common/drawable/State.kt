@@ -1,7 +1,7 @@
 package com.fphoenixcorneae.common.drawable
 
 /** 将系统android.R.attr.state_checked 等常量封装，方便调用**/
-sealed class State private constructor(val value: Int)
+sealed class State constructor(val value: Int)
 
 /** @see android.R.attr.state_activated*/
 object StateActivated : State(android.R.attr.state_activated)

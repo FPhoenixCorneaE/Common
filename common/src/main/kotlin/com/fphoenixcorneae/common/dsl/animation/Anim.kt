@@ -62,20 +62,20 @@ abstract class Anim {
 
     internal fun addListener() {
         animator.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
-                animation?.let { onRepeat?.invoke(it) }
+            override fun onAnimationRepeat(animation: Animator) {
+                onRepeat?.invoke(animation)
             }
 
-            override fun onAnimationEnd(animation: Animator?) {
-                animation?.let { onEnd?.invoke(it) }
+            override fun onAnimationEnd(animation: Animator) {
+                onEnd?.invoke(animation)
             }
 
-            override fun onAnimationCancel(animation: Animator?) {
-                animation?.let { onCancel?.invoke(it) }
+            override fun onAnimationCancel(animation: Animator) {
+                onCancel?.invoke(animation)
             }
 
-            override fun onAnimationStart(animation: Animator?) {
-                animation?.let { onStart?.invoke(it) }
+            override fun onAnimationStart(animation: Animator) {
+                onStart?.invoke(animation)
             }
         })
     }

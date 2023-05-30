@@ -10,6 +10,7 @@ import android.media.AudioManager
 import android.media.MediaRouter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
+import android.net.wifi.p2p.WifiP2pManager
 import android.os.BatteryManager
 import android.os.PowerManager
 import android.os.Vibrator
@@ -42,6 +43,7 @@ val Context.vibrator get() = getSystemService<Vibrator>()
 val Context.vibratorManager get() = getSystemService<VibratorManager>()
 val Context.connectivityManager get() = getSystemService<ConnectivityManager>()
 val Context.wifiManager get() = getSystemService<WifiManager>()
+val Context.wifiP2pManager get() = getSystemService<WifiP2pManager>()
 val Context.audioManager get() = getSystemService<AudioManager>()
 val Context.mediaRouter get() = getSystemService<MediaRouter>()
 val Context.telephonyManager get() = getSystemService<TelephonyManager>()

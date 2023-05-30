@@ -820,11 +820,11 @@ fun <T> View.observe(liveData: LiveData<T>?, action: (T) -> Unit) {
 fun RecyclerView.setOnItemClickListener(listener: (View, Int) -> Unit) {
     addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
         val gestureDetector = GestureDetector(context, object : GestureDetector.OnGestureListener {
-            override fun onShowPress(e: MotionEvent?) {
+            override fun onShowPress(e: MotionEvent) {
             }
 
-            override fun onSingleTapUp(e: MotionEvent?): Boolean {
-                e?.let {
+            override fun onSingleTapUp(e: MotionEvent): Boolean {
+                e.let {
                     findChildViewUnder(it.x, it.y)?.let { child ->
                         listener(child, getChildAdapterPosition(child))
                     }
@@ -832,13 +832,13 @@ fun RecyclerView.setOnItemClickListener(listener: (View, Int) -> Unit) {
                 return false
             }
 
-            override fun onDown(e: MotionEvent?): Boolean {
+            override fun onDown(e: MotionEvent): Boolean {
                 return false
             }
 
             override fun onFling(
-                e1: MotionEvent?,
-                e2: MotionEvent?,
+                e1: MotionEvent,
+                e2: MotionEvent,
                 velocityX: Float,
                 velocityY: Float
             ): Boolean {
@@ -846,15 +846,15 @@ fun RecyclerView.setOnItemClickListener(listener: (View, Int) -> Unit) {
             }
 
             override fun onScroll(
-                e1: MotionEvent?,
-                e2: MotionEvent?,
+                e1: MotionEvent,
+                e2: MotionEvent,
                 distanceX: Float,
                 distanceY: Float
             ): Boolean {
                 return false
             }
 
-            override fun onLongPress(e: MotionEvent?) {
+            override fun onLongPress(e: MotionEvent) {
             }
         })
 

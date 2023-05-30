@@ -11,7 +11,6 @@ plugins {
 
 android {
     compileSdk = Deps.Android.compileSdkVersion
-    buildToolsVersion = Deps.Android.buildToolsVersion
 
     defaultConfig {
         minSdk = Deps.Android.minSdkVersion
@@ -57,6 +56,10 @@ android {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
+    packagingOptions {
+        resources.excludes += "DebugProbesKt.bin"
+    }
+
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
@@ -65,20 +68,16 @@ android {
     }
 
     lint {
-        isCheckReleaseBuilds = false
-        isAbortOnError = false
     }
 
     configurations.all {
         resolutionStrategy {
-            force(Deps.Kotlin.stdlib)
         }
     }
 }
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    implementation(Deps.Kotlin.stdlib)
     // FPhoenixCorneaE
     api(Deps.FPhoenixCorneaE.coroutinesPermissions)
     // androidX

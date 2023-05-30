@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.fphoenixcorneae.common.annotation.GradientType
 import com.fphoenixcorneae.common.annotation.Shape
 import com.fphoenixcorneae.common.demo.cache.CacheActivity
 import com.fphoenixcorneae.common.demo.databinding.ActivityMainBinding
@@ -94,8 +96,8 @@ class MainActivity : AppCompatActivity() {
         mViewBinding.btnRequestPermissions.setOnClickListener {
             requestPermissions()
         }
-//        mViewBinding.btnRequestPermissions.background = codeConstructsGradientDrawable()
-        mViewBinding.btnRequestPermissions.background = codeConstructsStateListDrawable()
+        mViewBinding.btnRequestPermissions.background = codeConstructsGradientDrawable()
+//        mViewBinding.btnRequestPermissions.background = codeConstructsStateListDrawable()
 
         // 设置亮度
         mViewBinding.sbBrightness.setOnSeekBarChangeListener(
@@ -149,17 +151,17 @@ class MainActivity : AppCompatActivity() {
     private fun codeConstructsGradientDrawable(): Drawable {
         return gradientDrawable(this) {
             shape(Shape.RECTANGLE)
-            solidColor(Color.GRAY)
-//            solidColor {
-//                item {
-//                    color(Color.RED)
-//                    state(StatePressed)
-//                }
-//                item {
-//                    color(Color.BLUE)
-//                    minusState(StatePressed)
-//                }
-//            }
+//            solidColor(Color.GRAY)
+            solidColor {
+                item {
+                    color(Color.RED)
+                    state(StatePressed)
+                }
+                item {
+                    color(Color.BLUE)
+                    minusState(StatePressed)
+                }
+            }
             corner {
 //                radius(20f)
                 radii(
@@ -188,14 +190,14 @@ class MainActivity : AppCompatActivity() {
                 setPadding(left = 8f, top = 8f, right = 8f, bottom = 8f)
             }
             size(width = 100, height = 20)
-//            gradient {
-//                gradientCenter(0.5f, 0.5f)
-//                useLevel(false)
-//                gradientType(GradientType.LINEAR_GRADIENT)
-//                orientation(GradientDrawable.Orientation.LEFT_RIGHT)
-//                gradientRadius(10f)
-//                gradientColors(intArrayOf(Color.TRANSPARENT, Color.BLACK))
-//            }
+            gradient {
+                gradientCenter(0.5f, 0.5f)
+                useLevel(false)
+                gradientType(GradientType.LINEAR_GRADIENT)
+                orientation(GradientDrawable.Orientation.LEFT_RIGHT)
+                gradientRadius(10f)
+                gradientColors(intArrayOf(Color.TRANSPARENT, Color.BLACK))
+            }
         }
     }
 

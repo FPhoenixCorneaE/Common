@@ -10,7 +10,6 @@ plugins {
 
 android {
     compileSdk = Deps.Android.compileSdkVersion
-    buildToolsVersion = Deps.Android.buildToolsVersion
 
     defaultConfig {
         applicationId = "com.fphoenixcorneae.common.demo"
@@ -62,9 +61,11 @@ android {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
+    packagingOptions {
+        resources.excludes += "DebugProbesKt.bin"
+    }
+
     lint {
-        isCheckReleaseBuilds = false
-        isAbortOnError = false
     }
 
     buildFeatures {
@@ -74,14 +75,12 @@ android {
 
     configurations.all {
         resolutionStrategy {
-            force(Deps.Kotlin.stdlib)
         }
     }
 }
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    implementation(Deps.Kotlin.stdlib)
     implementation(Deps.AndroidX.appcompat)
     implementation(Deps.AndroidX.constraintLayout)
     implementation(Deps.AndroidX.material)
@@ -108,7 +107,7 @@ dependencies {
     implementation(Deps.Eventbus.eventbus)
     implementation(Deps.Gson.gson)
     implementation(Deps.Log.logger)
-    implementation(project(mapOf("path" to ":common")))
+    implementation(projects.common)
     testImplementation(Deps.Test.junit)
     androidTestImplementation(Deps.Test.junitExt)
     androidTestImplementation(Deps.Test.espresso)

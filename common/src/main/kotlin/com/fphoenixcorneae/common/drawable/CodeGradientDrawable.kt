@@ -357,7 +357,7 @@ class Corner private constructor(
         }
 
         internal fun build(): Corner {
-            return Corner(radius = radius, radii)
+            return Corner(radius = radius, radii = radii)
         }
 
         override fun equals(other: Any?): Boolean {

@@ -238,9 +238,8 @@ class LocationUtil private constructor() {
         ): Address? {
             val geocoder = Geocoder(applicationContext, Locale.getDefault())
             try {
-                val addresses =
-                    geocoder.getFromLocation(latitude, longitude, 1)
-                if (addresses.size > 0) return addresses[0]
+                val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+                return addresses?.getOrNull(0)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
