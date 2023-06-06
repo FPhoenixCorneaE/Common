@@ -236,6 +236,10 @@ class MainActivity : AppCompatActivity() {
     fun go2CacheActivity(view: View) {
         startKtxActivity<CacheActivity>()
     }
+
+    fun throwsException(view: View) {
+        throw RuntimeException("测试抛出异常，然后进行处理！")
+    }
 }
 
 data class Fruit(

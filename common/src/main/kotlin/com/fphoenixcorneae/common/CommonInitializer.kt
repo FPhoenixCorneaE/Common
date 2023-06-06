@@ -5,8 +5,8 @@ import android.content.Context
 import androidx.startup.Initializer
 import com.fphoenixcorneae.common.ext.logd
 import com.fphoenixcorneae.common.ext.relaunchApp
+import com.fphoenixcorneae.common.ext.setupGlobalExceptionHandler
 import com.fphoenixcorneae.common.lifecycle.ActivityLifecycleCallbacksImpl
-import com.fphoenixcorneae.common.util.CrashUtil
 import com.fphoenixcorneae.common.util.toast.ToastUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -24,27 +24,17 @@ class CommonInitializer : Initializer<Unit>, CoroutineScope by MainScope() {
             // 初始化 ToastUtil
             ToastUtil.init(it)
         }
-        // 初始化 CrashUtil
-        initCrashUtil()
+        // 全局异常处理
+        setupGlobalExceptionHandler { _, _ ->
+            // 重启应用
+            relaunchApp()
+        }
         "CommonInitializer 初始化".logd("startup")
     }
 
     override fun dependencies(): MutableList<Class<out Initializer<*>>> {
         // No dependencies on other libraries.
         return mutableListOf()
-    }
-
-    /**
-     * 初始化崩溃处理工具
-     */
-    private fun initCrashUtil() {
-        CrashUtil.init(object : CrashUtil.OnCrashListener {
-            override fun onCrash(crashInfo: String, e: Throwable?) {
-                crashInfo.logd()
-                // 重启应用
-                relaunchApp()
-            }
-        })
     }
 
     companion object {

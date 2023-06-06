@@ -55,6 +55,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp" />
 
+            <Button
+                android:id="@+id/btnThrowsException"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:onClick="throwsException"
+                android:text="抛出异常"
+                android:textColor="@android:color/white"
+                tools:ignore="HardcodedText" />
+
             <fragment
                 android:id="@+id/fragmentHome"
                 android:name="com.fphoenixcorneae.common.demo.HomeFragment"
