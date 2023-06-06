@@ -662,10 +662,7 @@ object BankCheckUtil {
      * @return 是否合法
      */
     fun checkBankCard(cardId: String): Boolean {
-        val bit = getBankCardCheckCode(
-            cardId
-                .substring(0, cardId.length - 1)
-        )
+        val bit = getBankCardCheckCode(cardId.substring(0, cardId.length - 1))
         if (bit == 'N') {
             return false
         }
@@ -704,7 +701,7 @@ object BankCheckUtil {
     }
 
     /**
-     * 通过银行卡 的前六位确定 判断银行开户行及卡种
+     * 通过银行卡的前六位判断银行开户行及卡种
      */
     fun getNameOfBank(cardbin: String): String {
         // 通过银行卡的前6位确定
@@ -716,11 +713,6 @@ object BankCheckUtil {
                 index = i
             }
         }
-        return when (index) {
-            -1 -> {
-                ""
-            }
-            else -> BANK_NAME[index]
-        }
+        return if (index == -1) "" else BANK_NAME[index]
     }
 }

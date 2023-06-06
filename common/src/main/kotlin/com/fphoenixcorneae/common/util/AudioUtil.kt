@@ -1,7 +1,6 @@
 package com.fphoenixcorneae.common.util
 
 import android.content.Intent
-import android.content.res.AssetManager
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
@@ -10,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.SystemClock
 import android.provider.Settings
+import com.fphoenixcorneae.common.ext.appPackageName
 import com.fphoenixcorneae.common.ext.applicationContext
 import com.fphoenixcorneae.common.ext.audioManager
 import java.io.IOException
@@ -22,21 +22,16 @@ import java.util.concurrent.Executors
  */
 object AudioUtil {
 
-    private var mAssetManager: AssetManager? = null
     private val soundBytes: HashMap<String, ByteArray> = HashMap()
     private val audioTrackMap: HashMap<String, AudioTrack?> = HashMap()
     private val audioTrackUsingerList: ConcurrentLinkedQueue<AudioTrack> = ConcurrentLinkedQueue()
     private lateinit var knobAudioTrack: AudioTrack
-
-    /**
-     * 上下文
-     */
-    private val mContext = applicationContext
+    private val mAssetManager by lazy { applicationContext.assets }
 
     /**
      * 音频服务 Manager
      */
-    private val mAudioManager by lazy { mContext.audioManager }
+    private val mAudioManager by lazy { applicationContext.audioManager }
 
     /**
      * 线程池
@@ -44,7 +39,6 @@ object AudioUtil {
     val mThreadPool by lazy { Executors.newFixedThreadPool(100) }
 
     init {
-        mAssetManager = mContext.assets
         initAudioTrack()
     }
 
@@ -74,14 +68,14 @@ object AudioUtil {
 
     private fun muteSystemTouch() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.System.canWrite(mContext)) {
+            if (!Settings.System.canWrite(applicationContext)) {
                 val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
-                intent.data = Uri.parse("package:" + mContext.packageName)
+                intent.data = Uri.parse("package:$appPackageName")
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                mContext.startActivity(intent)
+                applicationContext.startActivity(intent)
             } else {
                 Settings.System.putInt(
-                    mContext.contentResolver,
+                    applicationContext.contentResolver,
                     Settings.System.SOUND_EFFECTS_ENABLED,
                     0
                 )
@@ -89,7 +83,7 @@ object AudioUtil {
             }
         } else {
             Settings.System.putInt(
-                mContext.contentResolver,
+                applicationContext.contentResolver,
                 Settings.System.SOUND_EFFECTS_ENABLED,
                 0
             )
@@ -180,30 +174,22 @@ object AudioUtil {
         val formatTag = bytes2Int(bytes.copyOfRange(indexOf - 17, indexOf - 15))
         // fps
         val bits = bytes2Int(bytes.copyOfRange(indexOf - 21, indexOf - 17))
-        /* println(
-             "bitPerSample:${bitPerSample}\n" +
-                     "blockAlign:${blockAlign}\n" +
-                     "bytePerSec:${bytePerSec}\n" +
-                     "sampleRate:${sampleRate}\n" +
-                     "channel:${channel}\n" +
-                     "formatTag:${formatTag}\n" +
-                     "bits:${bits}"
-         )*/
         return HeaderInfo(
-            bitPerSample,
-            blockAlign,
-            bytePerSec,
-            sampleRate,
-            when (channel) {
+            bitPerSample = bitPerSample,
+            blockAlign = blockAlign,
+            bytePerSec = bytePerSec,
+            sampleRate = sampleRate,
+            channelFormat = when (channel) {
                 1 -> AudioFormat.CHANNEL_OUT_MONO
                 2 -> AudioFormat.CHANNEL_OUT_STEREO
                 else -> AudioFormat.CHANNEL_OUT_STEREO
             },
-            when (bits) {
+            bitFormat = when (bits) {
                 8 -> AudioFormat.ENCODING_PCM_8BIT
                 16 -> AudioFormat.ENCODING_PCM_16BIT
                 else -> AudioFormat.ENCODING_DEFAULT
-            }, indexOf + 3
+            },
+            dataIndex = indexOf + 3,
         )
     }
 
@@ -214,7 +200,7 @@ object AudioUtil {
         val sampleRate: Int,
         val channelFormat: Int,
         val bitFormat: Int,
-        val dataIndex: Int
+        val dataIndex: Int,
     )
 
     private fun bytes2Int(bytes: ByteArray): Int {
@@ -222,7 +208,6 @@ object AudioUtil {
         // 将每个byte依次搬运到int相应的位置
         bytes.forEachIndexed { index, byte ->
             result = result or (byte.toInt() and 0xff shl index * 8)
-
         }
         return result
     }
