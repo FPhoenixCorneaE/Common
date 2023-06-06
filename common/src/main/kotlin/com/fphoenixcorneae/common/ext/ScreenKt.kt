@@ -158,6 +158,7 @@ var sleepDuration: Int
  * 获取状态栏高度
  */
 val statusBarHeight: Int
+    @SuppressLint("InternalInsetResource", "DiscouragedApi")
     get() =
         Resources.getSystem().run {
             val resId = getIdentifier("status_bar_height", "dimen", "android")
@@ -234,6 +235,7 @@ val Activity.titleBarHeight: Int
  * 获取导航栏高度
  */
 val navigationBarHeight: Int
+    @SuppressLint("DiscouragedApi", "InternalInsetResource")
     get() =
         Resources.getSystem().run {
             val resId = getIdentifier("navigation_bar_height", "dimen", "android")

@@ -265,7 +265,7 @@ private val macAddressByFile: String
  * Return the manufacturer of the product/hardware.
  * e.g. Xiaomi
  */
-val manufacturer: String
+val deviceManufacturer: String
     get() = Build.MANUFACTURER
 
 /**

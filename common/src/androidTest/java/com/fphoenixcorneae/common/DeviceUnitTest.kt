@@ -20,7 +20,7 @@ class DeviceUnitTest {
         println("androidID: $androidID")
         println("macAddress: $macAddress")
         println("wifiEnabled: $wifiEnabled")
-        println("manufacturer: $manufacturer")
+        println("manufacturer: $deviceManufacturer")
         println("deviceModel: $deviceModel")
         println("aBIs: $aBIs")
         println("isTablet: $isTablet")

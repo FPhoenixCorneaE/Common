@@ -3,7 +3,6 @@ package com.fphoenixcorneae.common.util.statusbar
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.view.View
@@ -12,17 +11,20 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.ColorInt
 import androidx.annotation.FloatRange
-import com.fphoenixcorneae.common.util.RomUtil
+import com.fphoenixcorneae.common.ext.isMeizu
+import com.fphoenixcorneae.common.ext.isOppo
+import com.fphoenixcorneae.common.ext.isXiaomi
 
 /**
  * 状态栏工具类
  */
 object StatusBarUtil {
 
+    @SuppressLint("ObsoleteSdkInt")
     fun supportTransparentStatusBar(): Boolean {
-        return (RomUtil.isXiaomi
-                || RomUtil.isMeizu
-                || (RomUtil.isOppo && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        return (isXiaomi
+                || isMeizu
+                || (isOppo && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
     }
 
@@ -31,39 +33,35 @@ object StatusBarUtil {
      *
      * @param window
      */
+    @SuppressLint("ObsoleteSdkInt")
     fun transparentStatusBar(window: Window) {
         when {
-            RomUtil.isXiaomi || RomUtil.isMeizu -> {
+            isXiaomi || isMeizu -> {
                 when {
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
-                        transparentStatusBarAbove21(
-                            window
-                        )
+                        transparentStatusBarAbove21(window)
                     }
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT -> {
                         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
                     }
                 }
             }
-            RomUtil.isOppo && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
-                transparentStatusBarAbove21(
-                    window
-                )
+            isOppo && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
+                transparentStatusBarAbove21(window)
             }
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
-                transparentStatusBarAbove21(
-                    window
-                )
+                transparentStatusBarAbove21(window)
             }
         }
     }
 
-    @TargetApi(21)
+    @SuppressLint("ObsoleteSdkInt")
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun transparentStatusBarAbove21(window: Window) {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+        window.decorView.systemUiVisibility =
+            (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
         window.statusBarColor = Color.TRANSPARENT
     }
 
@@ -74,30 +72,10 @@ object StatusBarUtil {
      */
     fun setLightMode(window: Window) {
         when {
-            RomUtil.isXiaomi -> {
-                setMIUIStatusBarDarkMode(
-                    window,
-                    false
-                )
-            }
-            RomUtil.isMeizu -> {
-                setFlymeStatusBarDarkMode(
-                    window,
-                    false
-                )
-            }
-            RomUtil.isOppo -> {
-                setOppoStatusBarDarkMode(
-                    window,
-                    false
-                )
-            }
-            else -> {
-                setStatusBarDarkMode(
-                    window,
-                    false
-                )
-            }
+            isXiaomi -> setMIUIStatusBarDarkMode(window, false)
+            isMeizu -> setFlymeStatusBarDarkMode(window, false)
+            isOppo -> setOppoStatusBarDarkMode(window, false)
+            else -> setStatusBarDarkMode(window, false)
         }
     }
 
@@ -108,36 +86,22 @@ object StatusBarUtil {
      */
     fun setDarkMode(window: Window) {
         when {
-            RomUtil.isXiaomi -> {
-                setMIUIStatusBarDarkMode(window, true)
-            }
-            RomUtil.isMeizu -> {
-                setFlymeStatusBarDarkMode(window, true)
-            }
-            RomUtil.isOppo -> {
-                setOppoStatusBarDarkMode(window, true)
-            }
-            else -> {
-                setStatusBarDarkMode(window, true)
-            }
+            isXiaomi -> setMIUIStatusBarDarkMode(window, true)
+            isMeizu -> setFlymeStatusBarDarkMode(window, true)
+            isOppo -> setOppoStatusBarDarkMode(window, true)
+            else -> setStatusBarDarkMode(window, true)
         }
     }
 
     private fun setStatusBarDarkMode(
         window: Window,
-        darkMode: Boolean
+        darkMode: Boolean,
     ) {
-        when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
-                when {
-                    darkMode -> {
-                        window.decorView.systemUiVisibility =
-                            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    }
-                    else -> {
-                        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    }
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.decorView.systemUiVisibility = if (darkMode) {
+                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            } else {
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
             }
         }
     }
@@ -145,7 +109,7 @@ object StatusBarUtil {
     @SuppressLint("PrivateApi")
     private fun setMIUIStatusBarDarkMode(
         window: Window,
-        darkMode: Boolean
+        darkMode: Boolean,
     ) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             val clazz: Class<out Window> = window.javaClass
@@ -164,44 +128,37 @@ object StatusBarUtil {
             } catch (e: Exception) {
             }
         }
-        setStatusBarDarkMode(
-            window,
-            darkMode
-        )
+        setStatusBarDarkMode(window, darkMode)
     }
 
     private fun setFlymeStatusBarDarkMode(
         window: Window,
-        darkMode: Boolean
+        darkMode: Boolean,
     ) {
         FlymeStatusBarUtil.setStatusBarDarkIcon(window, darkMode)
     }
 
     private const val SYSTEM_UI_FLAG_OP_STATUS_BAR_TINT = 0x00000010
+
+    @SuppressLint("ObsoleteSdkInt")
     private fun setOppoStatusBarDarkMode(
         window: Window,
-        darkMode: Boolean
+        darkMode: Boolean,
     ) {
         var vis = window.decorView.systemUiVisibility
         when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
-                vis = when {
-                    darkMode -> {
-                        vis or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                    }
-                    else -> {
-                        vis and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-                    }
+                vis = if (darkMode) {
+                    vis or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                } else {
+                    vis and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
                 }
             }
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
-                vis = when {
-                    darkMode -> {
-                        vis or SYSTEM_UI_FLAG_OP_STATUS_BAR_TINT
-                    }
-                    else -> {
-                        vis and SYSTEM_UI_FLAG_OP_STATUS_BAR_TINT.inv()
-                    }
+                vis = if (darkMode) {
+                    vis or SYSTEM_UI_FLAG_OP_STATUS_BAR_TINT
+                } else {
+                    vis and SYSTEM_UI_FLAG_OP_STATUS_BAR_TINT.inv()
                 }
             }
         }
@@ -214,10 +171,11 @@ object StatusBarUtil {
      * @param color 颜色
      * @param alpha 透明度
      */
+    @SuppressLint("ObsoleteSdkInt")
     fun setStatusBarColor(
         window: Window,
         @ColorInt color: Int,
-        @FloatRange(from = 0.0, to = 1.0) alpha: Float = 1f
+        @FloatRange(from = 0.0, to = 1.0) alpha: Float = 1f,
     ) {
         if (Build.VERSION.SDK_INT >= 21) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
@@ -236,10 +194,11 @@ object StatusBarUtil {
     /**
      * 创建假的透明栏
      */
+    @SuppressLint("ObsoleteSdkInt")
     private fun setTranslucentView(
         container: ViewGroup,
         @ColorInt color: Int,
-        @FloatRange(from = 0.0, to = 1.0) alpha: Float
+        @FloatRange(from = 0.0, to = 1.0) alpha: Float,
     ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val mixtureColor = calculateStatusColor(color, alpha)
@@ -259,6 +218,7 @@ object StatusBarUtil {
     /**
      * 增加View的高度以及paddingTop,增加的值为状态栏高度.一般是在沉浸式全屏给ToolBar用的
      */
+    @SuppressLint("ObsoleteSdkInt")
     fun setSmartPadding(context: Context, view: View) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val lp = view.layoutParams
@@ -276,6 +236,7 @@ object StatusBarUtil {
     /**
      * 增加View上边距（MarginTop）一般是给高度为 WARP_CONTENT 的小控件用的
      */
+    @SuppressLint("ObsoleteSdkInt")
     fun setSmartMargin(context: Context, view: View) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val lp = view.layoutParams
@@ -296,7 +257,7 @@ object StatusBarUtil {
      */
     private fun calculateStatusColor(
         @ColorInt color: Int,
-        @FloatRange(from = 0.0, to = 1.0) alpha: Float
+        @FloatRange(from = 0.0, to = 1.0) alpha: Float,
     ): Int {
         val a = when {
             color and -0x1000000 == 0 -> 0xff
@@ -311,9 +272,10 @@ object StatusBarUtil {
      * @param context
      * @return
      */
+    @SuppressLint("InternalInsetResource", "DiscouragedApi")
     @JvmStatic
     fun getStatusBarHeight(context: Context): Int {
-        val resources = Resources.getSystem()
+        val resources = context.applicationContext.resources
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
         return resources.getDimensionPixelSize(resourceId)
     }
@@ -324,8 +286,9 @@ object StatusBarUtil {
      * @param context
      * @return
      */
+    @SuppressLint("InternalInsetResource", "DiscouragedApi")
     fun getNavigationBarHeight(context: Context): Int {
-        val resources = Resources.getSystem()
+        val resources = context.applicationContext.resources
         val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
         return resources.getDimensionPixelSize(resourceId)
     }
@@ -336,7 +299,7 @@ object StatusBarUtil {
      * @param context
      * @return
      */
-    @SuppressLint("PrivateApi")
+    @SuppressLint("PrivateApi", "DiscouragedApi")
     fun checkDeviceHasNavigationBar(context: Context): Boolean {
         var hasNavigationBar = false
         val rs = context.resources
@@ -345,12 +308,9 @@ object StatusBarUtil {
             hasNavigationBar = rs.getBoolean(id)
         }
         try {
-            val systemPropertiesClass =
-                Class.forName("android.os.SystemProperties")
-            val m =
-                systemPropertiesClass.getMethod("get", String::class.java)
-            val navBarOverride =
-                m.invoke(systemPropertiesClass, "qemu.hw.mainkeys") as String
+            val systemPropertiesClass = Class.forName("android.os.SystemProperties")
+            val m = systemPropertiesClass.getMethod("get", String::class.java)
+            val navBarOverride = m.invoke(systemPropertiesClass, "qemu.hw.mainkeys") as String
             if ("1" == navBarOverride) {
                 hasNavigationBar = false
             } else if ("0" == navBarOverride) {
