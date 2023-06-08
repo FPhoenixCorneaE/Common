@@ -75,6 +75,15 @@
                 android:textColor="@android:color/white"
                 tools:ignore="HardcodedText" />
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:onClick="location"
+                android:text="定位"
+                android:textColor="@android:color/white"
+                tools:ignore="HardcodedText" />
+
             <fragment
                 android:id="@+id/fragmentHome"
                 android:name="com.fphoenixcorneae.common.demo.HomeFragment"

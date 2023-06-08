@@ -14,6 +14,7 @@ import com.fphoenixcorneae.common.annotation.GradientType
 import com.fphoenixcorneae.common.annotation.Shape
 import com.fphoenixcorneae.common.demo.cache.CacheActivity
 import com.fphoenixcorneae.common.demo.databinding.ActivityMainBinding
+import com.fphoenixcorneae.common.demo.location.LocationActivity
 import com.fphoenixcorneae.common.demo.shortcut.ShortcutActivity
 import com.fphoenixcorneae.common.drawable.*
 import com.fphoenixcorneae.common.dsl.layout.TextView
@@ -244,6 +245,10 @@ class MainActivity : AppCompatActivity() {
 
     fun shortcut(view: View) {
         startKtxActivity<ShortcutActivity>()
+    }
+
+    fun location(view: View) {
+        startKtxActivity<LocationActivity>()
     }
 }
 

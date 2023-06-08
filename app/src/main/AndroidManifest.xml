@@ -24,5 +24,6 @@
         <activity
             android:name=".shortcut.ShortcutActivity"
             android:exported="true" />
+        <activity android:name=".location.LocationActivity" />
     </application>
 </manifest>

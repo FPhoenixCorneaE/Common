@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:onClick="gpsEnabled"
+            android:text="Gps是否可用" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:onClick="locationEnabled"
+            android:text="定位是否可用" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:onClick="openGpsSetting"
+            android:text="打开Gps设置界面" />
+
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
