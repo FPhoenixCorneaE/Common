@@ -21,6 +21,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".cache.CacheActivity" />
+        <activity
+            android:name=".shortcut.ShortcutActivity"
+            android:exported="true" />
     </application>
-
 </manifest>

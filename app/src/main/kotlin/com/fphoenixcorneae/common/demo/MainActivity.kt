@@ -14,6 +14,7 @@ import com.fphoenixcorneae.common.annotation.GradientType
 import com.fphoenixcorneae.common.annotation.Shape
 import com.fphoenixcorneae.common.demo.cache.CacheActivity
 import com.fphoenixcorneae.common.demo.databinding.ActivityMainBinding
+import com.fphoenixcorneae.common.demo.shortcut.ShortcutActivity
 import com.fphoenixcorneae.common.drawable.*
 import com.fphoenixcorneae.common.dsl.layout.TextView
 import com.fphoenixcorneae.common.ext.*
@@ -239,6 +240,10 @@ class MainActivity : AppCompatActivity() {
 
     fun throwsException(view: View) {
         throw RuntimeException("测试抛出异常，然后进行处理！")
+    }
+
+    fun shortcut(view: View) {
+        startKtxActivity<ShortcutActivity>()
     }
 }
 
