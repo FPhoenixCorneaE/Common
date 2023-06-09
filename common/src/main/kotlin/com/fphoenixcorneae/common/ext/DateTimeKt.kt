@@ -15,7 +15,7 @@ import kotlin.math.roundToLong
  * @param day 天数
  */
 fun Date.getStartOfDay(
-    day: Int = 0
+    day: Int = 0,
 ): Date =
     currentCalendar().run {
         time = this@getStartOfDay
@@ -35,7 +35,7 @@ fun Date.getStartOfDay(
  * @param day 天数
  */
 fun Date.getEndOfDay(
-    day: Int = 0
+    day: Int = 0,
 ): Date =
     currentCalendar().run {
         time = this@getEndOfDay
@@ -52,7 +52,7 @@ fun Date.getEndOfDay(
  * @param day 天数 【-1: 1天前, 1: 1天后】
  */
 fun Date.daysBeforeOrAfter(
-    day: Int
+    day: Int,
 ): Date =
     currentCalendar().run {
         time = this@daysBeforeOrAfter
@@ -65,7 +65,7 @@ fun Date.daysBeforeOrAfter(
  * @param month 月数 【-1: 1月前, 1: 1月后】
  */
 fun Date.monthsBeforeOrAfter(
-    month: Int
+    month: Int,
 ): Date =
     currentCalendar().run {
         time = this@monthsBeforeOrAfter
@@ -79,7 +79,7 @@ fun Date.monthsBeforeOrAfter(
  */
 fun Date.getTimeSpan(
     anotherDate: Date,
-    timeUnit: TimeUnit = TimeUnit.MILLISECONDS
+    timeUnit: TimeUnit = TimeUnit.MILLISECONDS,
 ): Long =
     abs(date2Millis() - anotherDate.date2Millis()).run {
         timeUnit.convert(this, TimeUnit.MILLISECONDS)
@@ -90,7 +90,7 @@ fun Date.getTimeSpan(
  * @param timeUnit    返回单位 [TimeUnit]
  */
 fun Date.getTimeSpanByNow(
-    timeUnit: TimeUnit = TimeUnit.MILLISECONDS
+    timeUnit: TimeUnit = TimeUnit.MILLISECONDS,
 ): Long =
     getTimeSpan(currentDate(), timeUnit)
 
@@ -100,7 +100,7 @@ fun Date.getTimeSpanByNow(
  */
 fun Long.getTimeSpan(
     anotherMillis: Long,
-    timeUnit: TimeUnit = TimeUnit.MILLISECONDS
+    timeUnit: TimeUnit = TimeUnit.MILLISECONDS,
 ): Long =
     abs(this - anotherMillis).run {
         timeUnit.convert(this, TimeUnit.MILLISECONDS)
@@ -111,7 +111,7 @@ fun Long.getTimeSpan(
  * @param timeUnit    返回单位 [TimeUnit]
  */
 fun Long.getTimeSpanByNow(
-    timeUnit: TimeUnit = TimeUnit.MILLISECONDS
+    timeUnit: TimeUnit = TimeUnit.MILLISECONDS,
 ): Long =
     getTimeSpan(System.currentTimeMillis(), timeUnit)
 
@@ -125,7 +125,7 @@ fun Long.getTimeSpanByNow(
 fun String.getTimeSpan(
     anotherTime: String,
     format: DateFormat,
-    timeUnit: TimeUnit = TimeUnit.MILLISECONDS
+    timeUnit: TimeUnit = TimeUnit.MILLISECONDS,
 ): Long =
     abs(string2Millis(format) - anotherTime.string2Millis(format)).run {
         timeUnit.convert(this, TimeUnit.MILLISECONDS)
@@ -138,7 +138,7 @@ fun String.getTimeSpan(
  */
 fun String.getTimeSpanByNow(
     format: DateFormat,
-    timeUnit: TimeUnit = TimeUnit.MILLISECONDS
+    timeUnit: TimeUnit = TimeUnit.MILLISECONDS,
 ): Long =
     string2Date(format).getTimeSpanByNow(timeUnit)
 
@@ -182,10 +182,10 @@ fun String.getAgeByBirthday(
 fun Long.getFriendlyTimeSpanByNow(): String {
     val currentTimeMillis = System.currentTimeMillis()
     val timeMillisSpan = currentTimeMillis - this
-    if (timeMillisSpan < 0) {
-        return String.format(locale = Locale.getDefault(), format = "%tc", this)
-    }
     when {
+        timeMillisSpan < 0 -> {
+            return String.format(locale = Locale.getDefault(), format = "%tc", this)
+        }
         timeMillisSpan < TimeUnit.SECONDS.toMillis(10) -> {
             return "刚刚"
         }
@@ -319,7 +319,7 @@ fun currentTimeMillis(): Long =
  * @param format 时间格式
  */
 fun currentTimeString(
-    format: DateFormat
+    format: DateFormat,
 ): String =
     currentTimeMillis().millis2String(format)
 
