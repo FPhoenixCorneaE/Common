@@ -82,7 +82,7 @@ class FragmentUtil private constructor() {
             bundle: Bundle? = null,
             addToBackStack: Boolean = false
         ): Companion {
-            newFragment.arguments = BundleBuilder.of(bundle).get()
+            newFragment.arguments = bundle
             fragmentTransaction?.replace(containerViewId, newFragment, newFragment.javaClass.name)
             if (addToBackStack) {
                 fragmentTransaction?.addToBackStack(newFragment.javaClass.name)
@@ -100,7 +100,7 @@ class FragmentUtil private constructor() {
             bundle: Bundle? = null,
             addToBackStack: Boolean = false
         ): Companion {
-            newFragment.arguments = BundleBuilder.of(bundle).get()
+            newFragment.arguments = bundle
             if (!newFragment.isAdded) {
                 fragmentTransaction?.add(containerViewId, newFragment, newFragment.javaClass.name)
             }
@@ -124,7 +124,7 @@ class FragmentUtil private constructor() {
             if (null != previousFragment) {
                 fragmentTransaction?.hide(previousFragment)
             }
-            newFragment.arguments = BundleBuilder.of(bundle).get()
+            newFragment.arguments = bundle
             if (newFragment.isAdded) {
                 fragmentTransaction?.show(newFragment)
             } else {

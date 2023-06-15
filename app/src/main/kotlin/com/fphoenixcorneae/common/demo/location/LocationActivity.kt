@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.fphoenixcorneae.common.demo.R
 import com.fphoenixcorneae.common.ext.*
-import com.fphoenixcorneae.common.util.IntentUtil
 
 class LocationActivity : AppCompatActivity() {
 
@@ -29,7 +28,7 @@ class LocationActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            IntentUtil.openApplicationDetailsSettings()
+            openApplicationDetailsSettings()
             return
         }
         registerLocationListener(0, 0, object : OnLocationChangeListener {

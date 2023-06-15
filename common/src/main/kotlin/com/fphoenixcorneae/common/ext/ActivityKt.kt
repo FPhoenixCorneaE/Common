@@ -2,13 +2,18 @@ package com.fphoenixcorneae.common.ext
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Service
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import androidx.annotation.AnimRes
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import com.fphoenixcorneae.common.ext.view.createBitmap
 import java.io.Serializable
@@ -68,8 +73,8 @@ fun getLauncherActivity(pkg: String): String {
 private val topActivityByReflect: Activity?
     get() {
         try {
-            @SuppressLint("PrivateApi") val activityThreadClass =
-                Class.forName("android.app.ActivityThread")
+            @SuppressLint("PrivateApi")
+            val activityThreadClass = Class.forName("android.app.ActivityThread")
             val currentActivityThreadMethod = activityThreadClass.getMethod("currentActivityThread").invoke(null)
             val mActivityListField = activityThreadClass.getDeclaredField("mActivityList")
             mActivityListField.isAccessible = true
@@ -110,10 +115,88 @@ fun Context?.getActivity(): Activity? {
     return null
 }
 
+/**
+ * @param bundle         传递数据
+ * @param requestCode    请求码
+ * @param enterAnim      进入动画
+ * @param exitAnim       退出动画
+ * @param sharedElements 共享元素
+ */
+@SuppressLint("ObsoleteSdkInt")
+inline fun <reified T : Activity> Context.startActivityWithAnim(
+    bundle: Bundle? = null,
+    requestCode: Int = -1,
+    @AnimRes enterAnim: Int = 0,
+    @AnimRes exitAnim: Int = 0,
+    vararg sharedElements: androidx.core.util.Pair<View, String>,
+) {
+    val intent = Intent(this, T::class.java).apply {
+        bundle?.let { putExtras(it) }
+    }
+    val makeCustomAnimation = sharedElements.isEmpty() || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP
+    val optionsBundle = if (makeCustomAnimation) {
+        ActivityOptionsCompat.makeCustomAnimation(this, enterAnim, exitAnim).toBundle()
+    } else {
+        ActivityOptionsCompat.makeSceneTransitionAnimation(this as Activity, *sharedElements).toBundle()
+    }
+    if (requestCode < 0) {
+        ActivityCompat.startActivity(this, intent, optionsBundle)
+    } else {
+        getActivity()?.startActivityForResult(intent, requestCode, optionsBundle)
+    }
+    getActivity()?.overridePendingTransition(enterAnim, exitAnim)
+}
+
+/**
+ * 根据action启动activity
+ * @param action 动作
+ */
+fun Context.startActivityByAction(
+    action: String?,
+    bundle: Bundle? = null,
+    requestCode: Int = -1,
+) {
+    runCatching {
+        val intent = Intent(action).apply {
+            bundle?.let { putExtras(it) }
+        }
+        if (requestCode < 0) {
+            ActivityCompat.startActivity(this, intent, null)
+        } else {
+            getActivity()?.startActivityForResult(intent, requestCode)
+        }
+    }.onFailure {
+        it.printStackTrace()
+    }
+}
+
+/**
+ * 通过包名打开软件
+ */
+fun Context.startAppByPackageName(appPackageName: String) {
+    packageManager.getLaunchIntentForPackage(appPackageName)?.apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    }?.also {
+        startActivity(it)
+    }
+}
+
+/**
+ * 启动服务
+ */
+inline fun <reified T : Service> Context.startKtxService(
+    bundle: Bundle? = null,
+) {
+    val intent = Intent(this, T::class.java).apply {
+        bundle?.let { putExtras(it) }
+    }
+    startService(intent)
+}
+
 inline fun <reified T : Activity> Fragment.startKtxActivity(
     flags: Int? = null,
     extra: Bundle? = null,
-    vararg values: Pair<String, Any>
+    vararg values: Pair<String, Any>,
 ) =
     activity?.let {
         startActivity(activity?.getIntent<T>(flags, extra, *values))
@@ -122,21 +205,21 @@ inline fun <reified T : Activity> Fragment.startKtxActivity(
 inline fun <reified T : Activity> Context.startKtxActivity(
     flags: Int? = null,
     extra: Bundle? = null,
-    vararg values: Pair<String, Any>
+    vararg values: Pair<String, Any>,
 ) =
     startActivity(getIntent<T>(flags, extra, *values))
 
 inline fun <reified T : Activity> Activity.startKtxActivityForResult(
     requestCode: Int,
     flags: Int? = null,
-    extra: Bundle? = null
+    extra: Bundle? = null,
 ) =
     startActivityForResult(getIntent<T>(flags, extra), requestCode)
 
 inline fun <reified T : Activity> Fragment.startKtxActivityForResult(
     requestCode: Int,
     flags: Int? = null,
-    extra: Bundle? = null
+    extra: Bundle? = null,
 ) =
     activity?.let {
         startActivityForResult(activity?.getIntent<T>(flags, extra), requestCode)
@@ -145,7 +228,7 @@ inline fun <reified T : Activity> Fragment.startKtxActivityForResult(
 inline fun <reified T : Context> Context.getIntent(
     flags: Int?,
     extra: Bundle?,
-    vararg pairs: Pair<String, Any>
+    vararg pairs: Pair<String, Any>,
 ): Intent =
     Intent(this, T::class.java).apply {
         flags?.let { setFlags(flags) }

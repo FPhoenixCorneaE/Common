@@ -6,8 +6,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.fphoenixcorneae.common.demo.databinding.ActivityCacheBinding
 import com.fphoenixcorneae.common.ext.logd
+import com.fphoenixcorneae.common.ext.openApplicationDetailsSettings
 import com.fphoenixcorneae.common.ext.toast
-import com.fphoenixcorneae.common.util.IntentUtil
 import com.fphoenixcorneae.permissions.requestWritePermission
 
 /**
@@ -61,7 +61,7 @@ class CacheActivity : AppCompatActivity() {
                     .show()
             }
             onNeverAsk {
-                IntentUtil.openApplicationDetailsSettings()
+                openApplicationDetailsSettings()
             }
         }
     }

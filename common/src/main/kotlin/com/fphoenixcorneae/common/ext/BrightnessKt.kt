@@ -8,7 +8,6 @@ import android.provider.Settings
 import android.view.Window
 import androidx.annotation.IntRange
 import androidx.annotation.RequiresPermission
-import com.fphoenixcorneae.common.util.IntentUtil
 
 /**
  * Return whether automatic brightness mode is enabled.
@@ -77,7 +76,7 @@ fun setScreenBrightness(
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         if (!Settings.System.canWrite(applicationContext)) {
             // 打开允许修改 Setting 权限的界面
-            IntentUtil.openApplicationManageWriteSettings()
+            openApplicationManageWriteSettings()
             return
         }
     }

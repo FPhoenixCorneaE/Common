@@ -11,37 +11,37 @@ class DefaultPrinter : Printer {
 
     override fun d(tag: String?, message: String, vararg args: Any?) {
         if (isDebuggable) {
-            Log.d(tag, if (args.isNullOrEmpty()) message else String.format(message, args))
+            Log.d(tag, if (args.isEmpty()) message else String.format(message, args))
         }
     }
 
     override fun v(tag: String?, message: String, vararg args: Any?) {
         if (isDebuggable) {
-            Log.v(tag, if (args.isNullOrEmpty()) message else String.format(message, args))
+            Log.v(tag, if (args.isEmpty()) message else String.format(message, args))
         }
     }
 
     override fun i(tag: String?, message: String, vararg args: Any?) {
         if (isDebuggable) {
-            Log.i(tag, if (args.isNullOrEmpty()) message else String.format(message, args))
+            Log.i(tag, if (args.isEmpty()) message else String.format(message, args))
         }
     }
 
     override fun w(tag: String?, message: String, vararg args: Any?) {
         if (isDebuggable) {
-            Log.w(tag, if (args.isNullOrEmpty()) message else String.format(message, args))
+            Log.w(tag, if (args.isEmpty()) message else String.format(message, args))
         }
     }
 
     override fun e(tag: String?, message: String, vararg args: Any?) {
         if (isDebuggable) {
-            Log.e(tag, if (args.isNullOrEmpty()) message else String.format(message, args))
+            Log.e(tag, if (args.isEmpty()) message else String.format(message, args))
         }
     }
 
     override fun wtf(tag: String?, message: String, vararg args: Any?) {
         if (isDebuggable) {
-            Log.wtf(tag, if (args.isNullOrEmpty()) message else String.format(message, args))
+            Log.wtf(tag, if (args.isEmpty()) message else String.format(message, args))
         }
     }
 

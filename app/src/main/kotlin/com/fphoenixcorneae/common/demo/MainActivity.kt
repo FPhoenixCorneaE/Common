@@ -24,7 +24,6 @@ import com.fphoenixcorneae.common.ext.view.queryTextListener
 import com.fphoenixcorneae.common.ext.view.setOnSeekBarChangeListener
 import com.fphoenixcorneae.common.ext.view.setUnderLine
 import com.fphoenixcorneae.common.ext.view.textAction
-import com.fphoenixcorneae.common.util.IntentUtil
 import com.fphoenixcorneae.permissions.requestPhonePermission
 import com.fphoenixcorneae.permissions.requestWritePermission
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mViewBinding: ActivityMainBinding
     private val appViewModel by androidViewModel<AppViewModel>()
 
-    @SuppressLint("UseCompatLoadingForDrawables")
+    @SuppressLint("UseCompatLoadingForDrawables", "MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mViewBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -96,7 +95,8 @@ class MainActivity : AppCompatActivity() {
 
         // 申请权限
         mViewBinding.btnRequestPermissions.setOnClickListener {
-            requestPermissions()
+//            requestPermissions()
+            callPhone("10010")
         }
         mViewBinding.btnRequestPermissions.background = codeConstructsGradientDrawable()
 //        mViewBinding.btnRequestPermissions.background = codeConstructsStateListDrawable()
@@ -227,7 +227,7 @@ class MainActivity : AppCompatActivity() {
                     .show()
             }
             onNeverAsk {
-                IntentUtil.openApplicationDetailsSettings()
+                openApplicationDetailsSettings()
             }
         }
         requestWritePermission {
