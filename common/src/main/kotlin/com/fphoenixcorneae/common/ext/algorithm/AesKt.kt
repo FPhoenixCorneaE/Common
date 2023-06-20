@@ -2,6 +2,8 @@ package com.fphoenixcorneae.common.ext.algorithm
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.fphoenixcorneae.common.ext.hexString2Bytes
+import com.fphoenixcorneae.common.ext.toHexString
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -126,6 +128,31 @@ fun String.aesEncryptBase64(
 }.getOrDefault("")
 
 /**
+ * AES 加密
+ */
+@RequiresApi(Build.VERSION_CODES.O)
+fun String.aesEncryptHex(
+    slatKey: String,
+    vectorKey: String,
+    aesCipher: AesCipher = AesCipher.CBC_PKCS5PADDING,
+    slatKeySize: Int = SLAT_KEY_SIZE,
+    vectorKeySize: Int = VECTOR_KEY_SIZE,
+): String = runCatching {
+    val cipher = initCipher(Cipher.ENCRYPT_MODE, slatKey, vectorKey, aesCipher, slatKeySize, vectorKeySize)
+    val plainText = if (AesCipher.CBC_NO_PADDING == aesCipher || AesCipher.ECB_NO_PADDING == aesCipher) {
+        handleNoPaddingEncryptFormat(cipher, this)
+    } else {
+        toByteArray()
+    }
+    // 加密
+    val result = cipher.doFinal(plainText)
+    // 将加密后的二进制数组转化为十六进制
+    result.toHexString()
+}.onFailure {
+    it.printStackTrace()
+}.getOrDefault("")
+
+/**
  * AES 解密
  */
 @RequiresApi(Build.VERSION_CODES.O)
@@ -138,6 +165,23 @@ fun String.aesDecryptBase64(
 ): String {
     val cipher = initCipher(Cipher.DECRYPT_MODE, slatKey, vectorKey, aesCipher, slatKeySize, vectorKeySize)
     return String(cipher.doFinal(Base64.getDecoder().decode(this)))
+}
+
+/**
+ * AES 解密
+ */
+@RequiresApi(Build.VERSION_CODES.O)
+fun String.aesDecryptHex(
+    slatKey: String,
+    vectorKey: String,
+    aesCipher: AesCipher = AesCipher.CBC_PKCS5PADDING,
+    slatKeySize: Int = SLAT_KEY_SIZE,
+    vectorKeySize: Int = VECTOR_KEY_SIZE,
+): String {
+    val cipher = initCipher(Cipher.DECRYPT_MODE, slatKey, vectorKey, aesCipher, slatKeySize, vectorKeySize)
+    return hexString2Bytes()?.let {
+        String(cipher.doFinal(it))
+    }.orEmpty()
 }
 
 fun File.aesEncrypt(
