@@ -26,8 +26,8 @@ private const val AES_ALGORITHM = "AES"
 
 private const val SECURE_RANDOM_ALGORITHM = "SHA1PRNG"
 
-private const val SLAT_KEY_SIZE = 128
-private const val VECTOR_KEY_SIZE = 128
+private const val SLAT_KEY_LENGTH = 128
+private const val VECTOR_KEY_LENGTH = 128
 
 /**
  * 获取加密的密匙，传入的slatKey可以是任意长度的，作为SecureRandom的随机种子，
@@ -46,7 +46,7 @@ private fun getSlatKey(slatKey: String, size: Int): Key? = runCatching {
 
 /**
  * 获取加密的向量
- * @param size 128 192 256
+ * @param size
  */
 private fun getVectorKey(vectorKey: String, size: Int): IvParameterSpec = runCatching {
     val keyGen = KeyGenerator.getInstance(AES_ALGORITHM)
@@ -62,12 +62,12 @@ private fun initCipher(
     mode: Int,
     slatKey: String,
     vectorKey: String,
-    aesCipher: AesCipher,
+    cipherAlgorithm: AesCipher,
     slatKeySize: Int,
     vectorKeySize: Int,
 ): Cipher {
-    val cipher = Cipher.getInstance(aesCipher.transformation)
-    if (AesCipher.CBC_NO_PADDING == aesCipher || AesCipher.CBC_PKCS5PADDING == aesCipher) {
+    val cipher = Cipher.getInstance(cipherAlgorithm.transformation)
+    if (AesCipher.CBC_NO_PADDING == cipherAlgorithm || AesCipher.CBC_PKCS5PADDING == cipherAlgorithm) {
         cipher.init(mode, getSlatKey(slatKey, slatKeySize), getVectorKey(vectorKey, vectorKeySize))
     } else {
         cipher.init(mode, getSlatKey(slatKey, slatKeySize))
@@ -109,12 +109,12 @@ fun handleNoPaddingEncryptFormat(
 fun String.aesEncryptBase64(
     slatKey: String,
     vectorKey: String,
-    aesCipher: AesCipher = AesCipher.CBC_PKCS5PADDING,
-    slatKeySize: Int = SLAT_KEY_SIZE,
-    vectorKeySize: Int = VECTOR_KEY_SIZE,
+    cipherAlgorithm: AesCipher = AesCipher.CBC_PKCS5PADDING,
+    slatKeySize: Int = SLAT_KEY_LENGTH,
+    vectorKeySize: Int = VECTOR_KEY_LENGTH,
 ): String = runCatching {
-    val cipher = initCipher(Cipher.ENCRYPT_MODE, slatKey, vectorKey, aesCipher, slatKeySize, vectorKeySize)
-    val plainText = if (AesCipher.CBC_NO_PADDING == aesCipher || AesCipher.ECB_NO_PADDING == aesCipher) {
+    val cipher = initCipher(Cipher.ENCRYPT_MODE, slatKey, vectorKey, cipherAlgorithm, slatKeySize, vectorKeySize)
+    val plainText = if (AesCipher.CBC_NO_PADDING == cipherAlgorithm || AesCipher.ECB_NO_PADDING == cipherAlgorithm) {
         handleNoPaddingEncryptFormat(cipher, this)
     } else {
         toByteArray()
@@ -134,12 +134,12 @@ fun String.aesEncryptBase64(
 fun String.aesEncryptHex(
     slatKey: String,
     vectorKey: String,
-    aesCipher: AesCipher = AesCipher.CBC_PKCS5PADDING,
-    slatKeySize: Int = SLAT_KEY_SIZE,
-    vectorKeySize: Int = VECTOR_KEY_SIZE,
+    cipherAlgorithm: AesCipher = AesCipher.CBC_PKCS5PADDING,
+    slatKeySize: Int = SLAT_KEY_LENGTH,
+    vectorKeySize: Int = VECTOR_KEY_LENGTH,
 ): String = runCatching {
-    val cipher = initCipher(Cipher.ENCRYPT_MODE, slatKey, vectorKey, aesCipher, slatKeySize, vectorKeySize)
-    val plainText = if (AesCipher.CBC_NO_PADDING == aesCipher || AesCipher.ECB_NO_PADDING == aesCipher) {
+    val cipher = initCipher(Cipher.ENCRYPT_MODE, slatKey, vectorKey, cipherAlgorithm, slatKeySize, vectorKeySize)
+    val plainText = if (AesCipher.CBC_NO_PADDING == cipherAlgorithm || AesCipher.ECB_NO_PADDING == cipherAlgorithm) {
         handleNoPaddingEncryptFormat(cipher, this)
     } else {
         toByteArray()
@@ -159,11 +159,11 @@ fun String.aesEncryptHex(
 fun String.aesDecryptBase64(
     slatKey: String,
     vectorKey: String,
-    aesCipher: AesCipher = AesCipher.CBC_PKCS5PADDING,
-    slatKeySize: Int = SLAT_KEY_SIZE,
-    vectorKeySize: Int = VECTOR_KEY_SIZE,
+    cipherAlgorithm: AesCipher = AesCipher.CBC_PKCS5PADDING,
+    slatKeySize: Int = SLAT_KEY_LENGTH,
+    vectorKeySize: Int = VECTOR_KEY_LENGTH,
 ): String {
-    val cipher = initCipher(Cipher.DECRYPT_MODE, slatKey, vectorKey, aesCipher, slatKeySize, vectorKeySize)
+    val cipher = initCipher(Cipher.DECRYPT_MODE, slatKey, vectorKey, cipherAlgorithm, slatKeySize, vectorKeySize)
     return String(cipher.doFinal(Base64.getDecoder().decode(this)))
 }
 
@@ -174,11 +174,11 @@ fun String.aesDecryptBase64(
 fun String.aesDecryptHex(
     slatKey: String,
     vectorKey: String,
-    aesCipher: AesCipher = AesCipher.CBC_PKCS5PADDING,
-    slatKeySize: Int = SLAT_KEY_SIZE,
-    vectorKeySize: Int = VECTOR_KEY_SIZE,
+    cipherAlgorithm: AesCipher = AesCipher.CBC_PKCS5PADDING,
+    slatKeySize: Int = SLAT_KEY_LENGTH,
+    vectorKeySize: Int = VECTOR_KEY_LENGTH,
 ): String {
-    val cipher = initCipher(Cipher.DECRYPT_MODE, slatKey, vectorKey, aesCipher, slatKeySize, vectorKeySize)
+    val cipher = initCipher(Cipher.DECRYPT_MODE, slatKey, vectorKey, cipherAlgorithm, slatKeySize, vectorKeySize)
     return hexString2Bytes()?.let {
         String(cipher.doFinal(it))
     }.orEmpty()
@@ -188,9 +188,9 @@ fun File.aesEncrypt(
     destFilePath: String,
     slatKey: String,
     vectorKey: String,
-    aesCipher: AesCipher = AesCipher.CBC_PKCS5PADDING,
-    slatKeySize: Int = SLAT_KEY_SIZE,
-    vectorKeySize: Int = VECTOR_KEY_SIZE,
+    cipherAlgorithm: AesCipher = AesCipher.CBC_PKCS5PADDING,
+    slatKeySize: Int = SLAT_KEY_LENGTH,
+    vectorKeySize: Int = VECTOR_KEY_LENGTH,
 ): File? =
     handleFile(
         mode = Cipher.ENCRYPT_MODE,
@@ -198,7 +198,7 @@ fun File.aesEncrypt(
         destFilePath = destFilePath,
         slatKey = slatKey,
         vectorKey = vectorKey,
-        aesCipher = aesCipher,
+        cipherAlgorithm = cipherAlgorithm,
         slatKeySize = slatKeySize,
         vectorKeySize = vectorKeySize
     )
@@ -207,9 +207,9 @@ fun File.aesDecrypt(
     destFilePath: String,
     slatKey: String,
     vectorKey: String,
-    aesCipher: AesCipher = AesCipher.CBC_PKCS5PADDING,
-    slatKeySize: Int = SLAT_KEY_SIZE,
-    vectorKeySize: Int = VECTOR_KEY_SIZE,
+    cipherAlgorithm: AesCipher = AesCipher.CBC_PKCS5PADDING,
+    slatKeySize: Int = SLAT_KEY_LENGTH,
+    vectorKeySize: Int = VECTOR_KEY_LENGTH,
 ): File? =
     handleFile(
         mode = Cipher.DECRYPT_MODE,
@@ -217,7 +217,7 @@ fun File.aesDecrypt(
         destFilePath = destFilePath,
         slatKey = slatKey,
         vectorKey = vectorKey,
-        aesCipher = aesCipher,
+        cipherAlgorithm = cipherAlgorithm,
         slatKeySize = slatKeySize,
         vectorKeySize = vectorKeySize
     )
@@ -228,7 +228,7 @@ private fun handleFile(
     destFilePath: String,
     slatKey: String,
     vectorKey: String,
-    aesCipher: AesCipher,
+    cipherAlgorithm: AesCipher,
     slatKeySize: Int,
     vectorKeySize: Int,
 ): File? {
@@ -243,7 +243,7 @@ private fun handleFile(
 
         val inputStream = FileInputStream(sourceFile)
         val outputStream = FileOutputStream(destFile)
-        val cipher = initCipher(mode, slatKey, vectorKey, aesCipher, slatKeySize, vectorKeySize)
+        val cipher = initCipher(mode, slatKey, vectorKey, cipherAlgorithm, slatKeySize, vectorKeySize)
         val cin = CipherInputStream(inputStream, cipher)
 
         try {
