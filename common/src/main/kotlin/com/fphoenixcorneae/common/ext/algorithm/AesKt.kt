@@ -130,7 +130,6 @@ fun String.aesEncryptBase64(
 /**
  * AES 加密
  */
-@RequiresApi(Build.VERSION_CODES.O)
 fun String.aesEncryptHex(
     slatKey: String,
     vectorKey: String,
@@ -170,7 +169,6 @@ fun String.aesDecryptBase64(
 /**
  * AES 解密
  */
-@RequiresApi(Build.VERSION_CODES.O)
 fun String.aesDecryptHex(
     slatKey: String,
     vectorKey: String,

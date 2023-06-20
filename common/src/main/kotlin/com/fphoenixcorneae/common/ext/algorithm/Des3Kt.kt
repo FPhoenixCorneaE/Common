@@ -88,7 +88,6 @@ fun String.des3EncryptBase64(
 /**
  * DES 加密
  */
-@RequiresApi(Build.VERSION_CODES.O)
 fun String.des3EncryptHex(
     slatKey: String,
     vectorKey: String,
@@ -124,7 +123,6 @@ fun String.des3DecryptBase64(
 /**
  * DES 解密
  */
-@RequiresApi(Build.VERSION_CODES.O)
 fun String.des3DecryptHex(
     slatKey: String,
     vectorKey: String,
