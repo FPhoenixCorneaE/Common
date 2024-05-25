@@ -10,13 +10,20 @@ import android.graphics.drawable.Drawable
 import android.os.Parcel
 import android.os.Parcelable
 import com.fphoenixcorneae.common.annotation.MemoryUnit
-import com.fphoenixcorneae.common.annotation.TimeUnit
 import kotlinx.parcelize.Parceler
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.*
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.io.OutputStream
+import java.io.Serializable
+import java.io.UnsupportedEncodingException
 import java.nio.charset.Charset
-import java.util.*
+import java.util.Locale
 
 /**
  * 十六进制数字
@@ -339,30 +346,16 @@ fun Long.byte2FitMemorySize(): String =
 /**
  * Time span in unit to milliseconds.
  * @param unit  The unit of time span.
- *  * [TimeUnit.MILLISECOND]
- *  * [TimeUnit.SECOND]
- *  * [TimeUnit.MINUTE]
- *  * [TimeUnit.HOUR]
- *  * [TimeUnit.DAY]
- *  * [TimeUnit.MONTH]
- *  * [TimeUnit.YEAR]
  */
-fun Long.timeSpan2Millis(@TimeUnit unit: Long): Long {
+fun Long.timeSpan2Millis(unit: Long): Long {
     return this * unit
 }
 
 /**
  * Milliseconds to time span in unit.
  * @param unit   The unit of time span.
- *  * [TimeUnit.MILLISECOND]
- *  * [TimeUnit.SECOND]
- *  * [TimeUnit.MINUTE]
- *  * [TimeUnit.HOUR]
- *  * [TimeUnit.DAY]
- *  * [TimeUnit.MONTH]
- *  * [TimeUnit.YEAR]
  */
-fun Long.millis2TimeSpan(@TimeUnit unit: Long): Long {
+fun Long.millis2TimeSpan(unit: Long): Long {
     return this / unit
 }
 
